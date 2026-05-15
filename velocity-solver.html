@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Velocity Solver</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0c10;
+    --panel: #111318;
+    --border: #1e2230;
+    --accent: #00e5ff;
+    --accent2: #ff6b35;
+    --text: #e8ecf0;
+    --muted: #5a6070;
+    --solved: #00ff88;
+    --card: #161922;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    background-image: 
+      radial-gradient(ellipse at 20% 20%, rgba(0,229,255,0.04) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(255,107,53,0.04) 0%, transparent 50%);
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+
+  .label-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    opacity: 0.8;
+  }
+
+  h1 {
+    font-size: 2.6rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1;
+    color: #fff;
+  }
+
+  h1 span { color: var(--accent); }
+
+  .subtitle {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 10px;
+  }
+
+  .formula-toggle {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .toggle-btn {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    padding: 10px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+  }
+
+  .toggle-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .toggle-btn.active {
+    background: rgba(0,229,255,0.08);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .main-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    width: 100%;
+    max-width: 560px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .main-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0.6;
+  }
+
+  .formula-display {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-family: 'Space Mono', monospace;
+    font-size: 1.3rem;
+    letter-spacing: 1px;
+  }
+
+  .formula-display .var { color: var(--accent); font-weight: 700; }
+  .formula-display .op { color: var(--muted); margin: 0 4px; }
+  .formula-display .solving { color: var(--solved); text-shadow: 0 0 12px rgba(0,255,136,0.4); }
+
+  .fields-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  .field-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .field-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .field-label .var-name { color: var(--accent); font-size: 13px; }
+  .field-label.solving-label .var-name { color: var(--solved); }
+
+  .field-input-wrap {
+    position: relative;
+  }
+
+  input[type="number"] {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    font-size: 15px;
+    padding: 12px 14px;
+    outline: none;
+    transition: all 0.2s;
+    -moz-appearance: textfield;
+  }
+
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+  input[type="number"]:focus {
+    border-color: var(--accent);
+    background: rgba(0,229,255,0.04);
+  }
+
+  input[type="number"].solved-field {
+    background: rgba(0,255,136,0.06);
+    border-color: var(--solved);
+    color: var(--solved);
+  }
+
+  input[type="number"]:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  .unit-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 4px;
+  }
+
+  .solve-for-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--solved);
+    text-align: center;
+    margin-top: 4px;
+    letter-spacing: 1px;
+  }
+
+  .solve-btn {
+    width: 100%;
+    background: linear-gradient(135deg, rgba(0,229,255,0.15), rgba(0,229,255,0.05));
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    margin-bottom: 14px;
+  }
+
+  .solve-btn:hover {
+    background: rgba(0,229,255,0.2);
+    box-shadow: 0 0 20px rgba(0,229,255,0.15);
+  }
+
+  .solve-btn:active { transform: scale(0.99); }
+
+  .reset-btn {
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s;
+  }
+
+  .reset-btn:hover { border-color: var(--muted); color: var(--text); }
+
+  .result-panel {
+    margin-top: 24px;
+    background: var(--bg);
+    border: 1px solid rgba(0,255,136,0.2);
+    border-radius: 12px;
+    padding: 20px 24px;
+    display: none;
+    animation: slideIn 0.3s ease;
+  }
+
+  .result-panel.show { display: block; }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .result-header {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--solved);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    opacity: 0.7;
+  }
+
+  .result-value {
+    font-family: 'Space Mono', monospace;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--solved);
+    text-shadow: 0 0 20px rgba(0,255,136,0.3);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .result-unit {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  .steps-header {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .step {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .step-num {
+    background: var(--border);
+    color: var(--accent);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .step-text { color: #8a9ab0; }
+  .step-text .hl { color: var(--text); }
+  .step-text .result { color: var(--solved); }
+
+  .error-msg {
+    background: rgba(255,107,53,0.08);
+    border: 1px solid rgba(255,107,53,0.3);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--accent2);
+    margin-top: 14px;
+    display: none;
+  }
+
+  .error-msg.show { display: block; }
+
+  .unit-selector {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .unit-selector select {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .formula-divider {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .frac { display: inline-flex; flex-direction: column; align-items: center; }
+  .frac span { padding: 0 2px; }
+  .frac .num { border-bottom: 2px solid var(--accent); }
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="label-tag">⚡ Physics Solver</div>
+  <h1>Velocity <span>Calculator</span></h1>
+  <p class="subtitle">// Leave one field empty → it gets solved</p>
+</header>
+
+<div class="formula-toggle">
+  <button class="toggle-btn active" onclick="setFormula('basic')">v = d / t</button>
+  <button class="toggle-btn" onclick="setFormula('kinematic')">v = v₀ + at</button>
+</div>
+
+<div class="main-card">
+
+  <div class="formula-display" id="formulaDisplay">
+    <!-- populated by JS -->
+  </div>
+
+  <div class="unit-selector">
+    <span>Speed unit:</span>
+    <select id="unitSelect" onchange="updateUnits()">
+      <option value="ms">m/s</option>
+      <option value="kmh">km/h</option>
+      <option value="mph">mph</option>
+      <option value="fts">ft/s</option>
+    </select>
+  </div>
+
+  <div class="fields-grid" id="fieldsGrid">
+    <!-- populated by JS -->
+  </div>
+
+  <button class="solve-btn" onclick="solve()">▶ Solve</button>
+  <button class="reset-btn" onclick="resetAll()">↺ Reset</button>
+
+  <div class="error-msg" id="errorMsg"></div>
+  <div class="result-panel" id="resultPanel"></div>
+
+</div>
+
+<script>
+  let mode = 'basic';
+
+  const unitLabels = {
+    basic: {
+      ms:  { v: 'm/s',  d: 'm',    t: 's'   },
+      kmh: { v: 'km/h', d: 'km',   t: 'h'   },
+      mph: { v: 'mph',  d: 'mi',   t: 'h'   },
+      fts: { v: 'ft/s', d: 'ft',   t: 's'   },
+    },
+    kinematic: {
+      ms:  { v: 'm/s',  v0: 'm/s',  a: 'm/s²', t: 's' },
+      kmh: { v: 'km/h', v0: 'km/h', a: 'km/h²',t: 'h' },
+      mph: { v: 'mph',  v0: 'mph',  a: 'mph/h',t: 'h' },
+      fts: { v: 'ft/s', v0: 'ft/s', a: 'ft/s²',t: 's' },
+    }
+  };
+
+  const fieldDefs = {
+    basic: [
+      { id: 'v',  label: 'Velocity', sym: 'v' },
+      { id: 'd',  label: 'Distance', sym: 'd' },
+      { id: 't',  label: 'Time',     sym: 't' },
+    ],
+    kinematic: [
+      { id: 'v',  label: 'Final Vel.', sym: 'v'  },
+      { id: 'v0', label: 'Init. Vel.', sym: 'v₀' },
+      { id: 'a',  label: 'Accel.',     sym: 'a'  },
+      { id: 't',  label: 'Time',       sym: 't'  },
+    ]
+  };
+
+  function setFormula(f) {
+    mode = f;
+    document.querySelectorAll('.toggle-btn').forEach((b,i) => b.classList.toggle('active', (i===0&&f==='basic')||(i===1&&f==='kinematic')));
+    render();
+  }
+
+  function getUnit() { return document.getElementById('unitSelect').value; }
+
+  function render() {
+    renderFormulaDisplay(null);
+    renderFields(null);
+    document.getElementById('resultPanel').classList.remove('show');
+    document.getElementById('errorMsg').classList.remove('show');
+  }
+
+  function renderFormulaDisplay(solving) {
+    const el = document.getElementById('formulaDisplay');
+    if (mode === 'basic') {
+      el.innerHTML = `
+        <span class="${solving==='v'?'solving var':'var'}">v</span>
+        <span class="op">=</span>
+        <span class="formula-divider">
+          <span class="${solving==='d'?'solving var':'var'}">d</span>
+          <span style="border-top:2px solid var(--accent);width:100%;display:block;margin:3px 0;${solving==='d'||solving==='t'?'border-color:var(--solved)':''}"></span>
+          <span class="${solving==='t'?'solving var':'var'}">t</span>
+        </span>`;
+    } else {
+      el.innerHTML = `
+        <span class="${solving==='v'?'solving var':'var'}">v</span>
+        <span class="op">=</span>
+        <span class="${solving==='v0'?'solving var':'var'}">v₀</span>
+        <span class="op">+</span>
+        <span class="${solving==='a'?'solving var':'var'}">a</span>
+        <span class="op">·</span>
+        <span class="${solving==='t'?'solving var':'var'}">t</span>`;
+    }
+  }
+
+  function renderFields(solving) {
+    const grid = document.getElementById('fieldsGrid');
+    const unit = getUnit();
+    const defs = fieldDefs[mode];
+    const units = unitLabels[mode][unit];
+
+    grid.style.gridTemplateColumns = mode === 'basic' ? '1fr 1fr 1fr' : '1fr 1fr 1fr 1fr';
+
+    grid.innerHTML = defs.map(f => {
+      const isSolving = f.id === solving;
+      const val = document.getElementById('f_'+f.id)?.value || '';
+      return `
+        <div class="field-wrap">
+          <div class="field-label ${isSolving?'solving-label':''}">
+            <span style="font-size:10px">${f.label}</span>
+            <span class="var-name">${f.sym}</span>
+          </div>
+          <input type="number" id="f_${f.id}" placeholder="${isSolving?'?' : '0'}"
+            class="${isSolving?'solved-field':''}"
+            ${isSolving?'disabled':''} value="${isSolving?'':val}"
+            step="any">
+          <div class="${isSolving?'solve-for-label':'unit-label'}">${isSolving?'← solving':'['+units[f.id]+']'}</div>
+        </div>`;
+    }).join('');
+  }
+
+  function updateUnits() { render(); }
+
+  function getValues() {
+    const defs = fieldDefs[mode];
+    let vals = {};
+    let empties = [];
+    defs.forEach(f => {
+      const el = document.getElementById('f_'+f.id);
+      const v = el ? el.value.trim() : '';
+      if (v === '' || v === null) empties.push(f.id);
+      else vals[f.id] = parseFloat(v);
+    });
+    return { vals, empties };
+  }
+
+  function solve() {
+    hideError();
+    const { vals, empties } = getValues();
+
+    if (empties.length === 0) {
+      showError('All fields are filled — clear one field to solve for it.');
+      return;
+    }
+    if (empties.length > 1) {
+      showError(`Fill in all but one field. Currently ${empties.length} fields are empty.`);
+      return;
+    }
+
+    const solving = empties[0];
+    let result, steps = [];
+
+    if (mode === 'basic') {
+      const { v, d, t } = vals;
+      if (solving === 'v') {
+        result = d / t;
+        steps = [
+          { n:1, text: `Start with the velocity formula: <span class="hl">v = d ÷ t</span>` },
+          { n:2, text: `Plug in values: <span class="hl">v = ${d} ÷ ${t}</span>` },
+          { n:3, text: `Calculate: <span class="result">v = ${fmt(result)}</span>` },
+        ];
+      } else if (solving === 'd') {
+        result = v * t;
+        steps = [
+          { n:1, text: `Rearrange for distance: <span class="hl">d = v × t</span>` },
+          { n:2, text: `Plug in values: <span class="hl">d = ${v} × ${t}</span>` },
+          { n:3, text: `Calculate: <span class="result">d = ${fmt(result)}</span>` },
+        ];
+      } else if (solving === 't') {
+        if (v === 0) { showError('Velocity cannot be 0 when solving for time.'); return; }
+        result = d / v;
+        steps = [
+          { n:1, text: `Rearrange for time: <span class="hl">t = d ÷ v</span>` },
+          { n:2, text: `Plug in values: <span class="hl">t = ${d} ÷ ${v}</span>` },
+          { n:3, text: `Calculate: <span class="result">t = ${fmt(result)}</span>` },
+        ];
+      }
+    } else {
+      const { v, v0, a, t } = vals;
+      if (solving === 'v') {
+        result = v0 + a * t;
+        steps = [
+          { n:1, text: `Use kinematic formula: <span class="hl">v = v₀ + a·t</span>` },
+          { n:2, text: `Plug in: <span class="hl">v = ${v0} + (${a} × ${t})</span>` },
+          { n:3, text: `Simplify: <span class="hl">v = ${v0} + ${fmt(a*t)}</span>` },
+          { n:4, text: `Result: <span class="result">v = ${fmt(result)}</span>` },
+        ];
+      } else if (solving === 'v0') {
+        result = v - a * t;
+        steps = [
+          { n:1, text: `Rearrange: <span class="hl">v₀ = v − a·t</span>` },
+          { n:2, text: `Plug in: <span class="hl">v₀ = ${v} − (${a} × ${t})</span>` },
+          { n:3, text: `Result: <span class="result">v₀ = ${fmt(result)}</span>` },
+        ];
+      } else if (solving === 'a') {
+        if (t === 0) { showError('Time cannot be 0 when solving for acceleration.'); return; }
+        result = (v - v0) / t;
+        steps = [
+          { n:1, text: `Rearrange: <span class="hl">a = (v − v₀) ÷ t</span>` },
+          { n:2, text: `Plug in: <span class="hl">a = (${v} − ${v0}) ÷ ${t}</span>` },
+          { n:3, text: `Simplify: <span class="hl">a = ${fmt(v-v0)} ÷ ${t}</span>` },
+          { n:4, text: `Result: <span class="result">a = ${fmt(result)}</span>` },
+        ];
+      } else if (solving === 't') {
+        if (a === 0) { showError('Acceleration cannot be 0 when solving for time this way.'); return; }
+        result = (v - v0) / a;
+        steps = [
+          { n:1, text: `Rearrange: <span class="hl">t = (v − v₀) ÷ a</span>` },
+          { n:2, text: `Plug in: <span class="hl">t = (${v} − ${v0}) ÷ ${a}</span>` },
+          { n:3, text: `Result: <span class="result">t = ${fmt(result)}</span>` },
+        ];
+      }
+    }
+
+    if (isNaN(result) || !isFinite(result)) {
+      showError('Invalid result — check your input values.'); return;
+    }
+
+    renderFormulaDisplay(solving);
+    renderFields(solving);
+    document.getElementById('f_'+solving).value = fmt(result);
+
+    const unit = getUnit();
+    const unitMap = unitLabels[mode][unit];
+    showResult(solving, result, unitMap[solving], steps);
+  }
+
+  function fmt(n) {
+    if (Math.abs(n) >= 10000 || (Math.abs(n) < 0.001 && n !== 0)) return n.toExponential(3);
+    return parseFloat(n.toFixed(4)).toString();
+  }
+
+  function showResult(solving, result, unit, steps) {
+    const sym = fieldDefs[mode].find(f => f.id === solving)?.sym || solving;
+    const panel = document.getElementById('resultPanel');
+    panel.innerHTML = `
+      <div class="result-header">✓ Solved for ${sym}</div>
+      <div class="result-value">${fmt(result)}</div>
+      <div class="result-unit">${unit}</div>
+      <div class="steps-header">// Step-by-step breakdown</div>
+      ${steps.map(s => `
+        <div class="step">
+          <div class="step-num">${s.n}</div>
+          <div class="step-text">${s.text}</div>
+        </div>`).join('')}
+    `;
+    panel.classList.add('show');
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('errorMsg');
+    el.textContent = '⚠ ' + msg;
+    el.classList.add('show');
+  }
+
+  function hideError() {
+    document.getElementById('errorMsg').classList.remove('show');
+  }
+
+  function resetAll() {
+    renderFormulaDisplay(null);
+    renderFields(null);
+    document.getElementById('resultPanel').classList.remove('show');
+    document.getElementById('errorMsg').classList.remove('show');
+  }
+
+  // init
+  render();
+</script>
+</body>
+</html>
