@@ -1,0 +1,1923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 1: Motion in One Dimension — Physics Study Tool</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;500;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0a0d14;--card:rgba(255,255,255,0.022);--bdr:rgba(255,255,255,0.055);--txt:#dfe6f0;--mut:#8a95a8;--dim:#5a6478;--prp:#7c6bf0;--pl:#b4a5fa;--pg:rgba(124,107,240,0.09);--grn:#2dd4a0;--gb:rgba(45,212,160,0.04);--gbd:rgba(45,212,160,0.18);--red:#f06b6b;--rb:rgba(240,107,107,0.04);--rbd:rgba(240,107,107,0.18);--ylw:#eab308;--blu:#58a6ff;--cyn:#20d3e8;--org:#f59e0b;--acc:#f59e0b;--m:'JetBrains Mono',monospace;--s:'Instrument Serif',Georgia,serif;--f:'DM Sans',sans-serif}
+body{background:var(--bg);color:var(--txt);font-family:var(--f);min-height:100vh;display:flex;flex-direction:column}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.07);border-radius:3px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-4px)}40%,80%{transform:translateX(4px)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+input[type=text],textarea{-webkit-appearance:none;appearance:none}
+.hdr{padding:16px 22px 12px;border-bottom:1px solid var(--bdr);background:linear-gradient(180deg,rgba(245,158,11,0.025) 0%,transparent 100%)}
+.hdr-in{max-width:860px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.hdr-lab{font:700 9px/1 var(--m);letter-spacing:.2em;color:var(--acc);margin-bottom:2px;text-transform:uppercase}
+.hdr-t{font:400 22px/1.2 var(--s);color:var(--txt)}.hdr-t i{font-style:italic;color:var(--acc)}
+.hdr-r{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.stats{display:flex;gap:12px;align-items:center}.stat-box{text-align:center}.stat-n{font:700 16px/1 var(--m);color:var(--txt)}.stat-l{font:500 8px/1 var(--m);color:var(--dim);margin-top:2px;letter-spacing:.08em;text-transform:uppercase}
+.streak-n{color:var(--ylw)}.pct-n{color:var(--cyn)}
+.btn-r{background:rgba(240,107,107,0.06);border:1px solid rgba(240,107,107,0.15);color:var(--red);padding:6px 12px;border-radius:8px;font:600 10px var(--f);cursor:pointer}
+.modes{display:flex;gap:4px;padding:10px 22px;border-bottom:1px solid rgba(255,255,255,0.03);max-width:900px;margin:0 auto;overflow-x:auto}
+.mode-btn{flex:1;min-width:90px;padding:10px 6px;border-radius:10px;border:1.5px solid var(--bdr);background:rgba(255,255,255,0.01);color:var(--dim);font:600 11px var(--f);cursor:pointer;transition:all .2s;outline:none;text-align:center}
+.mode-btn.on{border-color:rgba(245,158,11,0.35);background:rgba(245,158,11,0.06);color:var(--acc)}
+.toolbar{padding:8px 22px;border-bottom:1px solid rgba(255,255,255,0.02);max-width:900px;margin:0 auto;display:flex;gap:5px;flex-wrap:wrap;align-items:center}
+.cl{font:600 9px var(--m);color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-right:3px}
+.cb{display:flex;align-items:center;gap:6px;padding:7px 13px;border-radius:8px;border:1px solid var(--bdr);background:rgba(255,255,255,0.012);color:var(--dim);font:600 11px var(--f);cursor:pointer;white-space:nowrap;transition:all .2s;outline:none}
+.cb:hover{border-color:rgba(245,158,11,0.15);color:var(--mut)}.cb.on{border-color:rgba(245,158,11,0.28);background:rgba(245,158,11,0.07);color:var(--acc)}
+.tg{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:7px;border:1px solid var(--bdr);background:rgba(255,255,255,0.015);color:var(--dim);font:600 10px var(--f);cursor:pointer;transition:all .2s;outline:none;user-select:none;-webkit-user-select:none}
+.tg:hover{border-color:rgba(255,255,255,0.1)}.tg.on{border-color:rgba(240,107,107,0.3);background:rgba(240,107,107,0.06);color:var(--org)}
+.tg-dot{width:7px;height:7px;border-radius:50%;border:1.5px solid var(--dim);transition:all .2s;flex-shrink:0}.tg.on .tg-dot{background:var(--org);border-color:var(--org)}
+.cnt{max-width:740px;width:100%;margin:0 auto;padding:16px 22px 80px;flex:1}
+.pc{border-radius:14px;padding:24px;margin-bottom:16px;transition:all .3s;animation:fadeUp .3s ease;background:var(--card);border:1px solid var(--bdr)}.pc.ok{background:var(--gb);border-color:var(--gbd)}.pc.no{background:var(--rb);border-color:var(--rbd)}
+.pc-top{display:flex;align-items:center;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.bg{font:700 10px var(--m);padding:4px 8px;border-radius:6px;letter-spacing:.05em}.bg-q{background:var(--pg);color:#9d8df5}.bg-ok{background:rgba(45,212,160,0.1);color:var(--grn)}.bg-no{background:rgba(240,107,107,0.1);color:var(--red)}.bg-ty{background:rgba(245,158,11,0.08);color:var(--acc);font-size:9px;letter-spacing:.08em}.bg-hard{background:rgba(240,107,107,0.08);color:var(--org);font-size:9px}
+.q-txt{color:var(--txt);font:400 15px/1.8 var(--s);margin-bottom:2px}.q-txt b{font-weight:700;color:#fff}
+.ir{display:flex;gap:6px;margin:12px 0 0;flex-wrap:wrap}
+.ib{flex:1;min-width:110px;padding:9px 12px;border-radius:8px;font:400 11px/1.7 var(--m)}.ib-g{background:rgba(124,107,240,0.05);border:1px solid rgba(124,107,240,0.09);color:var(--pl)}.ib-f{background:rgba(32,211,232,0.04);border:1px solid rgba(32,211,232,0.08);color:var(--cyn)}.ib-w{background:rgba(234,179,8,0.04);border:1px solid rgba(234,179,8,0.08);color:var(--ylw)}.ib-l{font:700 8px var(--m);letter-spacing:.12em;text-transform:uppercase;margin-bottom:3px;display:block;opacity:.5}
+.aa{margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;align-items:stretch}.aw{flex:1;min-width:160px;position:relative}
+.ai{width:100%;padding:12px 14px;padding-right:50px;background:rgba(255,255,255,0.035);border:1.5px solid rgba(255,255,255,0.09);border-radius:10px;color:var(--txt);font:500 15px var(--m);outline:none;transition:all .25s}.ai:focus{border-color:rgba(245,158,11,0.45)}.ai.v-ok{border-color:var(--grn);background:rgba(45,212,160,0.05)}.ai.v-no{border-color:var(--red);background:rgba(240,107,107,0.05);animation:shake .35s}.ai::placeholder{color:rgba(255,255,255,0.12);font-weight:400;font-size:12px}
+.au{position:absolute;right:12px;top:50%;transform:translateY(-50%);font:500 11px var(--m);color:var(--dim);pointer-events:none}
+.ab{padding:12px 22px;border-radius:10px;border:1.5px solid rgba(245,158,11,0.25);background:rgba(245,158,11,0.08);color:var(--acc);font:700 13px var(--f);cursor:pointer;transition:all .2s;white-space:nowrap}.ab:hover{background:rgba(245,158,11,0.16)}
+.fb{margin-top:5px;font:600 12px var(--m)}.fb-ok{color:var(--grn)}.fb-no{color:var(--red)}.fb-v{font:400 11px var(--m);color:var(--dim);margin-top:2px}
+.btn-row{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap}
+.btn-sh{padding:7px 14px;border-radius:7px;border:1px solid var(--bdr);background:rgba(255,255,255,0.025);color:var(--mut);font:500 11px var(--f);cursor:pointer;transition:all .2s}.btn-sh:hover{color:var(--txt)}
+.btn-nx{padding:8px 20px;border-radius:8px;border:1.5px solid rgba(245,158,11,0.25);background:rgba(245,158,11,0.08);color:var(--acc);font:700 12px var(--f);cursor:pointer;transition:all .2s}.btn-nx:hover{background:rgba(245,158,11,0.15)}
+.sol{margin-top:14px;padding:16px;border-radius:10px;animation:fadeUp .25s;border:1px solid rgba(245,158,11,0.1);background:rgba(245,158,11,0.02)}.sol-tag{font:700 9px var(--m);letter-spacing:.12em;color:var(--acc);margin-bottom:8px;text-transform:uppercase}
+.stp{font:400 12px/2 var(--m);color:var(--pl)}.stp .lb{color:rgba(180,165,250,0.4);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}.stp .ans{color:var(--grn);font-weight:700;font-size:13px}
+.sol-note{margin-top:10px;padding:10px 12px;background:rgba(255,255,255,0.015);border:1px solid var(--bdr);border-radius:8px;font:400 12px/1.7 var(--f);color:var(--mut)}
+.opt{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:11px 14px;cursor:pointer;color:#b0bec5;font:400 13px/1.5 var(--f);transition:all .2s;outline:none;width:100%;text-align:left;margin-bottom:6px}.opt:not(.done):hover{background:rgba(245,158,11,0.06);border-color:rgba(245,158,11,0.25)}.opt.done{cursor:default}.opt.c-ok{background:rgba(45,212,160,0.08);border-color:rgba(45,212,160,0.3);color:var(--grn)}.opt.c-no{background:rgba(240,107,107,0.08);border-color:rgba(240,107,107,0.3);color:var(--red)}
+.opt-ltr{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font:700 11px var(--m);flex-shrink:0;background:rgba(255,255,255,0.04);color:var(--dim)}.opt.c-ok .opt-ltr{background:rgba(45,212,160,0.15);color:var(--grn)}.opt.c-no .opt-ltr{background:rgba(240,107,107,0.15);color:var(--red)}
+.opts{display:flex;flex-direction:column;margin-top:14px}
+textarea.v-ta{width:100%;padding:12px;background:rgba(255,255,255,0.035);border:1.5px solid rgba(255,255,255,0.09);border-radius:10px;color:var(--txt);font:400 14px var(--f);outline:none;resize:vertical;min-height:70px;line-height:1.6}
+.cs-sec{font:700 11px var(--m);letter-spacing:.1em;color:var(--acc);text-transform:uppercase;margin:20px 0 10px;padding-bottom:6px;border-bottom:1px solid rgba(245,158,11,0.15)}
+.cs-card{border-radius:10px;padding:16px;margin-bottom:10px;background:var(--card);border:1px solid var(--bdr);animation:fadeUp .3s}
+.cs-title{font:700 13px var(--f);color:var(--txt);margin-bottom:6px}
+.cs-fm{background:rgba(245,158,11,0.05);border:1px solid rgba(245,158,11,0.1);border-radius:8px;padding:10px 14px;font:500 12.5px/1.8 var(--m);color:var(--acc);margin-bottom:8px}
+.cs-lb{font:700 8px var(--m);letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin:8px 0 4px}
+.cs-vr{font:400 11.5px/1.8 var(--m);color:var(--mut);margin-bottom:6px}.cs-vr b{color:var(--cyn);font-weight:600}
+.cs-ex{background:rgba(45,212,160,0.03);border:1px solid rgba(45,212,160,0.1);border-radius:8px;padding:10px 12px;font:400 12px/1.9 var(--m);color:var(--grn)}.cs-ex .lb{color:rgba(45,212,160,0.4);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.lesson-wrap{max-width:700px;margin:0 auto}
+.lesson-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:20px;padding:12px 16px;background:var(--card);border:1px solid var(--bdr);border-radius:10px;flex-wrap:wrap}
+.lesson-prog{font:700 11px var(--m);color:var(--dim);letter-spacing:.08em}
+.prog-bar{height:4px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden;margin-top:6px;width:200px}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--acc),var(--ylw));transition:width .4s ease}
+.lesson-card{background:var(--card);border:1px solid var(--bdr);border-radius:14px;padding:28px;animation:fadeUp .3s}
+.lesson-type{font:700 9px var(--m);letter-spacing:.15em;color:var(--acc);text-transform:uppercase;margin-bottom:14px}
+.lesson-body{font:400 15px/1.9 var(--s);color:var(--mut);margin-bottom:14px}.lesson-body b{color:#fff;font-weight:600}.lesson-body em{color:var(--cyn);font-style:italic;font-weight:500}
+.lesson-def{background:rgba(124,107,240,0.05);border-left:3px solid var(--prp);padding:14px 18px;margin:12px 0;border-radius:6px}
+.lesson-def-t{font:700 10px var(--m);letter-spacing:.1em;color:var(--prp);text-transform:uppercase;margin-bottom:4px}
+.lesson-def-b{font:400 14px/1.7 var(--s);color:var(--pl)}
+.lesson-eq{background:rgba(32,211,232,0.04);border:1px solid rgba(32,211,232,0.1);border-radius:8px;padding:14px 18px;margin:12px 0;font:500 14px/1.9 var(--m);color:var(--cyn);text-align:center}
+.lesson-checkpoint{background:rgba(245,158,11,0.04);border:1.5px solid rgba(245,158,11,0.2);border-radius:12px;padding:20px 22px;margin:18px 0}
+.lesson-cp-t{font:700 10px var(--m);letter-spacing:.12em;color:var(--acc);text-transform:uppercase;margin-bottom:10px}
+.lesson-cp-q{font:400 15px/1.7 var(--s);color:var(--txt);margin-bottom:14px}.lesson-cp-q b{color:#fff}
+.hint-box{margin-top:10px;padding:12px 14px;background:rgba(234,179,8,0.05);border:1px solid rgba(234,179,8,0.2);border-radius:8px;font:400 13px/1.7 var(--f);color:var(--ylw);animation:fadeUp .3s}
+.nav-btn{padding:9px 18px;border-radius:9px;border:1.5px solid var(--bdr);background:rgba(255,255,255,0.025);color:var(--mut);font:600 12px var(--f);cursor:pointer;transition:all .2s}
+.nav-btn:hover:not(:disabled){background:rgba(255,255,255,0.05);color:var(--txt)}.nav-btn:disabled{opacity:.3;cursor:default}
+.nav-btn.primary{border-color:rgba(245,158,11,0.3);background:rgba(245,158,11,0.08);color:var(--acc)}
+.topic-picker{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:520px;margin:0 auto}@media(max-width:500px){.topic-picker{grid-template-columns:1fr}}
+.topic-btn{padding:20px 14px;border-radius:12px;border:1.5px solid var(--bdr);background:rgba(255,255,255,0.02);color:var(--txt);font:400 15px var(--s);cursor:pointer;transition:all .2s;text-align:left}.topic-btn:hover{border-color:rgba(245,158,11,0.3);background:rgba(245,158,11,0.05)}
+.topic-sub{font:400 11px var(--f);color:var(--dim);margin-top:4px}
+.quiz-score{font:700 32px var(--m);color:var(--acc);margin:12px 0}.quiz-score.qok{color:var(--grn)}
+/* === EXAM MODE === */
+.exam-landing{text-align:center;padding:30px 20px;animation:fadeUp .3s}
+.exam-title{font:400 28px/1.3 var(--s);color:var(--txt);margin-bottom:8px}
+.exam-title i{color:var(--acc);font-style:italic}
+.exam-sub{font:400 14px/1.6 var(--f);color:var(--mut);margin-bottom:24px;max-width:480px;margin-left:auto;margin-right:auto}
+.exam-section-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:560px;margin:0 auto 20px}
+@media(max-width:520px){.exam-section-grid{grid-template-columns:1fr}}
+.exam-section-btn{padding:18px 16px;border-radius:12px;border:1.5px solid var(--bdr);background:rgba(255,255,255,0.02);color:var(--txt);cursor:pointer;transition:all .2s;text-align:left;font-family:var(--f)}
+.exam-section-btn:hover{border-color:rgba(245,158,11,0.35);background:rgba(245,158,11,0.05);transform:translateY(-1px)}
+.exam-section-icon{font-size:22px;margin-bottom:4px;display:block}
+.exam-section-name{font:700 14px var(--f);color:var(--txt);margin-bottom:2px}
+.exam-section-meta{font:500 10px var(--m);color:var(--dim);letter-spacing:.08em;text-transform:uppercase}
+.exam-best{font:700 11px var(--m);color:var(--grn);margin-top:6px}
+.exam-config{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
+.exam-config-card{padding:14px 18px;border-radius:10px;border:1.5px solid var(--bdr);background:rgba(255,255,255,0.02);min-width:120px}
+.exam-config-l{font:700 9px var(--m);color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+.exam-config-v{font:700 18px var(--m);color:var(--txt)}
+.exam-toggle{display:inline-flex;gap:4px;background:rgba(255,255,255,0.03);border:1px solid var(--bdr);border-radius:8px;padding:3px}
+.exam-tog-btn{padding:6px 12px;border-radius:6px;border:none;background:transparent;color:var(--dim);font:600 11px var(--f);cursor:pointer;transition:all .15s}
+.exam-tog-btn.on{background:rgba(245,158,11,0.15);color:var(--acc)}
+.exam-start-btn{padding:14px 36px;border-radius:10px;border:1.5px solid rgba(245,158,11,0.4);background:rgba(245,158,11,0.12);color:var(--acc);font:700 14px var(--f);cursor:pointer;transition:all .2s;margin-top:10px}
+.exam-start-btn:hover{background:rgba(245,158,11,0.22)}
+.exam-bar{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;background:var(--card);border:1px solid var(--bdr);border-radius:12px;margin-bottom:16px;flex-wrap:wrap;gap:10px}
+.exam-q-counter{font:700 14px var(--m);color:var(--txt)}
+.exam-q-counter span{color:var(--acc)}
+.exam-progress-bar{flex:1;min-width:120px;height:5px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;margin:0 16px}
+.exam-progress-fill{height:100%;background:linear-gradient(90deg,var(--acc),var(--ylw));transition:width .3s ease}
+.exam-timer{font:700 14px var(--m);color:var(--cyn);display:flex;align-items:center;gap:6px}
+.exam-timer.warn{color:var(--ylw)}
+.exam-timer.danger{color:var(--red);animation:pulse 1s infinite}
+.exam-mini-stats{display:flex;gap:14px;font:600 11px var(--m)}
+.exam-mini-stats span{color:var(--dim)}
+.exam-mini-stats .ok{color:var(--grn)}
+.exam-mini-stats .no{color:var(--red)}
+.exam-quit{padding:5px 11px;border-radius:6px;border:1px solid rgba(240,107,107,0.2);background:rgba(240,107,107,0.05);color:var(--red);font:600 10px var(--f);cursor:pointer}
+.exam-quit:hover{background:rgba(240,107,107,0.12)}
+.exam-results{text-align:center;padding:30px 20px;animation:fadeUp .4s}
+.exam-results-score{font:700 56px var(--m);margin:12px 0}
+.exam-results-score.gold{color:var(--ylw)}.exam-results-score.green{color:var(--grn)}.exam-results-score.orange{color:var(--org)}.exam-results-score.red{color:var(--red)}
+.exam-results-pct{font:400 22px var(--s);color:var(--mut);margin-bottom:4px}
+.exam-results-grade{font:700 18px var(--m);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
+.exam-results-meta{display:flex;gap:14px;justify-content:center;margin:20px 0;flex-wrap:wrap}
+.exam-meta-card{padding:10px 16px;border-radius:10px;background:rgba(255,255,255,0.025);border:1px solid var(--bdr);min-width:100px}
+.exam-meta-l{font:700 9px var(--m);color:var(--dim);letter-spacing:.1em;text-transform:uppercase}
+.exam-meta-v{font:700 18px var(--m);color:var(--txt);margin-top:4px}
+.exam-review-list{margin-top:20px;text-align:left}
+.exam-review-item{padding:12px 14px;background:rgba(255,255,255,0.018);border:1px solid var(--bdr);border-radius:10px;margin-bottom:6px;display:flex;align-items:flex-start;gap:10px;cursor:pointer;transition:all .2s}
+.exam-review-item:hover{background:rgba(255,255,255,0.04)}
+.exam-review-item.ok-row{border-left:3px solid var(--grn)}
+.exam-review-item.no-row{border-left:3px solid var(--red)}
+.exam-review-num{font:700 10px var(--m);color:var(--dim);min-width:24px}
+.exam-review-q{font:400 12px/1.6 var(--f);color:var(--mut);flex:1}
+.exam-review-status{font:700 10px var(--m);text-transform:uppercase;letter-spacing:.08em}
+.exam-review-status.ok{color:var(--grn)}
+.exam-review-status.no{color:var(--red)}
+/* === GRAPH SVG === */
+.graph-svg{display:block;margin:14px auto;max-width:100%;height:auto;background:rgba(255,255,255,0.02);border:1px solid var(--bdr);border-radius:8px}
+.graph-svg .grid{stroke:rgba(255,255,255,0.06);stroke-width:1}
+.graph-svg .axis{stroke:rgba(255,255,255,0.35);stroke-width:1.5}
+.graph-svg .curve{stroke:var(--acc);stroke-width:2.5;fill:none}
+.graph-svg .marker{fill:var(--cyn)}
+.graph-svg .axis-label{font:600 11px var(--m);fill:var(--mut)}
+.graph-svg .tick-label{font:500 10px var(--m);fill:var(--dim)}
+.graph-svg .title-text{font:700 11px var(--m);fill:var(--txt);letter-spacing:.06em;text-transform:uppercase}
+@media(max-width:600px){.hdr{padding:14px 12px 10px}.modes{padding:8px 12px}.toolbar{padding:6px 12px}.cnt{padding:12px 12px 70px}.pc{padding:18px 14px}.aa{flex-direction:column}.lesson-card{padding:20px 16px}.ir{flex-direction:column}.exam-bar{padding:10px 12px}.exam-progress-bar{margin:0 8px}}
+</style>
+</head>
+<body>
+<div class="hdr"><div class="hdr-in">
+<div><div class="hdr-lab">Module 1 · Physics Study Tool</div><h1 class="hdr-t"><i>Motion</i> in One Dimension</h1></div>
+<div class="hdr-r"><div class="stats">
+<div class="stat-box"><div class="stat-n" id="sC">0</div><div class="stat-l">Correct</div></div>
+<div class="stat-box"><div class="stat-n" id="sA">0</div><div class="stat-l">Attempted</div></div>
+<div class="stat-box"><div class="stat-n pct-n" id="sP">—</div><div class="stat-l">Accuracy</div></div>
+<div class="stat-box"><div class="stat-n streak-n" id="sS"><span id="fire">🔥</span> 0</div><div class="stat-l">Streak</div></div>
+</div><button class="btn-r" onclick="resetStats()">Reset</button></div>
+</div></div>
+<div id="modeBar" class="modes"></div>
+<div id="ctrlBar" class="toolbar"></div>
+<div class="cnt" id="main"></div>
+<script>
+// ========== CORE HELPERS ==========
+function R(a,b,d){d=d||0;const f=Math.pow(10,d);return Math.round((Math.random()*(b-a)+a)*f)/f}
+function rd(v,d){return Math.round(v*Math.pow(10,d))/Math.pow(10,d)}
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
+function fmtTime(s){const m=Math.floor(s/60),sec=s%60;return m+":"+(sec<10?"0":"")+sec}
+
+// ========== VOCAB ==========
+const VOCAB=[
+{t:"displacement",d:"the change in an object's position; a vector quantity that includes direction"},
+{t:"distance",d:"the total path length traveled by an object; a scalar quantity with no direction"},
+{t:"vector quantity",d:"a physical measurement that contains directional information (e.g. displacement, velocity, acceleration)"},
+{t:"scalar quantity",d:"a physical measurement that does not contain directional information (e.g. distance, speed, time)"},
+{t:"velocity",d:"the time rate of change of an object's position; v = Δx/Δt; a vector quantity (m/s)"},
+{t:"speed",d:"the time rate of change of the distance traveled by an object; speed = Δd/Δt; a scalar quantity (m/s)"},
+{t:"instantaneous velocity",d:"the velocity of an object at one moment in time"},
+{t:"average velocity",d:"the velocity of an object over an extended period of time, calculated as total displacement divided by total time"},
+{t:"acceleration",d:"the time rate of change of an object's velocity; a = Δv/Δt; a vector quantity (m/s²)"},
+{t:"position",d:"where an object is located; the answer to 'where is the object?'"},
+{t:"slope of position vs time",d:"represents the velocity of the object; rise over run gives Δx/Δt = v"},
+{t:"slope of velocity vs time",d:"represents the acceleration of the object; rise over run gives Δv/Δt = a"},
+{t:"area under velocity vs time",d:"represents the displacement of the object"},
+{t:"relative velocity",d:"velocity depends on the observer; calculated as v(observed) − v(observer)"},
+{t:"positive vs negative direction",d:"a mathematical convention used to denote direction in one-dimensional motion; the choice is arbitrary but must stay consistent"},
+{t:"frame of reference",d:"the observer or coordinate system from which motion is measured; motion is relative to it"}
+];
+// ========== POOLS OF RANDOMIZATION DATA ==========
+const SUBJECTS_DD=[
+{n:"An ant",unit:"cm",scale:[5,20]},{n:"A beetle",unit:"cm",scale:[3,15]},
+{n:"A child",unit:"m",scale:[3,9]},{n:"A dog",unit:"m",scale:[5,18]},
+{n:"A skateboarder",unit:"m",scale:[8,25]},{n:"A jogger",unit:"m",scale:[20,80]},
+{n:"A cyclist",unit:"m",scale:[50,200]},{n:"A delivery truck",unit:"km",scale:[10,40]},
+{n:"A mail carrier",unit:"m",scale:[150,400]},{n:"A swimmer",unit:"m",scale:[15,50]},
+{n:"A hiker",unit:"m",scale:[30,120]},{n:"A toy car",unit:"cm",scale:[20,90]},
+{n:"A robot",unit:"m",scale:[4,18]},{n:"A turtle",unit:"cm",scale:[10,40]}
+];
+const SUBJECTS_VEL=[
+{n:"a cyclist",vrb:"pedals",dist:[40,400]},{n:"a runner",vrb:"runs",dist:[30,300]},
+{n:"a car",vrb:"drives",dist:[100,800]},{n:"a skateboarder",vrb:"rolls",dist:[20,200]},
+{n:"a jogger",vrb:"jogs",dist:[40,300]},{n:"a sprinter",vrb:"sprints",dist:[40,200]},
+{n:"a horse",vrb:"gallops",dist:[80,500]},{n:"a swimmer",vrb:"swims",dist:[25,150]},
+{n:"a boat",vrb:"sails",dist:[200,2000]},{n:"a paper airplane",vrb:"glides",dist:[10,80]},
+{n:"a wind-up car",vrb:"rolls",dist:[2,15]},{n:"a kayaker",vrb:"paddles",dist:[60,400]}
+];
+const DIRECTIONS=["north","south","east","west"];
+const DIR_PAIRS=[["east","west"],["north","south"],["forward","backward"],["right","left"],["up the street","down the street"],["toward the wall","away from the wall"]];
+const SUBJECTS_ACC=[
+{n:"a sprinter"},{n:"a cheetah"},{n:"a motorcycle"},{n:"a sports car"},
+{n:"a bicycle"},{n:"a skateboard"},{n:"a roller coaster car"},{n:"a horse"},
+{n:"a drag racer"},{n:"a scooter"},{n:"a go-kart"},{n:"a train"}
+];
+
+// ========== QUESTION GENERATOR POOL ==========
+// Each generator returns: {q, gv, fm, fi, u, a, tol, st, nt, ref}
+// Tons of variation: scenarios, subjects, units, directions, what's solved for.
+
+const G={
+// ============================================================
+// 📏 DISTANCE & DISPLACEMENT (~15 templates, each highly varied)
+// ============================================================
+dd_basic(){
+  const s=pick(SUBJECTS_DD);
+  const d1=R(s.scale[0],s.scale[1],1),d2=R(s.scale[0]*0.3,d1*0.85,1);
+  const [pos,neg]=pick(DIR_PAIRS);
+  const totalDist=rd(d1+d2,1),disp=rd(d1-d2,1);
+  const ask=pick(["disp","dist"]);
+  if(ask==="disp")return{ref:"Ex 1.1",q:`${s.n} starts at its starting point and travels <b>${d1} ${s.unit}</b> ${pos}. It turns around and travels <b>${d2} ${s.unit}</b> ${neg}. What is the <b>total displacement</b>? (${pos} = positive)`,gv:`Leg 1: +${d1} ${s.unit}\nLeg 2: −${d2} ${s.unit}`,fm:`Δx = sum of signed legs`,fi:`Δx = ? ${s.unit}`,u:s.unit,a:disp,tol:Math.max(Math.abs(disp)*0.01,0.05),
+    st:[`<span class='lb'>SIGNED LEGS</span> +${d1} and −${d2}`,`<span class='lb'>SUM</span> ${d1} + (−${d2}) = ${disp} ${s.unit}`,`<span class='lb'>ANSWER</span> <span class='ans'>${disp} ${s.unit} (${pos})</span>`],
+    nt:`Displacement keeps signs (vector). Distance would have been ${totalDist} ${s.unit}.`};
+  return{ref:"Ex 1.1",q:`${s.n} travels <b>${d1} ${s.unit}</b> ${pos}, then <b>${d2} ${s.unit}</b> ${neg}. What is the <b>total distance</b> traveled?`,gv:`Leg 1: ${d1} ${s.unit}\nLeg 2: ${d2} ${s.unit}`,fm:`Total distance = |d₁| + |d₂|`,fi:`Distance = ? ${s.unit}`,u:s.unit,a:totalDist,tol:Math.max(totalDist*0.01,0.05),
+    st:[`<span class='lb'>DISTANCE</span> always positive — just add magnitudes`,`<span class='lb'>SUM</span> ${d1} + ${d2} = ${totalDist} ${s.unit}`,`<span class='lb'>ANSWER</span> <span class='ans'>${totalDist} ${s.unit}</span>`],
+    nt:`Distance is a SCALAR. Displacement would have been ${disp} ${s.unit}.`};
+},
+dd_threeleg(){
+  const [pos,neg]=pick(DIR_PAIRS);
+  const d1=R(5,18,1),d2=R(3,12,1),d3=R(2,10,1);
+  const pattern=pick(["pnp","ppn","npn"]);
+  let signs,desc;
+  if(pattern==="pnp"){signs=[1,-1,1];desc=`<b>${d1} m ${pos}</b>, then <b>${d2} m ${neg}</b>, then <b>${d3} m ${pos}</b>`}
+  else if(pattern==="ppn"){signs=[1,1,-1];desc=`<b>${d1} m ${pos}</b>, then <b>${d2} m ${pos}</b>, then <b>${d3} m ${neg}</b>`}
+  else{signs=[-1,1,-1];desc=`<b>${d1} m ${neg}</b>, then <b>${d2} m ${pos}</b>, then <b>${d3} m ${neg}</b>`}
+  const sub=pick(["A jogger","A dog","A hiker","A robot","A toy car"]);
+  const disp=rd(signs[0]*d1+signs[1]*d2+signs[2]*d3,1),tot=rd(d1+d2+d3,1);
+  return{ref:"Distance vs Displacement",q:`${sub} runs ${desc}. What is the <b>total displacement</b>? (${pos} = positive)`,gv:`Leg 1: ${signs[0]>0?"+":"−"}${d1} m\nLeg 2: ${signs[1]>0?"+":"−"}${d2} m\nLeg 3: ${signs[2]>0?"+":"−"}${d3} m`,fm:`Δx = sum of signed legs`,fi:`Δx = ? m`,u:"m",a:disp,tol:Math.max(Math.abs(disp)*0.01,0.05),
+  st:[`<span class='lb'>SIGNED</span> ${signs[0]>0?"+":"−"}${d1}, ${signs[1]>0?"+":"−"}${d2}, ${signs[2]>0?"+":"−"}${d3}`,`<span class='lb'>SUM</span> ${(signs[0]*d1).toFixed(1)} + ${(signs[1]*d2).toFixed(1)} + ${(signs[2]*d3).toFixed(1)} = ${disp} m`,`<span class='lb'>ANSWER</span> <span class='ans'>${disp} m (distance would be ${tot} m)</span>`],nt:`3 legs: sign of each matters. Direction back cancels direction forward.`}
+},
+dd_fourleg(){
+  const d=[R(2,10,1),R(2,10,1),R(2,10,1),R(2,10,1)];
+  const signs=[pick([1,-1]),pick([1,-1]),pick([1,-1]),pick([1,-1])];
+  // ensure not trivially zero
+  if(signs.every(s=>s>0)||signs.every(s=>s<0))signs[1]*=-1;
+  const disp=rd(d.reduce((s,v,i)=>s+signs[i]*v,0),1),tot=rd(d.reduce((s,v)=>s+v,0),1);
+  const sub=pick(["An ant","A beetle","A spider","A toy car"]);
+  const legs=d.map((v,i)=>`${signs[i]>0?"+":"−"}${v}`).join(", ");
+  return{ref:"Multi-leg trip",q:`${sub} takes four steps with signed displacements: <b>${legs}</b> (in cm). What is the <b>total displacement</b>?`,gv:`4 legs (signed): ${legs} cm`,fm:`Δx = sum of signed legs`,fi:`Δx = ? cm`,u:"cm",a:disp,tol:Math.max(Math.abs(disp)*0.01,0.05),
+  st:[`<span class='lb'>SUM</span> ${legs} = ${disp} cm`,`<span class='lb'>DISTANCE</span> would be ${tot} cm (always positive sum)`,`<span class='lb'>ANSWER</span> <span class='ans'>${disp} cm</span>`],nt:`Distance and displacement differ whenever direction flips at least once.`}
+},
+dd_compare(){
+  const d1=R(8,30,1),d2=R(2,d1*0.9,1);
+  const dist=rd(d1+d2,1),disp=Math.abs(rd(d1-d2,1));
+  const diff=rd(dist-disp,1);
+  return{ref:"Distance vs Displacement",q:`An object walks <b>${d1} m</b> forward, then <b>${d2} m</b> backward. By how much does the <b>distance</b> exceed the <b>magnitude of displacement</b>?`,gv:`Distance = ${d1} + ${d2} = ${dist} m\n|Displacement| = ${d1} − ${d2} = ${disp} m`,fm:`Difference = distance − |displacement|`,fi:`Difference = ? m`,u:"m",a:diff,tol:Math.max(diff*0.02,0.05),
+  st:[`<span class='lb'>DISTANCE</span> ${d1} + ${d2} = ${dist} m`,`<span class='lb'>|DISPLACEMENT|</span> |${d1} − ${d2}| = ${disp} m`,`<span class='lb'>DIFFERENCE</span> ${dist} − ${disp} = ${diff} m`,`<span class='lb'>ANSWER</span> <span class='ans'>${diff} m</span>`],nt:`The "backward" leg gets counted twice in distance (once forward + once back) but cancels in displacement. So difference = 2 × backward-leg.`}
+},
+dd_find_leg(){
+  const d1=R(8,25,1),disp=R(2,d1-3,1);
+  const d2=rd(d1-disp,1);
+  const [pos,neg]=pick(DIR_PAIRS);
+  const sub=pick(["A jogger","A dog","A turtle","A boy","A girl"]);
+  return{ref:"Reverse-engineer leg",q:`${sub} travels <b>${d1} m ${pos}</b>, then turns around and walks <b>${neg}</b>. If the final displacement is <b>${disp} m ${pos}</b>, how far did ${sub.toLowerCase().replace(/^a /,"the ")} walk in the second leg?`,gv:`Leg 1: +${d1} m\nFinal Δx: +${disp} m`,fm:`Δx = leg1 + leg2\nleg2 = Δx − leg1`,fi:`|leg2| = ? m`,u:"m",a:d2,tol:Math.max(d2*0.02,0.05),
+  st:[`<span class='lb'>SETUP</span> Δx = leg1 + leg2`,`<span class='lb'>SOLVE</span> ${disp} = ${d1} + leg2 → leg2 = ${disp}−${d1} = ${rd(disp-d1,1)} m`,`<span class='lb'>MAGNITUDE</span> |leg2| = ${d2} m`,`<span class='lb'>ANSWER</span> <span class='ans'>${d2} m</span>`],nt:`Sign tells direction; magnitude tells distance. The second leg was ${d2} m in the negative direction.`}
+},
+dd_signflip(){
+  // tests sign convention - same problem, two definitions
+  const d1=R(5,20,1),d2=R(3,15,1);
+  const disp=rd(d1-d2,1);
+  const sub=pick(["A car","A bus","A truck"]);
+  const flip=pick([true,false]);
+  if(flip){
+    return{ref:"Sign Convention",q:`${sub} drives <b>${d1} km east</b>, then <b>${d2} km west</b>. If you define <b>WEST as positive</b>, what is the displacement?`,gv:`East = negative\nWest = positive\nLeg 1: −${d1} km\nLeg 2: +${d2} km`,fm:`Δx = sum of signed legs`,fi:`Δx = ? km`,u:"km",a:-disp,tol:Math.max(Math.abs(disp)*0.02,0.05),
+    st:[`<span class='lb'>YOUR CONVENTION</span> West = +`,`<span class='lb'>SIGNED LEGS</span> −${d1} + (+${d2}) = ${-disp} km`,`<span class='lb'>ANSWER</span> <span class='ans'>${-disp} km</span>`],nt:`Same physical situation, just flipped sign convention. If you used east=+, you'd get ${disp} km. Both are correct as long as you state direction.`}
+  } else {
+    return{ref:"Sign Convention",q:`${sub} drives <b>${d1} km east</b>, then <b>${d2} km west</b>. If you define <b>EAST as positive</b>, what is the displacement?`,gv:`East = positive\nWest = negative\nLeg 1: +${d1} km\nLeg 2: −${d2} km`,fm:`Δx = sum of signed legs`,fi:`Δx = ? km`,u:"km",a:disp,tol:Math.max(Math.abs(disp)*0.02,0.05),
+    st:[`<span class='lb'>SIGNED LEGS</span> +${d1} + (−${d2}) = ${disp} km`,`<span class='lb'>ANSWER</span> <span class='ans'>${disp} km</span>`],nt:`If you used west=+, you'd get ${-disp} km. Same physical answer, opposite sign convention.`}
+  }
+},
+dd_passed_start(){
+  // Object overshoots its start (Δx > original forward leg)
+  const d1=R(4,12,1),d2=R(d1+1,d1+8,1);
+  const disp=rd(d1-d2,1); // negative
+  const sub=pick(["A jogger","A toy car","A boy"]);
+  const [pos,neg]=pick(DIR_PAIRS);
+  return{ref:"Overshoot",q:`${sub} runs <b>${d1} m ${pos}</b>, then turns and runs <b>${d2} m ${neg}</b>. With ${pos} as positive, what is the final displacement?`,gv:`Leg 1: +${d1} m\nLeg 2: −${d2} m`,fm:`Δx = leg1 + leg2`,fi:`Δx = ? m`,u:"m",a:disp,tol:Math.max(Math.abs(disp)*0.02,0.05),
+  st:[`<span class='lb'>SUM</span> +${d1} + (−${d2}) = ${disp} m`,`<span class='lb'>INTERPRET</span> Negative → they overshot the start by ${Math.abs(disp)} m in the ${neg} direction`,`<span class='lb'>ANSWER</span> <span class='ans'>${disp} m</span>`],nt:`The negative sign tells us they didn't just return — they kept going past the start!`}
+},
+dd_units_convert(){
+  // Unit conversion challenge
+  const choice=pick(["km_to_m","cm_to_m","mi_to_km"]);
+  if(choice==="km_to_m"){
+    const km=R(1.5,8.0,2),m=rd(km*1000,0);
+    return{ref:"Unit Conversion",q:`A car drives <b>${km} km</b> east, then turns around and drives <b>${rd(km*500,0)} m</b> west. What is the <b>displacement</b> in meters? (east = +)`,gv:`Leg 1: +${km} km = +${m} m\nLeg 2: −${rd(km*500,0)} m`,fm:`Convert km → m, then sum`,fi:`Δx = ? m`,u:"m",a:rd(m-km*500,0),tol:Math.max(Math.abs(m-km*500)*0.02,1),
+    st:[`<span class='lb'>CONVERT</span> ${km} km × 1000 = ${m} m`,`<span class='lb'>SUM</span> +${m} + (−${rd(km*500,0)}) = ${rd(m-km*500,0)} m`,`<span class='lb'>ANSWER</span> <span class='ans'>${rd(m-km*500,0)} m east</span>`],nt:`Always check that units match before adding/subtracting!`}
+  } else if(choice==="cm_to_m"){
+    const cm1=R(120,400,0),m2=R(0.5,2.5,2);
+    const cm2=rd(m2*100,0);
+    const total_cm=rd(cm1+cm2,0);
+    return{ref:"Unit Conversion",q:`An ant travels <b>${cm1} cm</b> forward, then <b>${m2} m</b> backward. What is the <b>total distance</b> in cm?`,gv:`Leg 1: ${cm1} cm\nLeg 2: ${m2} m = ${cm2} cm`,fm:`Convert m → cm: × 100`,fi:`Distance = ? cm`,u:"cm",a:total_cm,tol:Math.max(total_cm*0.01,0.5),
+    st:[`<span class='lb'>CONVERT</span> ${m2} m × 100 = ${cm2} cm`,`<span class='lb'>SUM</span> ${cm1} + ${cm2} = ${total_cm} cm`,`<span class='lb'>ANSWER</span> <span class='ans'>${total_cm} cm</span>`],nt:`Distance just adds magnitudes — direction doesn't matter for distance.`}
+  } else {
+    const mi=R(2,15,1),km=rd(mi*1.609,2);
+    return{ref:"Unit Conversion",q:`A truck travels <b>${mi} miles</b>. What is this distance in kilometers? (1 mi ≈ 1.609 km)`,gv:`Distance = ${mi} mi\n1 mi = 1.609 km`,fm:`km = mi × 1.609`,fi:`Distance = ? km`,u:"km",a:km,tol:Math.max(km*0.02,0.05),
+    st:[`<span class='lb'>FORMULA</span> km = mi × 1.609`,`<span class='lb'>SOLVE</span> ${mi} × 1.609 = ${km}`,`<span class='lb'>ANSWER</span> <span class='ans'>${km} km</span>`],nt:`The textbook often uses km — knowing this conversion helps with US-context word problems.`}
+  }
+},
+dd_truck_route(){
+  // Practice Problem #1 — truck makes delivery and breaks down on return
+  const d1=R(20,60,1),d2=R(5,d1*0.7,1);
+  const dist=rd(d1+d2,1),disp=rd(d1-d2,1);
+  const ask=pick(["dist","disp"]);
+  if(ask==="dist")return{ref:"Practice #1",q:`A delivery truck travels down a straight highway for <b>${d1} km</b> to make a delivery. On the way back, the truck has engine trouble and is forced to stop after only <b>${d2} km</b> back toward its base. What is the <b>total distance</b> covered?`,gv:`Leg 1: ${d1} km (forward)\nLeg 2: ${d2} km (back)`,fm:`Distance = |d₁| + |d₂|`,fi:`Distance = ? km`,u:"km",a:dist,tol:Math.max(dist*0.01,0.05),
+    st:[`<span class='lb'>SUM</span> ${d1} + ${d2} = ${dist} km`,`<span class='lb'>ANSWER</span> <span class='ans'>${dist} km</span>`],nt:`Distance ignores direction. The truck covered ${dist} km of road total.`};
+  return{ref:"Practice #1",q:`A delivery truck travels down a straight highway for <b>${d1} km</b> to make a delivery. On the way back, the truck breaks down after only <b>${d2} km</b>. What is the truck's <b>final displacement</b> from base? (away from base = +)`,gv:`Leg 1: +${d1} km\nLeg 2: −${d2} km`,fm:`Δx = leg1 + leg2`,fi:`Δx = ? km`,u:"km",a:disp,tol:Math.max(Math.abs(disp)*0.02,0.05),
+    st:[`<span class='lb'>SUM</span> +${d1} + (−${d2}) = ${disp} km`,`<span class='lb'>ANSWER</span> <span class='ans'>${disp} km from base</span>`],nt:`Displacement = current location relative to start. Distance traveled was ${dist} km, but truck is only ${disp} km from base.`}
+},
+dd_vector_scalar_id(){
+  // Identify whether the answer needed is vector or scalar
+  const things=[
+    {asks:"total distance walked",isV:false,why:"Distance is a SCALAR — adds up regardless of direction"},
+    {asks:"final displacement",isV:true,why:"Displacement is a VECTOR — direction matters"},
+    {asks:"how far the object is from the start",isV:true,why:"Distance FROM start = displacement magnitude (vector concept)"},
+    {asks:"how much path the object traced out",isV:false,why:"Path length = distance (scalar)"},
+    {asks:"net change in position",isV:true,why:"Change in position = displacement (vector)"}
+  ];
+  const t=pick(things);
+  return{ref:"Vector vs Scalar",q:`A problem asks for <b>"${t.asks}"</b>. Is the answer a vector (1) or a scalar (0)?`,gv:`The question asks: "${t.asks}"`,fm:`Vector → has direction\nScalar → no direction`,fi:`1 = vector, 0 = scalar`,u:"",a:t.isV?1:0,tol:0.5,
+  st:[`<span class='lb'>ASK</span> Does "${t.asks}" need direction to be meaningful?`,`<span class='lb'>WHY</span> ${t.why}`,`<span class='lb'>ANSWER</span> <span class='ans'>${t.isV?"Vector (1)":"Scalar (0)"}</span>`],nt:`When a problem says "how much path" it's scalar. When it says "how far from start" or "net position change," it's vector.`}
+},
+dd_round_trip(){
+  // Round trip — displacement zero, distance nonzero
+  const d=R(10,80,1);
+  const ask=pick(["disp","dist"]);
+  const sub=pick(["A jogger","A cyclist","A delivery driver","A dog","A swimmer"]);
+  if(ask==="disp")return{ref:"Round trip",q:`${sub} travels <b>${d} m</b> down a straight path and then returns all the way back to the starting point. What is the <b>total displacement</b>?`,gv:`Total motion: out ${d} m and back ${d} m`,fm:`Δx = end position − start position`,fi:`Δx = ? m`,u:"m",a:0,tol:0.05,
+    st:[`<span class='lb'>INSIGHT</span> End position = start position`,`<span class='lb'>ANSWER</span> <span class='ans'>Δx = 0 m</span>`],nt:`Round trip: distance = ${2*d} m, but displacement = 0 m. They returned exactly to where they started.`};
+  return{ref:"Round trip",q:`${sub} travels <b>${d} m</b> down a straight path and then returns all the way back to the starting point. What is the <b>total distance</b> traveled?`,gv:`Out: ${d} m\nBack: ${d} m`,fm:`Distance = sum of magnitudes`,fi:`Distance = ? m`,u:"m",a:rd(2*d,1),tol:Math.max(d*0.01,0.05),
+    st:[`<span class='lb'>SUM</span> ${d} + ${d} = ${2*d} m`,`<span class='lb'>ANSWER</span> <span class='ans'>${rd(2*d,1)} m</span>`],nt:`Distance keeps accumulating even on a return trip. Displacement, on the other hand, would be 0 m.`}
+},
+dd_asymmetric(){
+  // Round-ish trip but doesn't fully return — Ex 1.1 style
+  const d1=R(4,15,1),d2=R(1,d1-0.5,1);
+  const sub=pick(["A child","A boy","A girl"]);
+  const direction=pick(["wall","tree","fence"]);
+  const disp=rd(d1-d2,1),dist=rd(d1+d2,1);
+  return{ref:"Ex 1.1 style",q:`${sub} is ${d1+R(0,2,1)} m from a ${direction} and rolls a ball <b>${d1} m</b> toward it. The ball hits the ${direction} and rolls back <b>${d2} m</b> before stopping. What is the ball's <b>total displacement</b> from ${sub.toLowerCase().replace(/^a /,"the ")}? (toward ${direction} = +)`,gv:`Leg 1: +${d1} m\nLeg 2: −${d2} m`,fm:`Δx = leg1 + leg2`,fi:`Δx = ? m`,u:"m",a:disp,tol:Math.max(Math.abs(disp)*0.02,0.05),
+  st:[`<span class='lb'>SETUP</span> Toward ${direction} = positive direction`,`<span class='lb'>SUM</span> +${d1} + (−${d2}) = ${disp} m`,`<span class='lb'>ANSWER</span> <span class='ans'>${disp} m toward the ${direction}</span>`],nt:`Classic Example 1.1 setup. Total distance traveled was ${dist} m.`}
+}
+};
+// ============================================================
+// 🏃 SPEED & VELOCITY (~12 templates)
+// ============================================================
+Object.assign(G,{
+v_basic(){
+  const s=pick(SUBJECTS_VEL);
+  const dist=R(s.dist[0],s.dist[1],1),time=R(Math.max(5,dist/15|0),Math.max(15,dist/2|0),1);
+  const dir=pick(DIRECTIONS);
+  const v=rd(dist/time,2);
+  return{ref:"Ex 1.2",q:`${s.n[0].toUpperCase()+s.n.slice(1)} ${s.vrb} <b>${dist} m</b> ${dir} in <b>${time} seconds</b>. What is the velocity?`,gv:`Δx = ${dist} m ${dir}\nΔt = ${time} s`,fm:`v = Δx / Δt`,fi:`v = ? m/s`,u:"m/s",a:v,tol:Math.max(v*0.02,0.02),
+  st:[`<span class='lb'>FORMULA</span> v = Δx / Δt`,`<span class='lb'>SOLVE</span> v = ${dist} / ${time}`,`<span class='lb'>ANSWER</span> <span class='ans'>v = ${v} m/s ${dir}</span>`],nt:`Velocity = displacement / time. Direction is part of the vector!`}
+},
+v_find_distance(){
+  // Ex 1.3 - find distance from v and t
+  const v=R(1.5,12.0,2);
+  const useMin=pick([true,false]);
+  if(useMin){
+    const tmin=R(3,25,1),tsec=rd(tmin*60,0);
+    const dist=rd(v*tsec,0);
+    return{ref:"Ex 1.3",q:`A jogger runs down a straight country road at <b>${v} m/s</b>. If she jogs for <b>${tmin} minutes</b>, how far does she run?`,gv:`v = ${v} m/s\nt = ${tmin} min = ${tsec} s`,fm:`Δx = v × Δt`,fi:`Δx = ? m`,u:"m",a:dist,tol:Math.max(dist*0.02,1),
+    st:[`<span class='lb'>CONVERT</span> ${tmin} min × 60 s/min = ${tsec} s`,`<span class='lb'>FORMULA</span> Δx = v × Δt`,`<span class='lb'>SOLVE</span> Δx = ${v} × ${tsec}`,`<span class='lb'>ANSWER</span> <span class='ans'>${dist} m</span>`],nt:`Always convert minutes to seconds when velocity is in m/s.`}
+  } else {
+    const t=R(20,180,1);
+    const dist=rd(v*t,0);
+    const sub=pick(["A cyclist","A runner","A skier","A car"]);
+    return{ref:"Ex 1.3 style",q:`${sub} travels at a constant velocity of <b>${v} m/s</b> for <b>${t} seconds</b>. How far does it travel?`,gv:`v = ${v} m/s\nt = ${t} s`,fm:`Δx = v × Δt`,fi:`Δx = ? m`,u:"m",a:dist,tol:Math.max(dist*0.02,1),
+    st:[`<span class='lb'>FORMULA</span> Δx = v × Δt`,`<span class='lb'>SOLVE</span> Δx = ${v} × ${t} = ${dist} m`,`<span class='lb'>ANSWER</span> <span class='ans'>${dist} m</span>`],nt:`Rearrange v = Δx/Δt to Δx = v·t.`}
+  }
+},
+v_find_time(){
+  // OYO 1.3 - find time from v and distance
+  const v=R(6,25,1);
+  const useKm=pick([true,false]);
+  if(useKm){
+    const dkm=R(1.5,40.0,1),dm=rd(dkm*1000,0);
+    const t=rd(dm/v,0);
+    return{ref:"OYO 1.3",q:`A boat travels straight down a river at <b>${v} m/s</b>. If the boat travels <b>${dkm} km</b>, how long was the boat ride? (in seconds)`,gv:`v = ${v} m/s\nΔx = ${dkm} km = ${dm} m`,fm:`Δt = Δx / v`,fi:`Δt = ? s`,u:"s",a:t,tol:Math.max(t*0.02,1),
+    st:[`<span class='lb'>CONVERT</span> ${dkm} km × 1000 m/km = ${dm} m`,`<span class='lb'>FORMULA</span> Δt = Δx / v`,`<span class='lb'>SOLVE</span> Δt = ${dm} / ${v} = ${t} s`,`<span class='lb'>ANSWER</span> <span class='ans'>${t} s</span>`],nt:`Convert distance units to match the velocity units before dividing.`}
+  } else {
+    const d=R(50,800,0);
+    const t=rd(d/v,1);
+    const sub=pick(["A runner","A cyclist","A horse","A car"]);
+    return{ref:"v = Δx/Δt rearranged",q:`${sub} maintains a constant velocity of <b>${v} m/s</b>. How long does it take to travel <b>${d} m</b>?`,gv:`v = ${v} m/s\nΔx = ${d} m`,fm:`Δt = Δx / v`,fi:`Δt = ? s`,u:"s",a:t,tol:Math.max(t*0.02,0.1),
+    st:[`<span class='lb'>FORMULA</span> Δt = Δx / v`,`<span class='lb'>SOLVE</span> Δt = ${d} / ${v} = ${t} s`,`<span class='lb'>ANSWER</span> <span class='ans'>${t} s</span>`],nt:`The three forms: v = Δx/Δt, Δx = v·t, Δt = Δx/v are the same equation rearranged.`}
+  }
+},
+v_round_trip_speed(){
+  // Ex 1.2 - speed nonzero, velocity zero
+  const d=R(80,400,1),t1=R(15,50,1),t2=R(15,50,1);
+  const total=rd(d*2,1),totalT=rd(t1+t2,1);
+  const speed=rd(total/totalT,2);
+  return{ref:"Ex 1.2",q:`You bike <b>${d} m</b> to the end of your street in <b>${t1} s</b>, then turn around and bike back, taking <b>${t2} s</b>. What was your <b>average speed</b> over the whole trip?`,gv:`Total distance = 2 × ${d} = ${total} m\nTotal time = ${t1} + ${t2} = ${totalT} s`,fm:`speed = Δd / Δt`,fi:`speed = ? m/s`,u:"m/s",a:speed,tol:Math.max(speed*0.02,0.02),
+  st:[`<span class='lb'>DISTANCE</span> ${d} + ${d} = ${total} m`,`<span class='lb'>TIME</span> ${t1} + ${t2} = ${totalT} s`,`<span class='lb'>SOLVE</span> speed = ${total} / ${totalT} = ${speed} m/s`,`<span class='lb'>ANSWER</span> <span class='ans'>${speed} m/s</span>`],nt:`Average SPEED uses total distance. The VELOCITY over this round trip would be 0 m/s (displacement = 0).`}
+},
+v_round_trip_velocity(){
+  // Round trip → velocity = 0
+  const d=R(80,400,1),t1=R(15,50,1),t2=R(15,50,1);
+  return{ref:"Ex 1.2",q:`A cyclist rides <b>${d} m</b> down a straight road in <b>${t1} s</b>, then turns around and rides back to the start, taking <b>${t2} s</b>. What was the <b>average velocity</b> over the whole trip?`,gv:`Total displacement = 0 (ended where started)\nTotal time = ${t1} + ${t2} = ${rd(t1+t2,1)} s`,fm:`v = Δx / Δt`,fi:`v = ? m/s`,u:"m/s",a:0,tol:0.05,
+  st:[`<span class='lb'>KEY INSIGHT</span> Ended at start → Δx = 0`,`<span class='lb'>SOLVE</span> v = 0 / ${rd(t1+t2,1)} = 0 m/s`,`<span class='lb'>ANSWER</span> <span class='ans'>0 m/s</span>`],nt:`Velocity is about displacement, NOT distance. Speed would have been about ${rd((2*d)/(t1+t2),2)} m/s.`}
+},
+v_two_leg_avg(){
+  // Sprinter example p10 - net average velocity (NOT just averaging two velocities)
+  const d1=R(80,300,1),t1=R(8,30,1);
+  const d2=R(10,d1*0.5,1),t2=R(8,40,1);
+  const netDisp=rd(d1-d2,1),netT=rd(t1+t2,1);
+  const v=rd(netDisp/netT,2);
+  return{ref:"Ex on p10–11",q:`A sprinter runs <b>${d1} m east</b> in <b>${t1} s</b>, then walks <b>${d2} m west</b> back toward the start in <b>${t2} s</b>. What is her <b>average velocity</b> over the entire trip? (east = +)`,gv:`Leg 1: +${d1} m in ${t1} s\nLeg 2: −${d2} m in ${t2} s`,fm:`v = total Δx / total Δt\n(Do NOT just average the two velocities!)`,fi:`v_avg = ? m/s`,u:"m/s",a:v,tol:Math.max(Math.abs(v)*0.03,0.05),
+  st:[`<span class='lb'>NET Δx</span> +${d1} + (−${d2}) = ${netDisp} m`,`<span class='lb'>NET Δt</span> ${t1} + ${t2} = ${netT} s`,`<span class='lb'>SOLVE</span> v_avg = ${netDisp} / ${netT} = ${v} m/s`,`<span class='lb'>ANSWER</span> <span class='ans'>${v} m/s east</span>`],nt:`The textbook trap (p11): you canNOT just average two velocities. Use TOTAL displacement / TOTAL time.`}
+},
+v_mph_to_ms(){
+  const mph=R(15,80,0);
+  const ms=rd(mph*0.44704,2);
+  return{ref:"Unit Conversion",q:`A car travels at <b>${mph} mph</b>. What is this in m/s? (1 mile = 1609 m, 1 hour = 3600 s)`,gv:`v = ${mph} mph\n1 mi = 1609 m\n1 hr = 3600 s`,fm:`m/s = mph × 1609/3600\n(≈ mph × 0.447)`,fi:`v = ? m/s`,u:"m/s",a:ms,tol:Math.max(ms*0.025,0.1),
+  st:[`<span class='lb'>CHAIN</span> ${mph} mi/hr × (1609 m/mi) × (1 hr/3600 s)`,`<span class='lb'>SHORTCUT</span> ${mph} × 0.447`,`<span class='lb'>ANSWER</span> <span class='ans'>v ≈ ${ms} m/s</span>`],nt:`Handy rule: 11 m/s ≈ 25 mph (book p27). 1 mph ≈ 0.447 m/s.`}
+},
+v_kmh_to_ms(){
+  const kmh=R(20,140,0);
+  const ms=rd(kmh/3.6,2);
+  return{ref:"Unit Conversion",q:`A train travels at <b>${kmh} km/h</b>. What is this in m/s?`,gv:`v = ${kmh} km/h\n1 km = 1000 m\n1 hr = 3600 s`,fm:`m/s = (km/h) ÷ 3.6`,fi:`v = ? m/s`,u:"m/s",a:ms,tol:Math.max(ms*0.02,0.05),
+  st:[`<span class='lb'>CHAIN</span> ${kmh} km/hr × (1000 m/km) × (1 hr/3600 s)`,`<span class='lb'>SHORTCUT</span> ${kmh} ÷ 3.6 = ${ms}`,`<span class='lb'>ANSWER</span> <span class='ans'>${ms} m/s</span>`],nt:`Useful shortcut: divide km/h by 3.6 to get m/s.`}
+},
+v_ms_to_mph(){
+  const ms=R(3,30,1);
+  const mph=rd(ms/0.44704,1);
+  return{ref:"Unit Conversion",q:`A runner sprints at <b>${ms} m/s</b>. What is this in mph?`,gv:`v = ${ms} m/s\n1 m/s ≈ 2.237 mph`,fm:`mph = (m/s) × 2.237\n(or ÷ 0.447)`,fi:`v = ? mph`,u:"mph",a:mph,tol:Math.max(mph*0.025,0.2),
+  st:[`<span class='lb'>SHORTCUT</span> ${ms} × 2.237 (or ÷ 0.447)`,`<span class='lb'>ANSWER</span> <span class='ans'>${mph} mph</span>`],nt:`Reverse of mph→m/s. Useful for understanding "how fast is 5.78 m/s really?"`}
+},
+v_plane_problem(){
+  // Practice Problem #3 style
+  const d1=R(400,900,1),d2=R(150,500,1);
+  const netDisp=rd(d1-d2,1);
+  const v=R(35,55,0);
+  const t=rd(netDisp/v,1);
+  return{ref:"Practice #3",q:`A plane flies straight for <b>${d1} km</b> and then turns around and heads back. The plane lands at an airport only <b>${d2} km</b> from where the pilot turned around. If the plane's average velocity over the entire trip was <b>${v} m/s</b>, how much time did the entire trip take?`,gv:`Total Δx = ${d1} − ${d2} = ${netDisp} km = ${rd(netDisp*1000,0)} m\nv_avg = ${v} m/s`,fm:`Δt = Δx / v`,fi:`Δt = ? s`,u:"s",a:rd(netDisp*1000/v,1),tol:Math.max(rd(netDisp*1000/v,1)*0.025,5),
+  st:[`<span class='lb'>NET Δx</span> ${d1} − ${d2} = ${netDisp} km = ${rd(netDisp*1000,0)} m`,`<span class='lb'>CONVERT</span> km → m: × 1000`,`<span class='lb'>SOLVE</span> Δt = ${rd(netDisp*1000,0)} / ${v} = ${rd(netDisp*1000/v,1)} s`,`<span class='lb'>ANSWER</span> <span class='ans'>${rd(netDisp*1000/v,1)} s</span>`],nt:`Net displacement is what counts for velocity — not total distance traveled.`}
+},
+v_concept(){
+  const cases=[
+    {q:"A car drives around a 400 m circular track and ends up where it started. Its average <b>velocity</b> is:",ans:0,opt:"0 m/s",why:"Returned to start → displacement = 0 → velocity = 0"},
+    {q:"A car drives around a 400 m circular track in 80 s. Its average <b>speed</b> is:",ans:5,opt:"5 m/s",why:"Speed uses total distance: 400/80 = 5 m/s"}
+  ];
+  // Use generic numeric version
+  const d=R(200,600,0),t=R(40,100,0);
+  const ask=pick(["vel","speed"]);
+  if(ask==="vel")return{ref:"Concept",q:`A car drives around a <b>${d} m</b> circular track in <b>${t} s</b> and ends back where it started. What is its average <b>velocity</b>?`,gv:`Total Δx = 0 (closed loop)\nTotal time = ${t} s`,fm:`v = Δx / Δt`,fi:`v = ? m/s`,u:"m/s",a:0,tol:0.05,
+    st:[`<span class='lb'>KEY</span> Closed loop → displacement = 0`,`<span class='lb'>SOLVE</span> v = 0 / ${t} = 0 m/s`,`<span class='lb'>ANSWER</span> <span class='ans'>0 m/s</span>`],nt:`Velocity is about NET displacement. A closed loop has displacement = 0 regardless of how fast you went.`};
+  return{ref:"Concept",q:`A car drives around a <b>${d} m</b> circular track in <b>${t} s</b> and ends back where it started. What is its average <b>speed</b>?`,gv:`Total distance = ${d} m\nTotal time = ${t} s`,fm:`speed = distance / time`,fi:`speed = ? m/s`,u:"m/s",a:rd(d/t,2),tol:Math.max(d/t*0.02,0.05),
+    st:[`<span class='lb'>FORMULA</span> speed uses TOTAL DISTANCE`,`<span class='lb'>SOLVE</span> ${d} / ${t} = ${rd(d/t,2)} m/s`,`<span class='lb'>ANSWER</span> <span class='ans'>${rd(d/t,2)} m/s</span>`],nt:`Speed and velocity tell very different stories on a closed loop.`}
+},
+v_mail_carrier(){
+  // OYO 1.2 - mail carrier
+  const d1=R(200,500,0),t1=R(200,400,0);
+  const d2=R(120,d1-20,0),t2=R(150,300,0);
+  const ask=pick(["leg1","leg2","total"]);
+  if(ask==="leg1"){
+    const v=rd(d1/t1,3);
+    return{ref:"OYO 1.2",q:`A mail carrier drives down a street delivering mail. She travels <b>${d1} m</b> down the street in <b>${t1} s</b>. What is her velocity during this leg? (down the street = +)`,gv:`Δx = +${d1} m\nΔt = ${t1} s`,fm:`v = Δx / Δt`,fi:`v = ? m/s`,u:"m/s",a:v,tol:Math.max(v*0.02,0.005),
+    st:[`<span class='lb'>SOLVE</span> v = ${d1} / ${t1} = ${v} m/s`,`<span class='lb'>ANSWER</span> <span class='ans'>${v} m/s down the street</span>`],nt:`Just one leg of the journey — straightforward Δx/Δt.`}
+  } else if(ask==="leg2"){
+    const v=rd(-d2/t2,3);
+    return{ref:"OYO 1.2",q:`A mail carrier drives <b>${d1} m</b> down a street, then turns around. On the return, she travels <b>${d2} m</b> back UP the street in <b>${t2} s</b>. What is her velocity on the return trip? (down = +)`,gv:`Δx (return) = −${d2} m\nΔt = ${t2} s`,fm:`v = Δx / Δt`,fi:`v = ? m/s`,u:"m/s",a:v,tol:Math.max(Math.abs(v)*0.02,0.005),
+    st:[`<span class='lb'>SIGNED Δx</span> −${d2} m (up = negative)`,`<span class='lb'>SOLVE</span> v = −${d2} / ${t2} = ${v} m/s`,`<span class='lb'>ANSWER</span> <span class='ans'>${v} m/s (negative = up the street)</span>`],nt:`Negative sign tells you direction. Magnitude is ${Math.abs(v)} m/s up the street.`}
+  } else {
+    const netD=rd(d1-d2,0),netT=rd(t1+t2,0);
+    const v=rd(netD/netT,3);
+    return{ref:"OYO 1.2",q:`A mail carrier travels <b>${d1} m down</b> a street in <b>${t1} s</b>, then <b>${d2} m back up</b> the street in <b>${t2} s</b>. What is her average velocity for the <b>entire trip</b>? (down = +)`,gv:`Net Δx = ${d1} − ${d2} = ${netD} m\nNet Δt = ${t1} + ${t2} = ${netT} s`,fm:`v_avg = net Δx / net Δt`,fi:`v = ? m/s`,u:"m/s",a:v,tol:Math.max(Math.abs(v)*0.02,0.005),
+    st:[`<span class='lb'>NET Δx</span> ${d1} − ${d2} = ${netD} m`,`<span class='lb'>NET Δt</span> ${t1} + ${t2} = ${netT} s`,`<span class='lb'>SOLVE</span> v = ${netD} / ${netT} = ${v} m/s`,`<span class='lb'>ANSWER</span> <span class='ans'>${v} m/s down the street</span>`],nt:`For overall average velocity, use TOTAL displacement / TOTAL time — never just average the two leg velocities.`}
+  }
+}
+});
+// ============================================================
+// ⚡ ACCELERATION (~12 templates)
+// ============================================================
+Object.assign(G,{
+a_from_rest(){
+  const sub=pick(SUBJECTS_ACC);
+  const vf=R(8,32,1),t=R(2.0,7.0,1);
+  const a=rd(vf/t,2);
+  const dir=pick(DIRECTIONS);
+  return{ref:"OYO 1.8",q:`${sub.n[0].toUpperCase()+sub.n.slice(1)} starts from rest and reaches a velocity of <b>${vf} m/s ${dir}</b> in <b>${t} seconds</b>. What is the acceleration?`,gv:`v_initial = 0 m/s\nv_final = ${vf} m/s\nΔt = ${t} s`,fm:`a = Δv / Δt\nΔv = v_final − v_initial`,fi:`a = ? m/s²`,u:"m/s²",a:a,tol:Math.max(a*0.025,0.05),
+  st:[`<span class='lb'>Δv</span> ${vf} − 0 = ${vf} m/s`,`<span class='lb'>SOLVE</span> a = ${vf} / ${t} = ${a} m/s²`,`<span class='lb'>ANSWER</span> <span class='ans'>${a} m/s² ${dir}</span>`],nt:`"Starts from rest" = v_initial = 0 (treat as exact).`}
+},
+a_brake_to_stop(){
+  const sub=pick([{n:"A car"},{n:"A truck"},{n:"A bicycle"},{n:"A motorcycle"}]);
+  const v=R(12,32,1),t=R(1.5,5.0,1);
+  const a=rd(-v/t,1);
+  const dir=pick(["east","north","forward","right"]);
+  const opp={"east":"west","north":"south","forward":"backward","right":"left"}[dir];
+  return{ref:"Ex 1.6",q:`${sub.n} is moving at <b>${v} m/s ${dir}</b>. The driver slams on the brakes and the vehicle comes to a halt in <b>${t} seconds</b>. What is the acceleration?`,gv:`v_initial = +${v} m/s\nv_final = 0\nΔt = ${t} s`,fm:`a = Δv / Δt`,fi:`a = ? m/s²`,u:"m/s²",a:a,tol:Math.max(Math.abs(a)*0.025,0.1),
+  st:[`<span class='lb'>Δv</span> 0 − ${v} = −${v} m/s`,`<span class='lb'>SOLVE</span> a = −${v} / ${t} = ${a} m/s²`,`<span class='lb'>ANSWER</span> <span class='ans'>${a} m/s² (= ${Math.abs(a)} m/s² ${opp})</span>`],nt:`Negative because acceleration is opposite to motion — that's what slowing down looks like with our sign convention.`}
+},
+a_change_velocity(){
+  const v1=R(3,15,1),v2=R(v1+5,v1+25,1),t=R(2.0,8.0,1);
+  const a=rd((v2-v1)/t,2);
+  const sub=pick(["A motorcycle","A car","A scooter","A train"]);
+  return{ref:"a = Δv/Δt",q:`${sub} accelerates from <b>${v1} m/s</b> to <b>${v2} m/s</b> in <b>${t} seconds</b>. What is the acceleration?`,gv:`v_initial = ${v1} m/s\nv_final = ${v2} m/s\nΔt = ${t} s`,fm:`a = Δv / Δt`,fi:`a = ? m/s²`,u:"m/s²",a:a,tol:Math.max(a*0.025,0.05),
+  st:[`<span class='lb'>Δv</span> ${v2} − ${v1} = ${rd(v2-v1,1)} m/s`,`<span class='lb'>SOLVE</span> a = ${rd(v2-v1,1)} / ${t} = ${a} m/s²`,`<span class='lb'>ANSWER</span> <span class='ans'>${a} m/s²</span>`],nt:`Δv = v_final − v_initial. Subtract initial FROM final.`}
+},
+a_slowing_general(){
+  // slowing but not stopping
+  const v1=R(20,40,1),v2=R(5,v1-5,1),t=R(2,8,1);
+  const a=rd((v2-v1)/t,2);
+  const sub=pick(["A car","A bicycle","A motorcycle"]);
+  return{ref:"a = Δv/Δt",q:`${sub} decelerates from <b>${v1} m/s</b> to <b>${v2} m/s</b> in <b>${t} seconds</b>. What is the acceleration?`,gv:`v_initial = ${v1} m/s\nv_final = ${v2} m/s\nΔt = ${t} s`,fm:`a = Δv / Δt`,fi:`a = ? m/s²`,u:"m/s²",a:a,tol:Math.max(Math.abs(a)*0.025,0.05),
+  st:[`<span class='lb'>Δv</span> ${v2} − ${v1} = ${rd(v2-v1,1)} m/s`,`<span class='lb'>SOLVE</span> a = ${rd(v2-v1,1)} / ${t} = ${a} m/s²`,`<span class='lb'>ANSWER</span> <span class='ans'>${a} m/s² (negative = slowing in + direction)</span>`],nt:`When v_final < v_initial, Δv is negative → a is negative.`}
+},
+a_find_vfinal(){
+  const vi=R(2,15,1),a=R(1.0,5.0,2),t=R(2.0,9.0,1);
+  const vf=rd(vi+a*t,2);
+  const sub=pick(["A cyclist","A runner","A car"]);
+  return{ref:"v_final = v_initial + a·t",q:`${sub} is initially traveling at <b>${vi} m/s</b>. She accelerates at <b>${a} m/s²</b> for <b>${t} seconds</b>. What is her final velocity?`,gv:`v_initial = ${vi} m/s\na = ${a} m/s²\nΔt = ${t} s`,fm:`v_final = v_initial + a × Δt`,fi:`v_final = ? m/s`,u:"m/s",a:vf,tol:Math.max(vf*0.02,0.1),
+  st:[`<span class='lb'>FORMULA</span> v_final = v_initial + a·Δt`,`<span class='lb'>SOLVE</span> v_final = ${vi} + (${a} × ${t}) = ${vi} + ${rd(a*t,2)}`,`<span class='lb'>ANSWER</span> <span class='ans'>${vf} m/s</span>`],nt:`Rearrange a = (v_f − v_i)/Δt → v_f = v_i + a·t.`}
+},
+a_find_vinitial(){
+  // OYO 1.9 - find initial velocity given final, accel, time
+  const a=R(-10.0,-3.0,1),t=R(2.0,5.5,1);
+  const vi=rd(-a*t,1);
+  return{ref:"OYO 1.9",q:`A race car accelerates at <b>${a} m/s²</b> when the brakes are applied. If it takes <b>${t} seconds</b> to stop, how fast was it originally going?`,gv:`a = ${a} m/s²\nΔt = ${t} s\nv_final = 0 (stopped)`,fm:`Δv = a·Δt\nΔv = v_final − v_initial`,fi:`v_initial = ? m/s`,u:"m/s",a:vi,tol:Math.max(vi*0.025,0.1),
+  st:[`<span class='lb'>FIND Δv</span> Δv = a × Δt = ${a} × ${t} = ${rd(a*t,1)} m/s`,`<span class='lb'>USE DEFINITION</span> Δv = 0 − v_initial`,`<span class='lb'>SOLVE</span> v_initial = −Δv = ${vi} m/s`,`<span class='lb'>ANSWER</span> <span class='ans'>${vi} m/s</span>`],nt:`Velocity and acceleration have opposite signs → car was slowing down (good sanity check).`}
+},
+a_find_time(){
+  // Find time to reach some velocity given acceleration
+  const choice=pick(["gravity","general","stop"]);
+  if(choice==="gravity"){
+    const vf=R(8,40,1);
+    const t=rd(vf/9.8,2);
+    return{ref:"Free fall (book p27)",q:`A ball is dropped (initial velocity = 0). Gravity accelerates objects at <b>9.8 m/s²</b>. How long does it take for the ball to reach a downward velocity of <b>${vf} m/s</b>?`,gv:`v_initial = 0\nv_final = ${vf} m/s\na = 9.8 m/s²`,fm:`Δt = Δv / a`,fi:`Δt = ? s`,u:"s",a:t,tol:Math.max(t*0.025,0.05),
+    st:[`<span class='lb'>Δv</span> ${vf} − 0 = ${vf} m/s`,`<span class='lb'>SOLVE</span> Δt = ${vf} / 9.8 = ${t} s`,`<span class='lb'>ANSWER</span> <span class='ans'>${t} s</span>`],nt:`Free-fall problems use a = 9.8 m/s² down. Note how m/s ÷ m/s² = s (units work out).`}
+  } else if(choice==="stop"){
+    const vi=R(12,30,1),a=R(-8,-2,1);
+    const t=rd(-vi/a,2);
+    const sub=pick(["A car","A bicycle","A truck"]);
+    return{ref:"Brake to stop",q:`${sub} traveling at <b>${vi} m/s</b> applies the brakes, producing an acceleration of <b>${a} m/s²</b>. How long does it take to stop?`,gv:`v_initial = ${vi} m/s\nv_final = 0\na = ${a} m/s²`,fm:`Δt = Δv / a`,fi:`Δt = ? s`,u:"s",a:t,tol:Math.max(t*0.025,0.05),
+    st:[`<span class='lb'>Δv</span> 0 − ${vi} = ${-vi} m/s`,`<span class='lb'>SOLVE</span> Δt = ${-vi} / ${a} = ${t} s`,`<span class='lb'>ANSWER</span> <span class='ans'>${t} s</span>`],nt:`Time is always positive! Negative Δv ÷ negative a = positive t.`}
+  } else {
+    const vi=R(2,8,1),vf=R(15,30,1),a=R(1,5,1);
+    const t=rd((vf-vi)/a,2);
+    const sub=pick(["A cyclist","A skateboarder","A runner"]);
+    return{ref:"Speeding up",q:`${sub} is initially traveling at <b>${vi} m/s</b> and accelerates at <b>${a} m/s²</b>. How long does it take to reach <b>${vf} m/s</b>?`,gv:`v_initial = ${vi} m/s\nv_final = ${vf} m/s\na = ${a} m/s²`,fm:`Δt = Δv / a`,fi:`Δt = ? s`,u:"s",a:t,tol:Math.max(t*0.025,0.05),
+    st:[`<span class='lb'>Δv</span> ${vf} − ${vi} = ${rd(vf-vi,1)} m/s`,`<span class='lb'>SOLVE</span> Δt = ${rd(vf-vi,1)} / ${a} = ${t} s`,`<span class='lb'>ANSWER</span> <span class='ans'>${t} s</span>`],nt:`Solving for time: rearrange a = Δv/Δt → Δt = Δv/a.`}
+  }
+},
+a_speedup_signs(){
+  // Review Q8 - is it speeding up or slowing down based on signs
+  const vSign=pick([1,-1]),aSign=pick([1,-1]);
+  const v=rd(vSign*R(4,28,1),1),a=rd(aSign*R(1,8,1),1);
+  const sameSign=(v>0)===(a>0);
+  const ans=sameSign?1:0;
+  return{ref:"Review Q8",q:`An object has velocity <b>${v} m/s</b> and acceleration <b>${a} m/s²</b>. Is it speeding up (1) or slowing down (0)?`,gv:`v = ${v} m/s\na = ${a} m/s²`,fm:`Same signs → speeding up\nOpposite signs → slowing down`,fi:`1 = speeding up, 0 = slowing down`,u:"",a:ans,tol:0.5,
+  st:[`<span class='lb'>v SIGN</span> ${v>0?"positive (+)":"negative (−)"}`,`<span class='lb'>a SIGN</span> ${a>0?"positive (+)":"negative (−)"}`,`<span class='lb'>SIGNS ARE</span> ${sameSign?"SAME → speeding up":"OPPOSITE → slowing down"}`,`<span class='lb'>ANSWER</span> <span class='ans'>${sameSign?"speeding up (1)":"slowing down (0)"}</span>`],nt:`Negative acceleration ≠ slowing down. It depends on velocity's sign!`}
+},
+a_train_stop(){
+  // Practice Problem #7
+  const vi=R(15.0,35.0,1),a=R(-0.15,-0.02,3);
+  const t=rd(-vi/a,0);
+  return{ref:"Practice #7",q:`A train is traveling at <b>${vi} m/s</b>. If the brakes can apply a maximum acceleration of <b>${a} m/s²</b>, how long will it take the train to stop?`,gv:`v_initial = ${vi} m/s\nv_final = 0\na = ${a} m/s²`,fm:`Δt = Δv / a`,fi:`Δt = ? s`,u:"s",a:t,tol:Math.max(t*0.02,5),
+  st:[`<span class='lb'>Δv</span> 0 − ${vi} = −${vi} m/s`,`<span class='lb'>SOLVE</span> Δt = ${-vi} / ${a} = ${t} s`,`<span class='lb'>ANSWER</span> <span class='ans'>${t} s</span>`],nt:`Trains have huge mass → tiny acceleration → long stopping times. That's why they need long warnings!`}
+},
+a_concept_velocity_zero(){
+  // Review Q10 - velocity zero doesn't mean accel zero
+  const cases=[
+    {desc:"A ball is thrown straight up. At the very top of its arc, the ball's velocity is momentarily 0. Is its acceleration also 0?",ans:0,why:"NO — gravity is STILL pulling at 9.8 m/s² down. Velocity is 0 only for an instant; acceleration is unchanged."},
+    {desc:"A ball is held perfectly still in your hand. v = 0. Is acceleration 0?",ans:1,why:"YES — if velocity stays at 0 (not changing), then Δv = 0, so a = 0. (Note: gravity is balanced by your hand!)"},
+    {desc:"A car sits at a red light, then accelerates when the light turns green. At the instant just before it starts moving, v = 0 but a ≠ 0?",ans:0,why:"NO — for the car to start moving, velocity MUST be changing → acceleration must be nonzero."},
+    {desc:"A ball at the peak of its bounce has v = 0. Does this mean a = 0?",ans:0,why:"NO — gravity is still acting. Velocity is zero for one moment, but acceleration stays at 9.8 m/s² down."}
+  ];
+  const c=pick(cases);
+  return{ref:"Review Q10",q:`${c.desc} (1 = yes, a = 0; 0 = no, a ≠ 0)`,gv:c.desc,fm:`v = 0 does NOT imply a = 0\na is about CHANGE in v`,fi:`1 = yes, 0 = no`,u:"",a:c.ans,tol:0.5,
+  st:[`<span class='lb'>WHY</span> ${c.why}`,`<span class='lb'>ANSWER</span> <span class='ans'>${c.ans===1?"Yes (1)":"No (0)"}</span>`],nt:`Velocity tells you where you are NOW (or how fast). Acceleration tells you how velocity is CHANGING.`}
+},
+a_two_step(){
+  // Find Δv first then v_initial — like OYO 1.9 but vary
+  const a=R(-8,-2,1),t=R(2.5,6.0,1);
+  const vfinal=R(3,15,1);
+  const vinit=rd(vfinal-a*t,1);
+  const sub=pick(["A car","A truck","A motorcycle"]);
+  return{ref:"OYO 1.9 style",q:`${sub} decelerates at <b>${a} m/s²</b>. After <b>${t} seconds</b> of braking, its velocity is <b>${vfinal} m/s</b>. What was its initial velocity?`,gv:`a = ${a} m/s²\nΔt = ${t} s\nv_final = ${vfinal} m/s`,fm:`Δv = a·Δt\nv_initial = v_final − Δv`,fi:`v_initial = ? m/s`,u:"m/s",a:vinit,tol:Math.max(vinit*0.025,0.1),
+  st:[`<span class='lb'>FIND Δv</span> Δv = ${a} × ${t} = ${rd(a*t,1)} m/s`,`<span class='lb'>USE DEFINITION</span> Δv = v_final − v_initial`,`<span class='lb'>REARRANGE</span> v_initial = v_final − Δv = ${vfinal} − (${rd(a*t,1)}) = ${vinit} m/s`,`<span class='lb'>ANSWER</span> <span class='ans'>${vinit} m/s</span>`],nt:`Two-step: (1) find Δv, (2) back out v_initial from definition.`}
+},
+a_concept_accel_zero(){
+  // If a=0, what does that tell you?
+  const cases=[
+    {desc:"A car cruises at a constant 60 mph for 5 minutes. What is its acceleration?",ans:0,why:"Constant velocity = no change in v = a = 0. (Even though v ≠ 0!)"},
+    {desc:"A stationary book sits on a table. What is its acceleration?",ans:0,why:"Velocity is constant (at 0). Δv = 0 → a = 0."}
+  ];
+  const c=pick(cases);
+  return{ref:"Concept",q:`${c.desc} (Enter the acceleration in m/s².)`,gv:c.desc,fm:`Constant velocity → a = 0`,fi:`a = ? m/s²`,u:"m/s²",a:0,tol:0.1,
+  st:[`<span class='lb'>WHY</span> ${c.why}`,`<span class='lb'>ANSWER</span> <span class='ans'>a = 0 m/s²</span>`],nt:`a = 0 just means velocity isn't changing. Could be at rest, or could be cruising.`}
+},
+a_freefall_specific(){
+  // Use the textbook's specific example: ball dropped, find time to reach 11 m/s (≈25 mph)
+  const targets=[{v:11.0,t:1.1},{v:19.6,t:2.0},{v:9.8,t:1.0},{v:24.5,t:2.5},{v:14.7,t:1.5}];
+  const choice=pick(targets);
+  return{ref:"Textbook p27",q:`A ball is dropped with no initial velocity. Gravity accelerates objects downward at <b>9.8 m/s²</b>. How long will it take to reach a downward velocity of <b>${choice.v} m/s</b>?`,gv:`v_initial = 0\nv_final = ${choice.v} m/s\na = 9.8 m/s²`,fm:`Δt = Δv / a`,fi:`Δt = ? s`,u:"s",a:choice.t,tol:0.1,
+  st:[`<span class='lb'>FORMULA</span> Δt = (v_final − v_initial) / a`,`<span class='lb'>SOLVE</span> Δt = ${choice.v} / 9.8 = ${rd(choice.v/9.8,2)} s`,`<span class='lb'>ANSWER</span> <span class='ans'>≈ ${choice.t} s</span>`],nt:`Falling objects gain ~10 m/s of speed every second. So ${choice.v} m/s ≈ ${rd(choice.v*2.237,0)} mph in just ${choice.t} s!`}
+}
+});
+
+// ============================================================
+// 🚗 RELATIVE VELOCITY (~12 templates)
+// ============================================================
+Object.assign(G,{
+rv_boat_raft(){
+  // OYO 1.7
+  const vBoat=R(8,22,0),vRaft=R(2,7,0);
+  const askWhat=pick(["raftFromBoat","boatFromRaft"]);
+  if(askWhat==="raftFromBoat"){
+    const ans=rd(-vRaft-vBoat,1);
+    return{ref:"OYO 1.7",q:`A fisherman on shore sees a boat traveling at <b>${vBoat} m/s up the river</b> and a raft floating <b>${vRaft} m/s down the river</b>. (Up the river = positive.) What is the velocity of the <b>raft as observed by someone on the boat</b>?`,gv:`v_boat = +${vBoat} m/s\nv_raft = −${vRaft} m/s\nObserver = boat`,fm:`v_observed = v_object − v_observer`,fi:`v(raft from boat) = ? m/s`,u:"m/s",a:ans,tol:Math.max(Math.abs(ans)*0.02,0.5),
+    st:[`<span class='lb'>FORMULA</span> v_obs = v_object − v_observer`,`<span class='lb'>SOLVE</span> (−${vRaft}) − (+${vBoat}) = ${ans} m/s`,`<span class='lb'>ANSWER</span> <span class='ans'>${ans} m/s (= ${Math.abs(ans)} m/s DOWN river)</span>`],nt:`Always v_object MINUS v_observer.`}
+  } else {
+    const ans=rd(vBoat-(-vRaft),1);
+    return{ref:"OYO 1.7",q:`A fisherman on shore sees a boat traveling at <b>${vBoat} m/s up the river</b> and a raft floating <b>${vRaft} m/s down the river</b>. (Up the river = positive.) What is the velocity of the <b>boat as observed by the boy on the raft</b>?`,gv:`v_boat = +${vBoat} m/s\nv_raft = −${vRaft} m/s\nObserver = raft`,fm:`v_observed = v_object − v_observer`,fi:`v(boat from raft) = ? m/s`,u:"m/s",a:ans,tol:Math.max(Math.abs(ans)*0.02,0.5),
+    st:[`<span class='lb'>FORMULA</span> v_obs = v_object − v_observer`,`<span class='lb'>SOLVE</span> (+${vBoat}) − (−${vRaft}) = ${vBoat}+${vRaft} = ${ans} m/s`,`<span class='lb'>ANSWER</span> <span class='ans'>+${ans} m/s (UP river)</span>`],nt:`Subtracting a negative = adding. To the raft, the boat looks even faster than to a stationary observer.`}
+  }
+},
+rv_headon(){
+  // Ex 1.5 - approaching head-on
+  const vCar=R(35,75,0),vTruck=R(35,75,0);
+  const ans=rd(vCar+vTruck,0);
+  const askMag=pick([true,false]);
+  if(askMag)return{ref:"Ex 1.5",q:`A car driving east at <b>${vCar} mph</b> and a truck driving west at <b>${vTruck} mph</b> approach each other. From the car driver's POV, what is the <b>magnitude</b> of the truck's velocity? (East = +)`,gv:`v_car = +${vCar} mph\nv_truck = −${vTruck} mph\nObserver = car driver`,fm:`v_obs = v_object − v_observer\n|v_obs| = magnitude`,fi:`|v(truck from car)| = ? mph`,u:"mph",a:ans,tol:Math.max(ans*0.02,1),
+    st:[`<span class='lb'>SOLVE</span> (−${vTruck}) − (+${vCar}) = −${ans} mph`,`<span class='lb'>MAGNITUDE</span> |−${ans}| = ${ans} mph`,`<span class='lb'>ANSWER</span> <span class='ans'>${ans} mph</span>`],nt:`Head-on, closing speeds ADD. That's why head-on crashes are so violent.`};
+  return{ref:"Ex 1.5",q:`A car driving east at <b>${vCar} mph</b> and a truck driving west at <b>${vTruck} mph</b> approach each other on a 2-lane road. From the side of the road (east = +), what velocity do you observe for the <b>truck</b>?`,gv:`Your velocity = 0\nv_truck = −${vTruck} mph`,fm:`v_obs = v_object − v_observer`,fi:`v(truck from you) = ? mph`,u:"mph",a:-vTruck,tol:Math.max(vTruck*0.02,1),
+    st:[`<span class='lb'>SOLVE</span> (−${vTruck}) − 0 = ${-vTruck} mph`,`<span class='lb'>ANSWER</span> <span class='ans'>${-vTruck} mph (= ${vTruck} mph west)</span>`],nt:`If you're stationary, you just see each object's ground velocity directly.`}
+},
+rv_same_direction(){
+  // Two cars same direction - relative is the DIFFERENCE
+  const vFaster=R(25,40,0),vSlower=R(10,vFaster-5,0);
+  const ans=rd(vSlower-vFaster,0); // observed from faster car
+  return{ref:"Ex 1.5 / Relative",q:`Two cars are driving east. Car A travels at <b>${vFaster} m/s</b> and Car B travels at <b>${vSlower} m/s</b>. From <b>Car A's</b> POV, what is Car B's velocity? (East = +)`,gv:`v_A = +${vFaster} m/s\nv_B = +${vSlower} m/s\nObserver = A`,fm:`v_obs = v_object − v_observer`,fi:`v(B from A) = ? m/s`,u:"m/s",a:ans,tol:Math.max(Math.abs(ans)*0.02,0.5),
+  st:[`<span class='lb'>SOLVE</span> v(B from A) = +${vSlower} − (+${vFaster}) = ${ans} m/s`,`<span class='lb'>ANSWER</span> <span class='ans'>${ans} m/s (= ${Math.abs(ans)} m/s west — B falls behind A)</span>`],nt:`Same direction: relative velocity = difference. From the faster car, the slower one looks like it's drifting backward.`}
+},
+rv_train_passenger(){
+  // Passenger walks on a train
+  const vTrain=R(8,20,0),vWalk=pick([R(1,3,1),-R(1,3,1)]);
+  const observerView=rd(vWalk+vTrain,1); // ground sees them at sum
+  return{ref:"Relative velocity",q:`A train moves east at <b>${vTrain} m/s</b>. A passenger walks toward the front of the train at <b>${Math.abs(vWalk)} m/s ${vWalk>0?"east":"west"}</b> (relative to the train). What velocity does a person on the <b>ground</b> observe for the passenger? (East = +)`,gv:`v_train (rel. to ground) = +${vTrain} m/s\nv_passenger (rel. to train) = ${vWalk>0?"+":""}${vWalk} m/s`,fm:`v_passenger(ground) = v_passenger(train) + v_train(ground)`,fi:`v(passenger from ground) = ? m/s`,u:"m/s",a:observerView,tol:Math.max(Math.abs(observerView)*0.02,0.1),
+  st:[`<span class='lb'>ADD</span> ${vWalk} + ${vTrain} = ${observerView} m/s`,`<span class='lb'>ANSWER</span> <span class='ans'>${observerView} m/s east</span>`],nt:`Walking in a moving train: ground sees you at train_speed + your_walking_speed (with signs!).`}
+},
+rv_grandma(){
+  // Textbook narrative - grandma watching car back out
+  const vCar=R(2,8,0); // backing out
+  const askWhat=pick(["grandma","dad"]);
+  if(askWhat==="grandma")return{ref:"Textbook grandma example",q:`You are sitting in the passenger seat as your dad backs the car out of the driveway at <b>${vCar} m/s</b>. Your grandma stands still in the driveway. What velocity does your <b>grandma</b> observe for YOU?`,gv:`v_you (rel. ground) = ${vCar} m/s\nv_grandma = 0`,fm:`v_obs = v_object − v_observer`,fi:`v = ? m/s`,u:"m/s",a:vCar,tol:0.2,
+    st:[`<span class='lb'>SOLVE</span> ${vCar} − 0 = ${vCar} m/s`,`<span class='lb'>ANSWER</span> <span class='ans'>${vCar} m/s (away from her)</span>`],nt:`Grandma is stationary, so she sees your full velocity.`};
+  return{ref:"Textbook grandma example",q:`You are sitting in the passenger seat as your dad backs the car out of the driveway at <b>${vCar} m/s</b>. What velocity does your <b>dad</b> (driving the car) observe for YOU?`,gv:`v_you = ${vCar} m/s\nv_dad = ${vCar} m/s (he's IN the car too)`,fm:`v_obs = v_object − v_observer`,fi:`v = ? m/s`,u:"m/s",a:0,tol:0.1,
+    st:[`<span class='lb'>SOLVE</span> ${vCar} − ${vCar} = 0`,`<span class='lb'>ANSWER</span> <span class='ans'>0 m/s</span>`],nt:`Dad moves with the car at the same velocity you do. From his frame, you're sitting still.`}
+},
+rv_plane_wind(){
+  // Plane in air, wind blowing
+  const vPlane=R(120,250,0); // plane's airspeed
+  const vWind=pick([R(15,50,0),-R(15,50,0)]);
+  const vGround=rd(vPlane+vWind,0);
+  return{ref:"Wind/current",q:`A plane flies east at an airspeed of <b>${vPlane} m/s</b> (relative to the air). The wind is blowing ${vWind>0?"east":"west"} at <b>${Math.abs(vWind)} m/s</b>. What is the plane's velocity relative to the <b>ground</b>? (East = +)`,gv:`v_plane (rel. air) = +${vPlane} m/s\nv_air (rel. ground) = ${vWind>0?"+":""}${vWind} m/s`,fm:`v_plane(ground) = v_plane(air) + v_air(ground)`,fi:`v_ground = ? m/s`,u:"m/s",a:vGround,tol:Math.max(vGround*0.015,1),
+  st:[`<span class='lb'>ADD</span> ${vPlane} + (${vWind}) = ${vGround} m/s`,`<span class='lb'>ANSWER</span> <span class='ans'>${vGround} m/s east</span>`],nt:`Tailwind helps (faster ground speed). Headwind slows you down. Same principle as walking on a train.`}
+},
+rv_signflip(){
+  // Same scenario, flipped sign convention
+  const v1=R(20,50,0),v2=R(20,50,0);
+  const eastPos=pick([true,false]);
+  if(eastPos){
+    const ans=rd((-v2)-v1,0); // truck from car
+    return{ref:"Sign convention",q:`A car drives east at <b>${v1} mph</b>, a truck drives west at <b>${v2} mph</b>. With <b>EAST as positive</b>, what does the car driver observe for the truck's velocity?`,gv:`East = +\nv_car = +${v1}\nv_truck = −${v2}`,fm:`v_obs = v_object − v_observer`,fi:`v = ? mph`,u:"mph",a:ans,tol:Math.max(Math.abs(ans)*0.02,1),
+    st:[`<span class='lb'>SOLVE</span> (−${v2}) − (+${v1}) = ${ans} mph`,`<span class='lb'>ANSWER</span> <span class='ans'>${ans} mph</span>`],nt:`Negative answer = truck moving west (in our convention).`}
+  } else {
+    const ans=rd(v2-(-v1),0); // truck (now +) from car (now -)
+    return{ref:"Sign convention",q:`A car drives east at <b>${v1} mph</b>, a truck drives west at <b>${v2} mph</b>. With <b>WEST as positive</b>, what does the car driver observe for the truck's velocity?`,gv:`West = +\nv_car = −${v1}\nv_truck = +${v2}`,fm:`v_obs = v_object − v_observer`,fi:`v = ? mph`,u:"mph",a:ans,tol:Math.max(Math.abs(ans)*0.02,1),
+    st:[`<span class='lb'>SOLVE</span> (+${v2}) − (−${v1}) = ${ans} mph`,`<span class='lb'>ANSWER</span> <span class='ans'>${ans} mph</span>`],nt:`Same physical situation, opposite sign convention. The magnitude is identical.`}
+  }
+},
+rv_river_swimmer(){
+  // Swimmer in river current
+  const vSwim=R(1.5,3.5,1),vRiv=R(0.5,2.0,1);
+  const dir=pick(["with","against"]);
+  if(dir==="with"){
+    const ans=rd(vSwim+vRiv,2);
+    return{ref:"Current",q:`A swimmer swims at <b>${vSwim} m/s</b> (in still water). The river current flows downstream at <b>${vRiv} m/s</b>. If the swimmer swims <b>downstream (with the current)</b>, what is her speed relative to the shore?`,gv:`v_swim (rel. water) = ${vSwim} m/s downstream\nv_water (rel. shore) = ${vRiv} m/s downstream`,fm:`v_shore = v_swim + v_water (same direction)`,fi:`v = ? m/s`,u:"m/s",a:ans,tol:Math.max(ans*0.02,0.05),
+    st:[`<span class='lb'>ADD</span> ${vSwim} + ${vRiv} = ${ans} m/s`,`<span class='lb'>ANSWER</span> <span class='ans'>${ans} m/s downstream</span>`],nt:`Same direction → velocities add. Current helps you go faster.`}
+  } else {
+    const ans=rd(vSwim-vRiv,2);
+    return{ref:"Current",q:`A swimmer swims at <b>${vSwim} m/s</b> in still water. The river current is <b>${vRiv} m/s</b> downstream. If she swims <b>upstream (against the current)</b>, what is her speed relative to the shore?`,gv:`v_swim (rel. water) = +${vSwim} m/s upstream\nv_water (rel. shore) = −${vRiv} m/s (downstream)`,fm:`v_shore = v_swim + v_water`,fi:`v = ? m/s`,u:"m/s",a:ans,tol:Math.max(Math.abs(ans)*0.02,0.05),
+    st:[`<span class='lb'>ADD (with signs)</span> +${vSwim} + (−${vRiv}) = ${ans} m/s`,`<span class='lb'>ANSWER</span> <span class='ans'>${ans} m/s upstream</span>`],nt:`Against the current: subtract. If current > swim speed, you'd go backward!`}
+  }
+},
+rv_relative_zero(){
+  // Two cars at same velocity
+  const v=R(20,40,0);
+  return{ref:"Concept",q:`Two cars drive side-by-side east at exactly <b>${v} m/s</b>. From the perspective of one car driver, what is the other car's velocity?`,gv:`v_A = +${v} m/s\nv_B = +${v} m/s`,fm:`v_obs = v_object − v_observer`,fi:`v = ? m/s`,u:"m/s",a:0,tol:0.05,
+  st:[`<span class='lb'>SOLVE</span> ${v} − ${v} = 0 m/s`,`<span class='lb'>ANSWER</span> <span class='ans'>0 m/s</span>`],nt:`Moving at the same velocity → relative velocity is zero. The other car appears to "hover" next to you.`}
+},
+rv_chase(){
+  // Cop chasing speeder - same direction, cop catches up
+  const vSpeed=R(28,40,0),vCop=R(35,50,0);
+  const ans=rd(vSpeed-vCop,0); // speeder seen from cop
+  return{ref:"Chase scenario",q:`A speeder drives east at <b>${vSpeed} m/s</b>. A police car follows east at <b>${vCop} m/s</b>. From the cop's POV (with east = +), what is the speeder's velocity?`,gv:`v_speeder = +${vSpeed} m/s\nv_cop = +${vCop} m/s`,fm:`v_obs = v_object − v_observer`,fi:`v(speeder from cop) = ? m/s`,u:"m/s",a:ans,tol:Math.max(Math.abs(ans)*0.02,0.5),
+  st:[`<span class='lb'>SOLVE</span> (+${vSpeed}) − (+${vCop}) = ${ans} m/s`,`<span class='lb'>ANSWER</span> <span class='ans'>${ans} m/s (negative = falling behind, the cop is catching up)</span>`],nt:`Cop is closing in at ${Math.abs(ans)} m/s. Closing speeds matter for chases and rocket interceptions!`}
+}
+});
+// ============================================================
+// 📈 GRAPH GENERATOR ENGINE
+// ============================================================
+// Creates an SVG plot from a piecewise-linear array of (t, y) anchor points.
+// W=420, H=260 viewBox. Padded for axes/labels. Returns SVG string.
+function makeGraph(opts){
+  // opts: {anchors: [[t,y],...], xMax, yMin, yMax, xLabel, yLabel, title, markers (optional [{t,y,label}])}
+  const W=440,H=280,PL=46,PR=18,PT=28,PB=44;
+  const pw=W-PL-PR,ph=H-PT-PB;
+  const {anchors,xMax,yMin,yMax,xLabel,yLabel,title,markers}=opts;
+  const xToPx=t=>PL+(t/xMax)*pw;
+  const yToPx=y=>PT+ph-((y-yMin)/(yMax-yMin))*ph;
+  // grid lines + ticks
+  let svg=`<svg class="graph-svg" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">`;
+  if(title)svg+=`<text class="title-text" x="${W/2}" y="16" text-anchor="middle">${title}</text>`;
+  // grid (every 1 unit on x, ~1 unit on y depending on range)
+  const xStep=xMax<=8?1:xMax<=15?2:xMax<=25?5:10;
+  const yRange=yMax-yMin;
+  const yStep=yRange<=8?1:yRange<=16?2:yRange<=30?5:10;
+  for(let t=0;t<=xMax;t+=xStep){
+    const px=xToPx(t);
+    svg+=`<line class="grid" x1="${px}" y1="${PT}" x2="${px}" y2="${PT+ph}"/>`;
+    svg+=`<text class="tick-label" x="${px}" y="${PT+ph+15}" text-anchor="middle">${t}</text>`;
+  }
+  for(let y=Math.ceil(yMin/yStep)*yStep;y<=yMax;y+=yStep){
+    const py=yToPx(y);
+    svg+=`<line class="grid" x1="${PL}" y1="${py}" x2="${PL+pw}" y2="${py}"/>`;
+    svg+=`<text class="tick-label" x="${PL-6}" y="${py+3}" text-anchor="end">${y}</text>`;
+  }
+  // axes (heavier)
+  svg+=`<line class="axis" x1="${PL}" y1="${PT}" x2="${PL}" y2="${PT+ph}"/>`;
+  svg+=`<line class="axis" x1="${PL}" y1="${PT+ph}" x2="${PL+pw}" y2="${PT+ph}"/>`;
+  // y=0 reference line if range crosses zero
+  if(yMin<0&&yMax>0){
+    const zy=yToPx(0);
+    svg+=`<line stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-dasharray="3 3" x1="${PL}" y1="${zy}" x2="${PL+pw}" y2="${zy}"/>`;
+  }
+  // axis labels
+  svg+=`<text class="axis-label" x="${PL+pw/2}" y="${H-10}" text-anchor="middle">${xLabel}</text>`;
+  svg+=`<text class="axis-label" x="14" y="${PT+ph/2}" text-anchor="middle" transform="rotate(-90 14 ${PT+ph/2})">${yLabel}</text>`;
+  // curve
+  const pts=anchors.map(([t,y])=>`${xToPx(t)},${yToPx(y)}`).join(" ");
+  svg+=`<polyline class="curve" points="${pts}"/>`;
+  // markers (optional)
+  if(markers)markers.forEach(m=>{
+    const cx=xToPx(m.t),cy=yToPx(m.y);
+    svg+=`<circle class="marker" cx="${cx}" cy="${cy}" r="3.5"/>`;
+    if(m.label)svg+=`<text class="tick-label" x="${cx+8}" y="${cy-6}" fill="var(--cyn)">${m.label}</text>`;
+  });
+  svg+=`</svg>`;
+  return svg;
+}
+
+// Helper: build piecewise-linear anchors from a list of segment slopes
+function buildPiecewise(startY,segments){
+  // segments: array of {dt, slope} — duration and slope of each segment
+  const anchors=[[0,startY]];
+  let t=0,y=startY;
+  segments.forEach(s=>{
+    t+=s.dt;
+    y+=s.slope*s.dt;
+    anchors.push([rd(t,2),rd(y,2)]);
+  });
+  return anchors;
+}
+
+// ============================================================
+// 📈 GRAPH-BASED QUESTION TEMPLATES (~13)
+// ============================================================
+Object.assign(G,{
+g_pt_slope_two_points(){
+  // Position-vs-Time: pick two times, find avg velocity
+  const segs=[
+    {dt:R(2,3,0),slope:R(0.5,2.0,1)},
+    {dt:R(2,3,0),slope:R(-1.0,-0.3,1)},
+    {dt:R(2,3,0),slope:R(0.5,1.8,1)}
+  ];
+  const anchors=buildPiecewise(R(0,2,1),segs);
+  const ys=anchors.map(p=>p[1]);
+  const yMin=Math.floor(Math.min(...ys)-1),yMax=Math.ceil(Math.max(...ys)+1);
+  const xMax=anchors[anchors.length-1][0];
+  // Pick two adjacent anchor points
+  const i=Math.floor(Math.random()*segs.length);
+  const [t1,y1]=anchors[i],[t2,y2]=anchors[i+1];
+  const v=rd((y2-y1)/(t2-t1),2);
+  const graph=makeGraph({anchors,xMax,yMin,yMax,xLabel:"Time (s)",yLabel:"Position (m)",title:"Position vs Time",markers:[{t:t1,y:y1,label:"A"},{t:t2,y:y2,label:"B"}]});
+  return{ref:"Ex 1.4",q:`From the graph, find the <b>average velocity</b> between points A (t = ${t1} s) and B (t = ${t2} s).${graph}`,gv:`Point A: (${t1} s, ${y1} m)\nPoint B: (${t2} s, ${y2} m)`,fm:`slope = rise / run\nv = Δx / Δt`,fi:`v = ? m/s`,u:"m/s",a:v,tol:Math.max(Math.abs(v)*0.05,0.15),
+  st:[`<span class='lb'>RISE (Δx)</span> ${y2} − ${y1} = ${rd(y2-y1,2)} m`,`<span class='lb'>RUN (Δt)</span> ${t2} − ${t1} = ${rd(t2-t1,2)} s`,`<span class='lb'>SLOPE</span> v = ${rd(y2-y1,2)} / ${rd(t2-t1,2)} = ${v} m/s`,`<span class='lb'>ANSWER</span> <span class='ans'>${v} m/s</span>`],nt:`Slope of P-vs-T IS the velocity. Rise over run.`}
+},
+g_pt_direction_changes(){
+  // Random number of slope sign changes (direction changes)
+  const numSegs=pick([2,3,4,5,6]);
+  const segs=[];
+  let curSign=pick([1,-1]);
+  let changes=0;
+  for(let i=0;i<numSegs;i++){
+    const flip=i>0&&Math.random()<0.65;
+    if(flip){curSign*=-1;changes++}
+    segs.push({dt:R(1,3,0),slope:curSign*R(0.5,2.0,1)});
+  }
+  const anchors=buildPiecewise(R(0,3,1),segs);
+  const ys=anchors.map(p=>p[1]);
+  const yMin=Math.floor(Math.min(...ys)-1),yMax=Math.ceil(Math.max(...ys)+1);
+  const xMax=anchors[anchors.length-1][0];
+  const graph=makeGraph({anchors,xMax,yMin,yMax,xLabel:"Time (s)",yLabel:"Position (m)",title:"Position vs Time"});
+  return{ref:"Ex 1.4 / OYO 1.5",q:`Looking at this position-vs-time graph, <b>how many times does the object change direction</b>?${graph}`,gv:`Read the slope: each sign change = direction change`,fm:`Count slope sign changes`,fi:`Number of direction changes`,u:"",a:changes,tol:0.5,
+  st:[`<span class='lb'>RULE</span> Each time slope flips sign, object reverses direction`,`<span class='lb'>COUNT</span> ${changes} sign change(s) in this graph`,`<span class='lb'>ANSWER</span> <span class='ans'>${changes} time${changes===1?"":"s"}</span>`],nt:`Slope of P-vs-T = velocity. When velocity changes sign, direction flips.`}
+},
+g_pt_when_fastest(){
+  // Find which interval has the steepest slope (max speed)
+  const segs=[
+    {dt:R(1,2,0),slope:R(0.3,1.0,1)},
+    {dt:R(1,2,0),slope:pick([R(2.0,4.0,1),R(-3.5,-2.0,1)])}, // steep one
+    {dt:R(1,2,0),slope:R(-0.8,-0.2,1)},
+    {dt:R(1,2,0),slope:R(0.3,1.2,1)}
+  ];
+  const anchors=buildPiecewise(R(0,2,1),segs);
+  // Find segment with max |slope|
+  let maxIdx=0,maxAbs=0;
+  segs.forEach((s,i)=>{if(Math.abs(s.slope)>maxAbs){maxAbs=Math.abs(s.slope);maxIdx=i}});
+  // The interval is from anchors[maxIdx] to anchors[maxIdx+1]
+  const t1=anchors[maxIdx][0],t2=anchors[maxIdx+1][0];
+  const ys=anchors.map(p=>p[1]);
+  const yMin=Math.floor(Math.min(...ys)-1),yMax=Math.ceil(Math.max(...ys)+1);
+  const xMax=anchors[anchors.length-1][0];
+  const graph=makeGraph({anchors,xMax,yMin,yMax,xLabel:"Time (s)",yLabel:"Position (m)",title:"Position vs Time"});
+  // Ask for midpoint of fastest interval
+  const tMid=rd((t1+t2)/2,1);
+  return{ref:"Ex 1.4",q:`During which interval is the object moving the <b>fastest</b>? Identify the midpoint time of that interval.${graph}<br><span style="color:var(--dim);font-size:12px">(Hint: look for the steepest segment — sign doesn't matter for speed.)</span>`,gv:`Speed = |slope|. Find max |slope|.`,fm:`Steepest segment = fastest motion`,fi:`Midpoint of fastest interval (s)`,u:"s",a:tMid,tol:0.55,
+  st:[`<span class='lb'>FASTEST INTERVAL</span> t = ${t1} to ${t2} s`,`<span class='lb'>MIDPOINT</span> (${t1} + ${t2}) / 2 = ${tMid} s`,`<span class='lb'>ANSWER</span> <span class='ans'>${tMid} s (interval ${t1}–${t2} s)</span>`],nt:`Speed cares about |slope|, not its sign. Steepness alone determines speed.`}
+},
+g_pt_instant_velocity_flat(){
+  // A flat segment — velocity = 0 during it
+  const startY=R(2,6,0);
+  const segs=[
+    {dt:R(1,2,0),slope:R(0.5,1.5,1)},
+    {dt:R(1.5,3,1),slope:0},
+    {dt:R(1,2,0),slope:R(-1.5,-0.5,1)}
+  ];
+  const anchors=buildPiecewise(startY,segs);
+  const ys=anchors.map(p=>p[1]);
+  const yMin=Math.floor(Math.min(...ys)-1),yMax=Math.ceil(Math.max(...ys)+1);
+  const xMax=anchors[anchors.length-1][0];
+  // Pick a time in the middle of the flat segment
+  const tFlat=rd((anchors[1][0]+anchors[2][0])/2,1);
+  const graph=makeGraph({anchors,xMax,yMin,yMax,xLabel:"Time (s)",yLabel:"Position (m)",title:"Position vs Time"});
+  return{ref:"Ex 1.4",q:`What is the <b>instantaneous velocity</b> at <b>t = ${tFlat} s</b>?${graph}`,gv:`Check slope of curve at t = ${tFlat} s`,fm:`Instantaneous v = slope at that point`,fi:`v = ? m/s`,u:"m/s",a:0,tol:0.2,
+  st:[`<span class='lb'>OBSERVE</span> Curve is flat at t = ${tFlat} s`,`<span class='lb'>SLOPE</span> Flat curve → slope = 0`,`<span class='lb'>ANSWER</span> <span class='ans'>0 m/s (object is at rest at this moment)</span>`],nt:`Flat segment on P-vs-T = stationary object. v = 0.`}
+},
+g_pt_straight_line_segment(){
+  // Multi-segment graph but one segment is straight line → instantaneous v = slope of that line, anywhere in it
+  const startY=R(0,2,1);
+  const slope1=R(0.8,2.0,1);
+  const slopeStraight=pick([R(-1.5,-0.5,1),R(0.7,1.8,1)]); // the segment we'll ask about
+  const segs=[
+    {dt:R(1,2,0),slope:slope1},
+    {dt:R(3,5,0),slope:slopeStraight}, // long straight section
+    {dt:R(1,2,0),slope:R(-1.5,0.3,1)}
+  ];
+  const anchors=buildPiecewise(startY,segs);
+  const ys=anchors.map(p=>p[1]);
+  const yMin=Math.floor(Math.min(...ys)-1),yMax=Math.ceil(Math.max(...ys)+1);
+  const xMax=anchors[anchors.length-1][0];
+  // Pick a time inside the straight section
+  const tStart=anchors[1][0],tEnd=anchors[2][0];
+  const tAsk=rd(tStart+(tEnd-tStart)*0.5,1);
+  const graph=makeGraph({anchors,xMax,yMin,yMax,xLabel:"Time (s)",yLabel:"Position (m)",title:"Position vs Time"});
+  const v=rd(slopeStraight,2);
+  return{ref:"Ex 1.4",q:`The curve is a straight line between t = ${tStart} s and t = ${tEnd} s. What is the <b>instantaneous velocity</b> at <b>t = ${tAsk} s</b>?${graph}`,gv:`Straight segment from t = ${tStart} to ${tEnd} s`,fm:`Slope of a straight line = same everywhere on it`,fi:`v = ? m/s`,u:"m/s",a:v,tol:Math.max(Math.abs(v)*0.08,0.2),
+  st:[`<span class='lb'>RISE</span> y(${tEnd}) − y(${tStart}) = ${anchors[2][1]} − ${anchors[1][1]} = ${rd(anchors[2][1]-anchors[1][1],2)} m`,`<span class='lb'>RUN</span> ${tEnd} − ${tStart} = ${rd(tEnd-tStart,1)} s`,`<span class='lb'>SLOPE</span> v = ${v} m/s (constant along straight segment)`,`<span class='lb'>ANSWER</span> <span class='ans'>${v} m/s</span>`],nt:`On a straight-line segment, instantaneous velocity = average velocity = slope of that segment.`}
+},
+g_pt_compare_speeds(){
+  // Compare instantaneous speeds at two times
+  const segs=[
+    {dt:R(1,2,0),slope:R(0.5,2.5,1)*pick([1,-1])},
+    {dt:R(1,2,0),slope:R(0.5,2.5,1)*pick([1,-1])},
+    {dt:R(1,2,0),slope:R(0.5,2.5,1)*pick([1,-1])}
+  ];
+  // Force different magnitudes
+  if(Math.abs(Math.abs(segs[0].slope)-Math.abs(segs[2].slope))<0.4){
+    segs[2].slope=segs[0].slope+pick([0.8,-0.8,1.2,-1.2]);
+  }
+  const anchors=buildPiecewise(R(0,3,1),segs);
+  const ys=anchors.map(p=>p[1]);
+  const yMin=Math.floor(Math.min(...ys)-1),yMax=Math.ceil(Math.max(...ys)+1);
+  const xMax=anchors[anchors.length-1][0];
+  const t1=rd((anchors[0][0]+anchors[1][0])/2,1);
+  const t2=rd((anchors[2][0]+anchors[3][0])/2,1);
+  const speed1=Math.abs(segs[0].slope),speed2=Math.abs(segs[2].slope);
+  const ans=speed1>speed2?1:2;
+  const graph=makeGraph({anchors,xMax,yMin,yMax,xLabel:"Time (s)",yLabel:"Position (m)",title:"Position vs Time"});
+  return{ref:"Ex 1.4 / OYO 1.4",q:`Compare the object's <b>speed</b> at <b>t = ${t1} s</b> (segment 1) and <b>t = ${t2} s</b> (segment 3). Which is faster? <b>Enter 1 or 2.</b>${graph}`,gv:`Compare |slopes| at the two times`,fm:`Speed = |slope|`,fi:`1 = t=${t1} s faster, 2 = t=${t2} s faster`,u:"",a:ans,tol:0.5,
+  st:[`<span class='lb'>SLOPE AT t=${t1}</span> ≈ ${rd(segs[0].slope,2)} m/s → |speed| = ${rd(speed1,2)}`,`<span class='lb'>SLOPE AT t=${t2}</span> ≈ ${rd(segs[2].slope,2)} m/s → |speed| = ${rd(speed2,2)}`,`<span class='lb'>FASTER</span> ${ans===1?`t = ${t1} s`:`t = ${t2} s`}`,`<span class='lb'>ANSWER</span> <span class='ans'>${ans}</span>`],nt:`Sign of slope = direction. Magnitude (steepness) = speed. We compare magnitudes here.`}
+},
+g_vt_slope(){
+  // Velocity-vs-Time: slope = acceleration
+  const startV=R(0,5,1);
+  const segs=[
+    {dt:R(2,4,0),slope:R(0.5,2.0,1)}, // constant accel
+    {dt:R(2,4,0),slope:R(-1.5,-0.3,1)}, // decel
+    {dt:R(2,3,0),slope:R(0.3,1.5,1)}
+  ];
+  const anchors=buildPiecewise(startV,segs);
+  const ys=anchors.map(p=>p[1]);
+  const yMin=Math.floor(Math.min(...ys)-1),yMax=Math.ceil(Math.max(...ys)+1);
+  const xMax=anchors[anchors.length-1][0];
+  const i=Math.floor(Math.random()*segs.length);
+  const [t1,v1]=anchors[i],[t2,v2]=anchors[i+1];
+  const a=rd((v2-v1)/(t2-t1),2);
+  const graph=makeGraph({anchors,xMax,yMin,yMax,xLabel:"Time (s)",yLabel:"Velocity (m/s)",title:"Velocity vs Time",markers:[{t:t1,y:v1,label:"A"},{t:t2,y:v2,label:"B"}]});
+  return{ref:"Ex 1.7",q:`From the velocity-vs-time graph, find the <b>acceleration</b> between A (t = ${t1} s) and B (t = ${t2} s).${graph}`,gv:`A: (${t1} s, ${v1} m/s)\nB: (${t2} s, ${v2} m/s)`,fm:`slope = a = Δv / Δt`,fi:`a = ? m/s²`,u:"m/s²",a:a,tol:Math.max(Math.abs(a)*0.05,0.15),
+  st:[`<span class='lb'>RISE (Δv)</span> ${v2} − ${v1} = ${rd(v2-v1,2)} m/s`,`<span class='lb'>RUN (Δt)</span> ${t2} − ${t1} = ${rd(t2-t1,1)} s`,`<span class='lb'>SLOPE</span> a = ${rd(v2-v1,2)} / ${rd(t2-t1,1)} = ${a} m/s²`,`<span class='lb'>ANSWER</span> <span class='ans'>${a} m/s²</span>`],nt:`Slope of V-vs-T graph IS the acceleration.`}
+},
+g_vt_speeding_up_interval(){
+  // Speeding up: v and a same sign
+  // Build a graph where velocity stays positive (or negative) but slope changes
+  const allPos=pick([true,false]);
+  const startV=allPos?R(2,5,1):R(-5,-2,1);
+  const segs=allPos?[
+    {dt:R(2,3,0),slope:R(0.5,1.5,1)}, // speeding up (v+, a+)
+    {dt:R(2,3,0),slope:R(-1.2,-0.4,1)}, // slowing down (v+, a−)
+    {dt:R(2,3,0),slope:R(0.4,1.5,1)} // speeding up again
+  ]:[
+    {dt:R(2,3,0),slope:R(-1.5,-0.5,1)}, // speeding up in − direction
+    {dt:R(2,3,0),slope:R(0.4,1.2,1)}, // slowing down
+    {dt:R(2,3,0),slope:R(-1.2,-0.4,1)}
+  ];
+  const anchors=buildPiecewise(startV,segs);
+  // Make sure velocity stays in one sign
+  const ys=anchors.map(p=>p[1]);
+  const minY=Math.min(...ys),maxY=Math.max(...ys);
+  // If it crosses zero, fall back to a regen using only allPos=true with bigger startV
+  if((allPos&&minY<0.3)||(!allPos&&maxY>-0.3)){
+    return G.g_vt_speeding_up_interval(); // retry
+  }
+  const yMin=Math.floor(minY-1),yMax=Math.ceil(maxY+1);
+  const xMax=anchors[anchors.length-1][0];
+  // Find the FIRST segment where v and slope have same sign — that's "speeding up"
+  let speedupIdx=-1;
+  for(let i=0;i<segs.length;i++){
+    const vMid=(anchors[i][1]+anchors[i+1][1])/2;
+    if((vMid>0&&segs[i].slope>0)||(vMid<0&&segs[i].slope<0)){speedupIdx=i;break}
+  }
+  if(speedupIdx===-1)return G.g_vt_speeding_up_interval();
+  const tStart=anchors[speedupIdx][0],tEnd=anchors[speedupIdx+1][0];
+  const tMid=rd((tStart+tEnd)/2,1);
+  const graph=makeGraph({anchors,xMax,yMin,yMax,xLabel:"Time (s)",yLabel:"Velocity (m/s)",title:"Velocity vs Time"});
+  return{ref:"Ex 1.7 / OYO 1.11",q:`Find a time when the object is <b>speeding up</b>. Enter the midpoint of any valid interval (within 0.7 s tolerance).${graph}`,gv:`Speeding up = same sign for v and a (slope)`,fm:`v(+) & slope(+) → speeding up\nv(−) & slope(−) → speeding up`,fi:`t = ? s`,u:"s",a:tMid,tol:Math.max((tEnd-tStart)/2,0.7),
+  st:[`<span class='lb'>FIND</span> Look for interval where v's sign matches slope's sign`,`<span class='lb'>INTERVAL</span> ${tStart} to ${tEnd} s — both v and a are ${allPos?"positive":"negative"}`,`<span class='lb'>MIDPOINT</span> t = ${tMid} s`,`<span class='lb'>ANSWER</span> <span class='ans'>${tMid} s (interval ${tStart}–${tEnd} s)</span>`],nt:`"Speeding up" means |v| is increasing — v and a point the same direction.`}
+},
+g_vt_accel_zero(){
+  // Find when acceleration is zero — flat segment on V-vs-T
+  const startV=R(3,8,1);
+  const segs=[
+    {dt:R(1.5,2.5,0),slope:R(0.5,1.5,1)},
+    {dt:R(2,3,0),slope:0}, // flat = a=0
+    {dt:R(1.5,2.5,0),slope:R(-1.5,-0.4,1)}
+  ];
+  const anchors=buildPiecewise(startV,segs);
+  const ys=anchors.map(p=>p[1]);
+  const yMin=Math.floor(Math.min(...ys)-1),yMax=Math.ceil(Math.max(...ys)+1);
+  const xMax=anchors[anchors.length-1][0];
+  const tMid=rd((anchors[1][0]+anchors[2][0])/2,1);
+  const graph=makeGraph({anchors,xMax,yMin,yMax,xLabel:"Time (s)",yLabel:"Velocity (m/s)",title:"Velocity vs Time"});
+  return{ref:"Ex 1.7",q:`Looking at this velocity-vs-time graph, identify a time at which the <b>acceleration is zero</b>.${graph}`,gv:`Find where the slope is zero (flat segment)`,fm:`a = slope of V-vs-T\nFlat → a = 0`,fi:`t = ? s`,u:"s",a:tMid,tol:Math.max((anchors[2][0]-anchors[1][0])/2,0.6),
+  st:[`<span class='lb'>RULE</span> a = slope; flat curve → slope = 0 → a = 0`,`<span class='lb'>FLAT INTERVAL</span> from t = ${anchors[1][0]} s to t = ${anchors[2][0]} s`,`<span class='lb'>MIDPOINT</span> t = ${tMid} s`,`<span class='lb'>ANSWER</span> <span class='ans'>${tMid} s (anywhere in the flat segment works)</span>`],nt:`Flat on V-vs-T = constant velocity = zero acceleration. Different from "v = 0"!`}
+},
+g_vt_max_accel(){
+  // Find the steepest segment (max |a|)
+  const startV=R(2,5,1);
+  const slopes=[R(0.3,1.0,1),R(2.5,4.0,1),R(-1.5,-0.5,1),R(0.5,1.2,1)];
+  const segs=slopes.map(s=>({dt:R(1.5,2.5,0),slope:s}));
+  const anchors=buildPiecewise(startV,segs);
+  let maxIdx=0,maxAbs=0;
+  slopes.forEach((s,i)=>{if(Math.abs(s)>maxAbs){maxAbs=Math.abs(s);maxIdx=i}});
+  const tStart=anchors[maxIdx][0],tEnd=anchors[maxIdx+1][0];
+  const tMid=rd((tStart+tEnd)/2,1);
+  const ys=anchors.map(p=>p[1]);
+  const yMin=Math.floor(Math.min(...ys)-1),yMax=Math.ceil(Math.max(...ys)+1);
+  const xMax=anchors[anchors.length-1][0];
+  const graph=makeGraph({anchors,xMax,yMin,yMax,xLabel:"Time (s)",yLabel:"Velocity (m/s)",title:"Velocity vs Time"});
+  return{ref:"Ex 1.7",q:`During which interval is the <b>acceleration's magnitude greatest</b>? Enter the midpoint time of that interval.${graph}`,gv:`Look for the steepest segment (sign doesn't matter)`,fm:`|a| = |slope|`,fi:`Midpoint time (s)`,u:"s",a:tMid,tol:Math.max((tEnd-tStart)/2,0.6),
+  st:[`<span class='lb'>STEEPEST SEGMENT</span> t = ${tStart} to ${tEnd} s`,`<span class='lb'>SLOPE</span> ≈ ${rd(slopes[maxIdx],2)} m/s² → magnitude ${rd(Math.abs(slopes[maxIdx]),2)}`,`<span class='lb'>MIDPOINT</span> t = ${tMid} s`,`<span class='lb'>ANSWER</span> <span class='ans'>${tMid} s</span>`],nt:`We're asking about magnitude — sign doesn't matter for "greatest acceleration magnitude."`}
+},
+g_vt_count_speedups(){
+  // OYO 1.11 style — count intervals where it's speeding up
+  // Build a velocity curve where v changes sign at least once and there are multiple speed-up intervals
+  const startV=R(8,15,1);
+  // segments: decreasing through zero, increasing back, decreasing again
+  const segs=[
+    {dt:R(2,3,0),slope:R(-3,-1.5,1)}, // v decreasing
+    {dt:R(2,3,0),slope:R(1,2,1)}, // v increasing back
+    {dt:R(2,3,0),slope:R(-2.5,-1.2,1)} // v decreasing again
+  ];
+  const anchors=buildPiecewise(startV,segs);
+  // Count intervals where v and slope have same sign
+  let count=0;
+  for(let i=0;i<segs.length;i++){
+    const vMid=(anchors[i][1]+anchors[i+1][1])/2;
+    if((vMid>0&&segs[i].slope>0)||(vMid<0&&segs[i].slope<0))count++;
+  }
+  const ys=anchors.map(p=>p[1]);
+  const yMin=Math.floor(Math.min(...ys)-1),yMax=Math.ceil(Math.max(...ys)+1);
+  const xMax=anchors[anchors.length-1][0];
+  const graph=makeGraph({anchors,xMax,yMin,yMax,xLabel:"Time (s)",yLabel:"Velocity (m/s)",title:"Velocity vs Time"});
+  return{ref:"OYO 1.11",q:`Count: how many <b>distinct intervals</b> is the object <b>speeding up</b>?${graph}`,gv:`Speeding up = v and slope same sign`,fm:`In each segment: check if v and a (slope) share sign`,fi:`Number of intervals`,u:"",a:count,tol:0.5,
+  st:[`<span class='lb'>SEGMENT 1</span> v ${anchors[0][1]>0?"+":"−"}, slope ${segs[0].slope>0?"+":"−"} → ${((anchors[0][1]>0)===(segs[0].slope>0))?"speeding up":"slowing down"}`,`<span class='lb'>SEGMENT 2</span> v ${anchors[1][1]>0?"+":"−"}, slope ${segs[1].slope>0?"+":"−"} → ${((anchors[1][1]>0)===(segs[1].slope>0))?"speeding up":"slowing down"}`,`<span class='lb'>SEGMENT 3</span> v ${anchors[2][1]>0?"+":"−"}, slope ${segs[2].slope>0?"+":"−"} → ${((anchors[2][1]>0)===(segs[2].slope>0))?"speeding up":"slowing down"}`,`<span class='lb'>ANSWER</span> <span class='ans'>${count} interval${count===1?"":"s"}</span>`],nt:`This is one of the trickiest problems in the module. Check EVERY segment, including ones where v is negative.`}
+},
+g_pt_velocity_at_point(){
+  // Read instantaneous velocity at one specific time on a straight segment
+  const startY=R(0,2,1);
+  const v=R(1.0,2.5,2)*pick([1,-1]);
+  const segs=[
+    {dt:R(2,3,0),slope:R(0.5,1.2,1)},
+    {dt:R(3,5,0),slope:v}, // long straight section we'll ask about
+    {dt:R(2,3,0),slope:R(-1.0,0.3,1)}
+  ];
+  const anchors=buildPiecewise(startY,segs);
+  const ys=anchors.map(p=>p[1]);
+  const yMin=Math.floor(Math.min(...ys)-1),yMax=Math.ceil(Math.max(...ys)+1);
+  const xMax=anchors[anchors.length-1][0];
+  const tAsk=rd(anchors[1][0]+(anchors[2][0]-anchors[1][0])*0.4,1);
+  const graph=makeGraph({anchors,xMax,yMin,yMax,xLabel:"Time (s)",yLabel:"Position (m)",title:"Position vs Time"});
+  return{ref:"Ex 1.4",q:`The position-vs-time graph shows a long straight section between t = ${anchors[1][0]} s and t = ${anchors[2][0]} s. What is the <b>instantaneous velocity</b> at <b>t = ${tAsk} s</b>?${graph}`,gv:`Straight segment: t = ${anchors[1][0]} s to ${anchors[2][0]} s\nPosition: ${anchors[1][1]} m to ${anchors[2][1]} m`,fm:`Slope of straight segment = constant`,fi:`v = ? m/s`,u:"m/s",a:rd(v,2),tol:Math.max(Math.abs(v)*0.08,0.2),
+  st:[`<span class='lb'>RISE</span> ${anchors[2][1]} − ${anchors[1][1]} = ${rd(anchors[2][1]-anchors[1][1],2)} m`,`<span class='lb'>RUN</span> ${anchors[2][0]} − ${anchors[1][0]} = ${rd(anchors[2][0]-anchors[1][0],1)} s`,`<span class='lb'>SLOPE</span> v = ${rd(v,2)} m/s`,`<span class='lb'>ANSWER</span> <span class='ans'>${rd(v,2)} m/s</span>`],nt:`On a STRAIGHT segment, the slope is the same at every point — so instantaneous velocity = average velocity.`}
+}
+});
+// ============================================================
+// CONCEPT QUESTIONS (kept simple — text-answer style)
+// ============================================================
+Object.assign(G,{
+c_vector_or_scalar(){
+  const items=[
+    {n:"displacement",ans:"vector"},{n:"distance",ans:"scalar"},{n:"velocity",ans:"vector"},
+    {n:"speed",ans:"scalar"},{n:"acceleration",ans:"vector"},{n:"time",ans:"scalar"},
+    {n:"position",ans:"vector"},{n:"path length",ans:"scalar"}
+  ];
+  const it=pick(items);
+  return{ref:"Concept",q:`Is <b>${it.n}</b> a vector or a scalar?`,gv:`Term: ${it.n}`,fm:`Vector = has direction\nScalar = no direction`,fi:`Type: vector or scalar`,u:"",a:it.ans,tol:0,isText:true,
+  st:[`<span class='lb'>RULE</span> If it has direction, it's a vector`,`<span class='lb'>ANSWER</span> <span class='ans'>${it.ans}</span>`],nt:`Vectors have BOTH magnitude AND direction.`}
+},
+c_slope_meaning(){
+  const items=[
+    {g:"position vs time",ans:"velocity"},
+    {g:"velocity vs time",ans:"acceleration"}
+  ];
+  const it=pick(items);
+  return{ref:"Concept",q:`The <b>slope</b> of a <b>${it.g}</b> graph represents what physical quantity?`,gv:`Graph type: ${it.g}`,fm:`slope = rise/run`,fi:`Quantity (one word)`,u:"",a:it.ans,tol:0,isText:true,
+  st:[`<span class='lb'>RULE</span> Slope of ${it.g} = Δ${it.g.split(" ")[0]} / Δtime = ${it.ans}`,`<span class='lb'>ANSWER</span> <span class='ans'>${it.ans}</span>`],nt:`Position/time → velocity. Velocity/time → acceleration. Pattern continues!`}
+},
+c_area_under(){
+  return{ref:"Concept",q:`The <b>area under</b> a <b>velocity vs time</b> graph represents what?`,gv:`Graph: velocity vs time\nAsk: area under curve`,fm:`Area = ∫v dt`,fi:`Quantity (one word)`,u:"",a:"displacement",tol:0,isText:true,
+  st:[`<span class='lb'>RULE</span> Area under V-vs-T = displacement`,`<span class='lb'>ANSWER</span> <span class='ans'>displacement</span>`],nt:`Velocity × time = displacement. The area of a rectangle (or triangle) on V-vs-T gives Δx.`}
+}
+});
+
+// ============================================================
+// SEC — sections used in Problems mode (existing UI)
+// ============================================================
+const SEC=[
+{id:"distdisp",icon:"📏",title:"Distance & Displacement",types:[
+  {id:"dd_basic",name:"Two-leg trip"},{id:"dd_threeleg",name:"Three legs"},{id:"dd_fourleg",name:"Four legs"},
+  {id:"dd_compare",name:"Compare D vs |Δx|"},{id:"dd_find_leg",name:"Find a leg"},{id:"dd_signflip",name:"Sign convention"},
+  {id:"dd_passed_start",name:"Overshoot"},{id:"dd_units_convert",name:"Unit conversion"},
+  {id:"dd_truck_route",name:"Truck route"},{id:"dd_vector_scalar_id",name:"V or S?"},
+  {id:"dd_round_trip",name:"Round trip"},{id:"dd_asymmetric",name:"Ball at wall"}
+]},
+{id:"velocity",icon:"🏃",title:"Speed & Velocity",types:[
+  {id:"v_basic",name:"v = Δx/Δt"},{id:"v_find_distance",name:"Find distance"},{id:"v_find_time",name:"Find time"},
+  {id:"v_round_trip_speed",name:"Round trip — speed"},{id:"v_round_trip_velocity",name:"Round trip — vel"},
+  {id:"v_two_leg_avg",name:"Two-leg average"},{id:"v_mph_to_ms",name:"mph → m/s"},{id:"v_kmh_to_ms",name:"km/h → m/s"},
+  {id:"v_ms_to_mph",name:"m/s → mph"},{id:"v_plane_problem",name:"Plane problem"},
+  {id:"v_concept",name:"Speed vs Vel"},{id:"v_mail_carrier",name:"Mail carrier"}
+]},
+{id:"accel",icon:"⚡",title:"Acceleration",types:[
+  {id:"a_from_rest",name:"From rest"},{id:"a_brake_to_stop",name:"Brake to stop"},
+  {id:"a_change_velocity",name:"Δv given"},{id:"a_slowing_general",name:"Slowing"},
+  {id:"a_find_vfinal",name:"Find v_final"},{id:"a_find_vinitial",name:"Find v_initial"},
+  {id:"a_find_time",name:"Find time"},{id:"a_speedup_signs",name:"Sign analysis"},
+  {id:"a_train_stop",name:"Train stop"},{id:"a_concept_velocity_zero",name:"v=0 ≠ a=0"},
+  {id:"a_two_step",name:"Two-step"},{id:"a_concept_accel_zero",name:"Constant v"},
+  {id:"a_freefall_specific",name:"Free fall"}
+]},
+{id:"relative",icon:"🚗",title:"Relative Velocity",types:[
+  {id:"rv_boat_raft",name:"Boat & raft"},{id:"rv_headon",name:"Head-on"},{id:"rv_same_direction",name:"Same direction"},
+  {id:"rv_train_passenger",name:"Train passenger"},{id:"rv_grandma",name:"Grandma example"},
+  {id:"rv_plane_wind",name:"Plane & wind"},{id:"rv_signflip",name:"Sign flip"},
+  {id:"rv_river_swimmer",name:"River swimmer"},{id:"rv_relative_zero",name:"Side-by-side"},
+  {id:"rv_chase",name:"Police chase"}
+]},
+{id:"graphs",icon:"📈",title:"Graph Interpretation",types:[
+  {id:"g_pt_slope_two_points",name:"P-T slope"},{id:"g_pt_direction_changes",name:"Direction changes"},
+  {id:"g_pt_when_fastest",name:"When fastest?"},{id:"g_pt_instant_velocity_flat",name:"v at flat"},
+  {id:"g_pt_straight_line_segment",name:"Straight-line v"},{id:"g_pt_compare_speeds",name:"Compare speeds"},
+  {id:"g_vt_slope",name:"V-T slope"},{id:"g_vt_speeding_up_interval",name:"When speeding up"},
+  {id:"g_vt_accel_zero",name:"a = 0 interval"},{id:"g_vt_max_accel",name:"Max |a|"},
+  {id:"g_vt_count_speedups",name:"Count speed-ups"},{id:"g_pt_velocity_at_point",name:"Instant v"}
+]},
+{id:"concept",icon:"💡",title:"Concept Check",types:[
+  {id:"c_vector_or_scalar",name:"V or S?"},{id:"c_slope_meaning",name:"Slope meaning"},
+  {id:"c_area_under",name:"Area meaning"},{id:"dd_vector_scalar_id",name:"Vector vs scalar"},
+  {id:"a_speedup_signs",name:"Speeding up/slowing"},{id:"a_concept_velocity_zero",name:"v=0 vs a=0"}
+]}
+];
+
+// ============================================================
+// EXAM POOLS — which generators belong to each exam section
+// ============================================================
+const EXAM_POOLS={
+distdisp:["dd_basic","dd_threeleg","dd_fourleg","dd_compare","dd_find_leg","dd_signflip","dd_passed_start","dd_units_convert","dd_truck_route","dd_vector_scalar_id","dd_round_trip","dd_asymmetric"],
+velocity:["v_basic","v_find_distance","v_find_time","v_round_trip_speed","v_round_trip_velocity","v_two_leg_avg","v_mph_to_ms","v_kmh_to_ms","v_ms_to_mph","v_plane_problem","v_concept","v_mail_carrier"],
+accel:["a_from_rest","a_brake_to_stop","a_change_velocity","a_slowing_general","a_find_vfinal","a_find_vinitial","a_find_time","a_speedup_signs","a_train_stop","a_concept_velocity_zero","a_two_step","a_concept_accel_zero","a_freefall_specific"],
+relative:["rv_boat_raft","rv_headon","rv_same_direction","rv_train_passenger","rv_grandma","rv_plane_wind","rv_signflip","rv_river_swimmer","rv_relative_zero","rv_chase"]
+};
+
+const EXAM_META={
+distdisp:{icon:"📏",name:"Distance & Displacement",desc:"Vectors vs scalars, signed sums, round trips, unit conversions",color:"#a78bfa"},
+velocity:{icon:"🏃",name:"Speed & Velocity",desc:"v = Δx/Δt, unit conversions, two-leg averages, round trips",color:"#20d3e8"},
+accel:{icon:"⚡",name:"Acceleration",desc:"a = Δv/Δt, braking, free fall, sign analysis",color:"#eab308"},
+relative:{icon:"🚗",name:"Relative Velocity",desc:"Frames of reference, head-on, same-direction, wind/current",color:"#f59e0b"}
+};
+
+// ============================================================
+// LESSONS (Learn mode)
+// ============================================================
+const LESSONS={
+basics:{title:"Motion Basics: Distance vs Displacement",icon:"📏",cards:[
+{type:"intro",body:`Module 1 is all about <b>motion in one dimension</b> — objects moving along a straight line. Before we can describe motion, we need to distinguish between two related but DIFFERENT ideas: <em>distance</em> and <em>displacement</em>.`},
+{type:"def",title:"Position",body:`Position tells us <b>where</b> an object is at a given moment. It's the answer to "where is the object?" In one dimension, we need only one number (with a sign) to describe position.`},
+{type:"def",title:"Distance (scalar)",body:`<b>Distance</b> is the total path length traveled — how much road you've covered. It's always positive and ignores direction. If you walk 5 m east then 3 m west, your distance is <em>8 m</em>.`},
+{type:"def",title:"Displacement (vector)",body:`<b>Displacement</b> is the <em>net change in position</em> — straight from start to finish, with direction. Same example: 5 m east + 3 m west = <em>2 m east</em>.`},
+{type:"eq",body:"Δx = x_final − x_initial"},
+{type:"checkpoint",q:`An ant walks <b>11.3 cm</b> away from its home, then <b>10.7 cm</b> back toward home. With "away" as positive, what is the <b>displacement</b>?`,fields:{label:"Δx (cm)",placeholder:"0.6"},answer:0.6,tol:0.05,hint:"Add signed legs: +11.3 + (−10.7) = 0.6 cm."},
+{type:"checkpoint",q:`Same ant. What is the <b>distance</b> traveled?`,fields:{label:"Distance (cm)",placeholder:"22"},answer:22.0,tol:0.05,hint:"Distance is the total path: 11.3 + 10.7 = 22.0 cm. Distance is always positive."},
+{type:"quiz",questions:[
+{q:"Which of these is a vector?",opts:["distance","speed","time","displacement"],ci:3,exp:"Displacement has a direction; distance, speed, and time are scalars."},
+{q:"You walk 10 m east, then 4 m west. Your displacement is:",opts:["14 m","6 m east","6 m west","14 m east"],ci:1,exp:"+10 + (−4) = 6 m east."},
+{q:"You walk a complete loop around your school and return to where you started. Distance traveled is 800 m. What is your displacement?",opts:["800 m","400 m","0 m","Cannot determine"],ci:2,exp:"Closed loop → Δx = 0. Displacement only cares about START and FINISH."},
+{q:"You walk 3 m north and then 4 m south. Total distance walked:",opts:["1 m","3 m","4 m","7 m"],ci:3,exp:"Distance adds magnitudes: 3 + 4 = 7 m."},
+{q:"If you define WEST as positive, walking 5 m east results in a displacement of:",opts:["+5 m","−5 m","+10 m","0 m"],ci:1,exp:"Sign convention matters — east becomes negative if west is positive."}
+]}
+]},
+speedvel:{title:"Speed & Velocity",icon:"🏃",cards:[
+{type:"intro",body:`Once we can describe positions, we can describe how positions <em>change</em>. The rate of change of position is <b>velocity</b>.`},
+{type:"def",title:"Speed",body:`<b>Speed</b> is how fast something is going — distance per unit time. It's a scalar (no direction). Formula: <em>speed = distance / time</em>.`},
+{type:"def",title:"Velocity",body:`<b>Velocity</b> is a vector. It's the rate of change of <em>position</em> (not distance). It includes direction. Formula: <em>v = Δx / Δt</em>.`},
+{type:"eq",body:"v = Δx / Δt          speed = Δd / Δt"},
+{type:"def",title:"Why they differ on round trips",body:`On a round trip, distance keeps adding (you covered more road) but displacement stays small (you're back near the start). So <em>speed</em> can be high while <em>velocity</em> is small — or even ZERO.`},
+{type:"def",title:"Average velocity ≠ average of two velocities",body:`To get average velocity over multi-leg trips, use <b>total displacement / total time</b> — NOT the simple average of the leg velocities. This is the classic textbook trap.`},
+{type:"checkpoint",q:`A jogger runs <b>120 m east in 30 s</b>, then turns around and walks <b>40 m west in 50 s</b>. What is her average velocity? (east = +)`,fields:{label:"v (m/s)",placeholder:"1"},answer:1.0,tol:0.05,hint:"Net Δx = 120 − 40 = 80 m. Net Δt = 30 + 50 = 80 s. v = 80/80 = 1 m/s."},
+{type:"checkpoint",q:`Same jogger. What was her average <b>speed</b>?`,fields:{label:"speed (m/s)",placeholder:"2"},answer:2.0,tol:0.05,hint:"Speed uses TOTAL distance: (120 + 40) / 80 = 160/80 = 2 m/s. Twice the velocity!"},
+{type:"quiz",questions:[
+{q:"What's the formula for velocity?",opts:["Δd/Δt","Δx/Δt","Δt/Δx","v²/2"],ci:1,exp:"Δx = displacement (vector). Δd = distance (scalar). They look similar but mean different things."},
+{q:"A car drives around a 1 km loop and returns to the start in 5 minutes. Its average velocity is:",opts:["0 m/s","200 m/s","2 m/s","Cannot determine"],ci:0,exp:"Returned to start → Δx = 0. Average velocity = 0/Δt = 0 m/s."},
+{q:"60 mph is approximately:",opts:["6 m/s","27 m/s","100 m/s","13 m/s"],ci:1,exp:"60 mph × 0.447 ≈ 26.8 m/s ≈ 27 m/s. Roughly 1 mph ≈ 0.45 m/s."},
+{q:"A swimmer covers 100 m in 50 s. Her average speed is:",opts:["0.5 m/s","2 m/s","5 m/s","100 m/s"],ci:1,exp:"100/50 = 2 m/s."},
+{q:"Two legs: 200 m east in 20 s, then 200 m west in 40 s. Average velocity is:",opts:["10 m/s","0 m/s","6.67 m/s","5 m/s"],ci:1,exp:"Net Δx = 0 (returned to start). Velocity = 0."}
+]}
+]},
+accel:{title:"Acceleration",icon:"⚡",cards:[
+{type:"intro",body:`If velocity is the rate of change of position, then <b>acceleration</b> is the rate of change of <em>velocity</em>.`},
+{type:"def",title:"Acceleration",body:`<b>Acceleration</b> is how fast velocity is changing. It's a vector (has direction). Units: m/s². Formula: <em>a = Δv / Δt</em>.`},
+{type:"eq",body:"a = Δv / Δt    where Δv = v_final − v_initial"},
+{type:"def",title:"Speeding up vs slowing down",body:`This is a major source of confusion! "Negative acceleration" does NOT automatically mean "slowing down." It depends on velocity's sign too:<br>• Same signs (both + or both −) → speeding up<br>• Opposite signs → slowing down`},
+{type:"def",title:"Special case: v = 0 ≠ a = 0",body:`A ball at the top of its arc has velocity = 0 for an instant, but gravity is still pulling — acceleration is NOT zero. Don't confuse "stopped right now" with "not changing."`},
+{type:"def",title:"Free fall",body:`Near Earth's surface, all objects in free fall accelerate at <b>9.8 m/s² downward</b> (often rounded to 10 m/s²). This is a constant — it doesn't depend on mass.`},
+{type:"checkpoint",q:`A sports car accelerates from rest to <b>27 m/s</b> in <b>3.0 seconds</b>. What is its acceleration?`,fields:{label:"a (m/s²)",placeholder:"9"},answer:9.0,tol:0.1,hint:"Δv = 27 − 0 = 27 m/s. a = 27/3.0 = 9.0 m/s²."},
+{type:"checkpoint",q:`A car going <b>20 m/s east</b> brakes and stops in <b>4 seconds</b>. With east as +, what's the acceleration?`,fields:{label:"a (m/s²)",placeholder:"-5"},answer:-5.0,tol:0.1,hint:"Δv = 0 − 20 = −20 m/s. a = −20/4 = −5 m/s². Negative because opposite to motion."},
+{type:"quiz",questions:[
+{q:"Units of acceleration?",opts:["m/s","m·s","m/s²","s/m"],ci:2,exp:"Acceleration = (m/s) / s = m/s²."},
+{q:"A motorcycle has v = +10 m/s and a = −2 m/s². It is:",opts:["speeding up","slowing down","stopped","at constant velocity"],ci:1,exp:"Opposite signs → slowing down."},
+{q:"A ball is dropped from rest. After 2 seconds, its downward velocity is approximately:",opts:["2 m/s","9.8 m/s","19.6 m/s","98 m/s"],ci:2,exp:"v = a·t = 9.8 × 2 ≈ 19.6 m/s."},
+{q:"A ball thrown straight up has v = 0 at the top of its arc. Its acceleration at that moment is:",opts:["0 m/s²","9.8 m/s² up","9.8 m/s² down","Depends on speed"],ci:2,exp:"Gravity ALWAYS pulls down at 9.8 m/s². Velocity is briefly zero, but acceleration isn't!"},
+{q:"A car cruises at constant 25 m/s for 10 minutes. Its acceleration is:",opts:["2.5 m/s²","0 m/s²","250 m/s²","Need more info"],ci:1,exp:"Constant velocity → Δv = 0 → a = 0."}
+]}
+]},
+graphs:{title:"Reading Motion Graphs",icon:"📈",cards:[
+{type:"intro",body:`Graphs of motion let us "see" what an object is doing over time. Two key graph types: <b>Position-vs-Time (P-T)</b> and <b>Velocity-vs-Time (V-T)</b>.`},
+{type:"def",title:"Slope of P-vs-T = Velocity",body:`On a position-vs-time graph, the <b>slope</b> at any point equals the <em>velocity</em> at that moment. Rise/run = Δx/Δt = v.`},
+{type:"def",title:"Slope of V-vs-T = Acceleration",body:`On a velocity-vs-time graph, the <b>slope</b> equals the <em>acceleration</em>. Same pattern: slope = Δv/Δt = a.`},
+{type:"def",title:"Area under V-vs-T = Displacement",body:`The <b>area</b> between a velocity-vs-time curve and the time axis equals the <em>displacement</em>. (Area above axis = positive Δx, area below = negative Δx.)`},
+{type:"def",title:"Reading a P-T graph",body:`• <b>Upward slope</b>: moving in + direction<br>• <b>Downward slope</b>: moving in − direction<br>• <b>Flat segment</b>: stopped (v = 0)<br>• <b>Steeper slope</b>: faster motion<br>• <b>Slope sign change</b>: direction reversal`},
+{type:"def",title:"Reading a V-T graph",body:`• <b>Above zero, going up</b>: speeding up in + direction<br>• <b>Above zero, going down</b>: slowing down<br>• <b>Below zero, going down</b>: speeding up in − direction<br>• <b>Flat segment</b>: constant velocity (a = 0)<br>• <b>Crossing zero</b>: velocity reverses direction`},
+{type:"checkpoint",q:`A P-vs-T graph shows position going from 2 m to 8 m between t = 1 s and t = 4 s. What is the velocity?`,fields:{label:"v (m/s)",placeholder:"2"},answer:2.0,tol:0.05,hint:"Slope = rise/run = (8−2)/(4−1) = 6/3 = 2 m/s."},
+{type:"checkpoint",q:`A V-T graph shows velocity going from 5 m/s to 15 m/s between t = 0 s and t = 2 s. What is the acceleration?`,fields:{label:"a (m/s²)",placeholder:"5"},answer:5.0,tol:0.05,hint:"Slope = (15−5)/(2−0) = 10/2 = 5 m/s²."},
+{type:"quiz",questions:[
+{q:"On a P-vs-T graph, a flat horizontal segment means:",opts:["object is moving fast","object is at rest","object is accelerating","object is in free fall"],ci:1,exp:"Flat slope = 0 velocity = at rest."},
+{q:"The slope of a velocity-time graph is:",opts:["distance","displacement","speed","acceleration"],ci:3,exp:"Δv / Δt = acceleration."},
+{q:"The area under a V-vs-T curve gives:",opts:["acceleration","velocity","displacement","time"],ci:2,exp:"v × t = displacement. Area under V-T = Δx."},
+{q:"On a P-vs-T graph, a downward-sloping line means the object is:",opts:["moving in negative direction","slowing down","accelerating","at rest"],ci:0,exp:"Negative slope = negative velocity = moving in negative direction."},
+{q:"A V-vs-T graph that's a horizontal line above zero shows:",opts:["constant velocity, zero accel","speeding up","slowing down","at rest"],ci:0,exp:"Flat = no slope = a = 0. Above zero = constant positive velocity."}
+]}
+]}
+};
+
+// ============================================================
+// CHEATSHEET
+// ============================================================
+const CS=[
+{section:"Core Formulas",items:[
+{title:"Velocity",fm:"v = Δx / Δt",vr:"<b>v</b> = velocity (m/s) · <b>Δx</b> = displacement (m) · <b>Δt</b> = time (s)",ex:"5 m in 2 s east → v = 5/2 = +2.5 m/s east"},
+{title:"Speed",fm:"speed = Δd / Δt",vr:"<b>Δd</b> = distance traveled (m, scalar, always +)",ex:"Total path of 20 m in 5 s → speed = 4 m/s"},
+{title:"Acceleration",fm:"a = Δv / Δt = (v_final − v_initial) / Δt",vr:"<b>a</b> = acceleration (m/s²) · <b>v_initial</b>, <b>v_final</b> = velocities at start, end of interval",ex:"0 → 30 m/s in 5 s → a = 30/5 = 6 m/s²"},
+{title:"Find v_final from a",fm:"v_final = v_initial + a · Δt",vr:"Rearrangement of a = Δv/Δt",ex:"v_i = 10 m/s, a = 2 m/s², t = 3 s → v_f = 16 m/s"},
+{title:"Displacement",fm:"Δx = x_final − x_initial",vr:"Vector — keep signs!",ex:"Start at x = 0, end at x = −4 → Δx = −4 m"},
+{title:"Relative Velocity",fm:"v_observed = v_object − v_observer",vr:"Both velocities measured from ground (or common frame)",ex:"Object: +30, Observer: +20 → v_obs = +10 m/s"}
+]},
+{section:"Graph Interpretation",items:[
+{title:"Slope of Position-vs-Time",fm:"slope = Δx / Δt = velocity",vr:"Rise / Run on a P-T graph",ex:"P-T slope = +3 → velocity is 3 m/s in + direction"},
+{title:"Slope of Velocity-vs-Time",fm:"slope = Δv / Δt = acceleration",vr:"Rise / Run on a V-T graph",ex:"V-T slope = −2 → a = −2 m/s²"},
+{title:"Area under Velocity-vs-Time",fm:"Area = Δx",vr:"Integrate v over time = displacement",ex:"Rectangle: v = 5, t = 4 → area = 20 m"}
+]},
+{section:"Sign & Direction",items:[
+{title:"Sign Convention",fm:"+ and − denote DIRECTION, not magnitude",vr:"Choose ONE direction as +; opposite is −. Stay consistent throughout the problem.",ex:"\"East = +\" → +10 m/s east, −5 m/s west"},
+{title:"Speeding Up vs Slowing Down",fm:"Same sign (v,a) → speeding up\nOpposite sign (v,a) → slowing down",vr:"NOT about whether a is + or −. About whether v and a share a sign.",ex:"v = +10, a = +2 → speeding up\nv = −10, a = −2 → also speeding up (in − direction)"},
+{title:"Free fall (Earth)",fm:"a = 9.8 m/s² downward",vr:"Same for all objects regardless of mass",ex:"Drop a ball: after 2 s, v_down = 19.6 m/s"}
+]},
+{section:"Unit Conversions",items:[
+{title:"mph ↔ m/s",fm:"1 m/s = 2.237 mph\n1 mph = 0.447 m/s",vr:"Useful: 60 mph ≈ 27 m/s",ex:"100 km/h = 27.8 m/s = 62.1 mph"},
+{title:"km/h ↔ m/s",fm:"(km/h) ÷ 3.6 = m/s",vr:"36 km/h = 10 m/s exactly",ex:"108 km/h = 30 m/s"},
+{title:"min, hr → s",fm:"1 min = 60 s\n1 hr = 3600 s",vr:"Always convert time to SECONDS to match m/s and m/s²",ex:"5 min = 300 s; 2 hr = 7200 s"}
+]}
+];
+// ============================================================
+// STATE
+// ============================================================
+let mode="problems";
+let active="distdisp",subType=null,prob=null,userVal="",answered=false,solShown=false;
+let hide={given:false,formula:false,find:false};
+let vMode="mc",vQ=null,vAns="",vAnswered=false;
+let stats={c:0,a:0,streak:0,best:0};
+let lessonKey=null,lessonIdx=0,cpState={},quizState={};
+// Exam state
+let examSection=null,examQuestions=[],examIdx=0,examAnswers=[],examInput="";
+let examStartTime=0,examTimerOn=false,examDurationMin=30,examFinished=false;
+let examTimerId=null,examElapsed=0,examReviewIdx=-1;
+let examBest=JSON.parse(localStorage.getItem("m1_exam_best")||"{}");
+
+// ============================================================
+// STATS
+// ============================================================
+function loadStats(){const s=localStorage.getItem("m1_stats");if(s)stats=JSON.parse(s)}
+function saveStats(){localStorage.setItem("m1_stats",JSON.stringify(stats))}
+function renderStats(){
+  document.getElementById("sC").textContent=stats.c;
+  document.getElementById("sA").textContent=stats.a;
+  document.getElementById("sP").textContent=stats.a>0?Math.round(100*stats.c/stats.a)+"%":"—";
+  document.getElementById("sS").innerHTML=`<span id="fire">${stats.streak>0?"🔥":"💤"}</span> ${stats.streak}`;
+}
+function resetStats(){if(confirm("Reset all stats?")){stats={c:0,a:0,streak:0,best:0};saveStats();renderStats()}}
+function recordAnswer(ok){
+  stats.a++;
+  if(ok){stats.c++;stats.streak++;if(stats.streak>stats.best)stats.best=stats.streak}
+  else stats.streak=0;
+  saveStats();renderStats();
+}
+
+// ============================================================
+// MODE BAR
+// ============================================================
+const MODES=[
+{id:"problems",label:"📝 Practice"},
+{id:"exam",label:"🎯 Exam"},
+{id:"vocab",label:"📖 Vocab"},
+{id:"learn",label:"🎓 Learn"},
+{id:"cheat",label:"📋 Cheatsheet"}
+];
+function renderModes(){
+  document.getElementById("modeBar").innerHTML=MODES.map(m=>
+    `<button class="mode-btn${mode===m.id?" on":""}" onclick="switchMode('${m.id}')">${m.label}</button>`).join("");
+}
+function switchMode(m){
+  mode=m;
+  if(examTimerId){clearInterval(examTimerId);examTimerId=null}
+  if(m!=="exam"){examSection=null;examFinished=false}
+  renderModes();renderCtrls();
+  if(m==="problems")genP();
+  else if(m==="exam")renderExam();
+  else if(m==="vocab")genV();
+  else if(m==="learn")renderLearn();
+  else if(m==="cheat")renderCheat();
+}
+
+// ============================================================
+// CONTROL BAR
+// ============================================================
+function renderCtrls(){
+  const el=document.getElementById("ctrlBar");
+  if(mode==="problems"){
+    let h=SEC.map(s=>`<button class="cb${active===s.id?" on":""}" onclick="active='${s.id}';subType=null;genP()">${s.icon} ${s.title}</button>`).join("");
+    h+=`<span style="width:6px;display:inline-block"></span><span class="cl">Hide:</span>`;
+    h+=`<button class="tg" id="tg-given" onclick="tglH('given')"><span class="tg-dot"></span>Givens</button>`;
+    h+=`<button class="tg" id="tg-formula" onclick="tglH('formula')"><span class="tg-dot"></span>Formulas</button>`;
+    h+=`<button class="tg" id="tg-find" onclick="tglH('find')"><span class="tg-dot"></span>Solve-For</button>`;
+    h+=`<button class="tg" id="tg-all" onclick="tglAll()"><span class="tg-dot"></span>Hard Mode</button>`;
+    el.innerHTML=h;el.style.display="flex";syncToggles();
+  } else if(mode==="vocab"){
+    el.style.display="flex";
+    el.innerHTML=`<span class="cl">Format:</span>`+
+    `<button class="cb${vMode==="mc"?" on":""}" onclick="vMode='mc';genV()">Multiple Choice</button>`+
+    `<button class="cb${vMode==="written"?" on":""}" onclick="vMode='written';genV()">Written</button>`+
+    `<button class="cb${vMode==="tf"?" on":""}" onclick="vMode='tf';genV()">True / False</button>`;
+  } else if(mode==="learn"){
+    el.style.display="flex";
+    el.innerHTML=Object.keys(LESSONS).map(k=>`<button class="cb${lessonKey===k?" on":""}" onclick="openLesson('${k}')">${LESSONS[k].icon} ${LESSONS[k].title}</button>`).join("");
+  } else if(mode==="cheat"){
+    el.style.display="flex";
+    el.innerHTML=`<span class="cl">All formulas, definitions, and key facts for Module 1</span>`;
+  } else {
+    el.style.display="none";el.innerHTML="";
+  }
+}
+function tglH(k){hide[k]=!hide[k];syncToggles();if(prob)renderProb()}
+function tglAll(){const all=hide.given&&hide.formula&&hide.find;hide.given=hide.formula=hide.find=!all;syncToggles();if(prob)renderProb()}
+function syncToggles(){
+  ["given","formula","find"].forEach(k=>{const b=document.getElementById("tg-"+k);if(b)b.classList.toggle("on",hide[k])});
+  const a=document.getElementById("tg-all");if(a)a.classList.toggle("on",hide.given&&hide.formula&&hide.find);
+}
+
+// ============================================================
+// PROBLEMS MODE
+// ============================================================
+function genP(){
+  renderCtrls();
+  const sec=SEC.find(s=>s.id===active);
+  let genId;
+  if(subType)genId=subType;
+  else genId=pick(sec.types).id;
+  prob=G[genId]();
+  prob._gen=genId;
+  userVal="";answered=false;solShown=false;
+  renderProb();
+}
+function chkP(){
+  const i=document.getElementById("inp");if(!i)return;
+  userVal=i.value.trim();
+  if(userVal==="")return;
+  answered=true;
+  const ok=isCorrect(prob,userVal);
+  recordAnswer(ok);
+  renderProb();
+}
+function isCorrect(p,val){
+  if(p.isText){
+    const norm=s=>String(s).toLowerCase().replace(/\s+/g,"").replace(/[²³]/g,c=>({"²":"2","³":"3"}[c]));
+    return norm(val)===norm(p.a);
+  }
+  const v=parseFloat(String(val).replace(/[+,\s]/g,""));
+  return !isNaN(v)&&Math.abs(v-p.a)<=p.tol;
+}
+function showPS(){solShown=true;renderProb()}
+function renderProb(){
+  const el=document.getElementById("main"),p=prob;
+  if(!p){el.innerHTML="";return}
+  const ok=answered&&isCorrect(p,userVal);
+  const cc=answered?(ok?"ok":"no"):"";
+  const bc=answered?(ok?"bg-ok":"bg-no"):"bg-q";
+  const sec=SEC.find(s=>s.id===active);
+  const hc=(hide.given?1:0)+(hide.formula?1:0)+(hide.find?1:0);
+  const dl=hc===3?"HARD MODE":hc===2?"HARD+":hc===1?"HARD":"";
+  let h=`<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px">`;
+  h+=`<button class="cb${!subType?" on":""}" onclick="subType=null;genP()">🎲 Random</button>`;
+  sec.types.forEach(t=>{h+=`<button class="cb${subType===t.id?" on":""}" onclick="subType='${t.id}';genP()">${t.name}</button>`});
+  h+=`</div>`;
+  h+=`<div class="pc ${cc}"><div class="pc-top"><span class="bg ${bc}">${answered?(ok?"✓ Correct":"✗ Incorrect"):"Problem"}</span><span class="bg bg-ty">${p.ref}</span>${dl?`<span class="bg bg-hard">${dl}</span>`:""}</div>`;
+  h+=`<div class="q-txt">${p.q}</div>`;
+  const gH=hide.given&&!answered&&!solShown,fH=hide.formula&&!answered&&!solShown,wH=hide.find&&!answered&&!solShown;
+  if(p.gv&&(!gH||!fH||!wH)){
+    h+=`<div class="ir">`;
+    if(!gH)h+=`<div class="ib ib-g"><span class="ib-l">Given</span>${p.gv.replace(/\n/g,"<br>")}</div>`;
+    if(p.fm&&!fH)h+=`<div class="ib ib-f"><span class="ib-l">Formula</span>${p.fm.replace(/\n/g,"<br>")}</div>`;
+    if(p.fi&&!wH)h+=`<div class="ib ib-w"><span class="ib-l">Solve For</span>${p.fi.replace(/\n/g,"<br>")}</div>`;
+    h+=`</div>`;
+  }
+  if(!answered){
+    h+=`<div class="aa"><div class="aw"><input class="ai" id="inp" type="text" inputmode="${p.isText?"text":"decimal"}" placeholder="Type your answer…" value="${userVal}" onkeydown="if(event.key==='Enter')chkP()"><span class="au">${p.u||""}</span></div><button class="ab" onclick="chkP()">Check</button></div>`;
+    h+=`<div class="btn-row"><button class="btn-sh" onclick="showPS()">Show Solution</button><button class="btn-sh" onclick="genP()">Skip →</button></div>`;
+  } else {
+    h+=`<div class="aa"><div class="aw"><input class="ai ${ok?"v-ok":"v-no"}" value="${userVal}" disabled><span class="au">${p.u||""}</span></div></div>`;
+    h+=`<div class="fb ${ok?"fb-ok":"fb-no"}">${ok?`✓ Correct! Streak: ${stats.streak} 🔥`:"✗ Not quite"}</div>`;
+    if(!ok)h+=`<div class="fb-v">Correct answer: ${p.a} ${p.u||""}</div>`;
+  }
+  if(answered||solShown){
+    h+=`<div class="sol"><div class="sol-tag">Solution</div>`;
+    p.st.forEach(s=>{h+=`<div class="stp">${s}</div>`});
+    h+=`<div class="sol-note">${p.nt}</div></div>`;
+  }
+  if(answered)h+=`<div class="btn-row" style="margin-top:10px"><button class="btn-nx" onclick="genP()">Next Problem →</button></div>`;
+  h+=`</div>`;
+  el.innerHTML=h;
+  if(!answered){const i=document.getElementById("inp");if(i)setTimeout(()=>i.focus(),50)}
+}
+
+// ============================================================
+// VOCAB MODE
+// ============================================================
+function genV(){
+  renderCtrls();
+  const term=pick(VOCAB);
+  vAns="";vAnswered=false;
+  if(vMode==="mc"){
+    const others=shuffle(VOCAB.filter(v=>v.t!==term.t)).slice(0,3);
+    const opts=shuffle([{t:term.d,c:true},...others.map(o=>({t:o.d,c:false}))]);
+    vQ={mode:"mc",term,opts,ci:opts.findIndex(o=>o.c)};
+  } else if(vMode==="tf"){
+    const isTrue=Math.random()<0.5;
+    const shown=isTrue?term.d:pick(VOCAB.filter(v=>v.t!==term.t)).d;
+    vQ={mode:"tf",term,shown,correct:isTrue};
+  } else {
+    vQ={mode:"written",term};
+  }
+  renderVocab();
+}
+function chkVMC(i){
+  if(vAnswered)return;
+  vAnswered=true;vAns=i;
+  recordAnswer(i===vQ.ci);
+  renderVocab();
+}
+function chkVTF(ans){
+  if(vAnswered)return;
+  vAnswered=true;vAns=ans;
+  recordAnswer(ans===vQ.correct);
+  renderVocab();
+}
+function chkVW(){
+  const ta=document.getElementById("vta");if(!ta)return;
+  vAns=ta.value.trim();
+  if(vAns==="")return;
+  vAnswered=true;
+  renderVocab();
+}
+function renderVocab(){
+  const el=document.getElementById("main");
+  if(!vQ){el.innerHTML="";return}
+  let h="";
+  if(vQ.mode==="mc"){
+    const ok=vAnswered&&vAns===vQ.ci;
+    h+=`<div class="pc ${vAnswered?(ok?"ok":"no"):""}"><div class="pc-top"><span class="bg ${vAnswered?(ok?"bg-ok":"bg-no"):"bg-q"}">${vAnswered?(ok?"✓ Correct":"✗ Incorrect"):"Vocabulary"}</span><span class="bg bg-ty">Definition Match</span></div>`;
+    h+=`<div class="q-txt">Which definition matches <b>"${vQ.term.t}"</b>?</div><div class="opts">`;
+    vQ.opts.forEach((o,i)=>{
+      let cls="opt";
+      if(vAnswered){cls+=" done";if(i===vQ.ci)cls+=" c-ok";else if(i===vAns)cls+=" c-no"}
+      h+=`<button class="${cls}" onclick="chkVMC(${i})"><span class="opt-ltr">${vAnswered&&i===vQ.ci?"✓":vAnswered&&i===vAns?"✗":String.fromCharCode(65+i)}</span><span>${o.t}</span></button>`;
+    });
+    h+=`</div>`;
+    if(vAnswered)h+=`<div class="btn-row" style="margin-top:12px"><button class="btn-nx" onclick="genV()">Next →</button></div>`;
+    h+=`</div>`;
+  } else if(vQ.mode==="tf"){
+    const ok=vAnswered&&vAns===vQ.correct;
+    h+=`<div class="pc ${vAnswered?(ok?"ok":"no"):""}"><div class="pc-top"><span class="bg ${vAnswered?(ok?"bg-ok":"bg-no"):"bg-q"}">${vAnswered?(ok?"✓ Correct":"✗ Incorrect"):"Vocabulary"}</span><span class="bg bg-ty">True / False</span></div>`;
+    h+=`<div class="q-txt">Is this definition of <b>"${vQ.term.t}"</b> correct?<br><br><em style="color:var(--mut)">"${vQ.shown}"</em></div>`;
+    h+=`<div class="opts" style="flex-direction:row;gap:8px">`;
+    ["True","False"].forEach((lab,i)=>{
+      const val=i===0;
+      let cls="opt";
+      if(vAnswered){cls+=" done";if(val===vQ.correct)cls+=" c-ok";else if(val===vAns)cls+=" c-no"}
+      h+=`<button class="${cls}" style="flex:1;justify-content:center" onclick="chkVTF(${val})">${lab}</button>`;
+    });
+    h+=`</div>`;
+    if(vAnswered){
+      h+=`<div class="sol" style="margin-top:14px"><div class="sol-tag">Correct definition</div><div class="stp">${vQ.term.d}</div></div>`;
+      h+=`<div class="btn-row" style="margin-top:10px"><button class="btn-nx" onclick="genV()">Next →</button></div>`;
+    }
+    h+=`</div>`;
+  } else {
+    h+=`<div class="pc"><div class="pc-top"><span class="bg bg-q">Vocabulary</span><span class="bg bg-ty">Written Recall</span></div>`;
+    h+=`<div class="q-txt">In your own words, define <b>"${vQ.term.t}"</b>.</div>`;
+    if(!vAnswered){
+      h+=`<textarea class="v-ta" id="vta" placeholder="Type your definition…">${vAns}</textarea>`;
+      h+=`<div class="btn-row"><button class="ab" onclick="chkVW()">Reveal Answer</button></div>`;
+    } else {
+      h+=`<textarea class="v-ta" disabled>${vAns}</textarea>`;
+      h+=`<div class="sol" style="margin-top:14px"><div class="sol-tag">Textbook definition</div><div class="stp">${vQ.term.d}</div><div class="sol-note">Compare your answer — did you capture the key idea?</div></div>`;
+      h+=`<div class="btn-row" style="margin-top:10px"><button class="btn-nx" onclick="genV()">Next →</button></div>`;
+    }
+    h+=`</div>`;
+  }
+  el.innerHTML=h;
+}
+
+// ============================================================
+// LEARN MODE
+// ============================================================
+function renderLearn(){
+  renderCtrls();
+  if(!lessonKey){
+    const el=document.getElementById("main");
+    let h=`<div style="text-align:center;padding:20px 0 16px"><div style="font-size:36px;margin-bottom:8px">🎓</div><div style="font:400 24px/1.3 var(--s)">Choose a Lesson</div><div style="font:400 13px var(--f);color:var(--dim);margin-top:4px">Read through, hit the checkpoints, then take the quick quiz</div></div>`;
+    h+=`<div class="topic-picker">`;
+    Object.keys(LESSONS).forEach(k=>{
+      h+=`<button class="topic-btn" onclick="openLesson('${k}')"><div style="font-size:20px">${LESSONS[k].icon}</div>${LESSONS[k].title}<div class="topic-sub">${LESSONS[k].cards.length} cards</div></button>`;
+    });
+    h+=`</div>`;
+    el.innerHTML=h;
+    return;
+  }
+  renderLessonCard();
+}
+function openLesson(k){lessonKey=k;lessonIdx=0;cpState={};quizState={};renderCtrls();renderLessonCard()}
+function renderLessonCard(){
+  const el=document.getElementById("main");
+  const L=LESSONS[lessonKey],card=L.cards[lessonIdx];
+  const total=L.cards.length;
+  let h=`<div class="lesson-wrap">`;
+  h+=`<div class="lesson-nav"><button class="nav-btn" onclick="lessonKey=null;renderLearn()">← All Lessons</button><div style="text-align:center"><div class="lesson-prog">${L.icon} ${L.title} · ${lessonIdx+1}/${total}</div><div class="prog-bar"><div class="prog-fill" style="width:${100*(lessonIdx+1)/total}%"></div></div></div><div style="width:90px"></div></div>`;
+  h+=`<div class="lesson-card">`;
+  if(card.type==="intro"){
+    h+=`<div class="lesson-type">Introduction</div><div class="lesson-body">${card.body}</div>`;
+  } else if(card.type==="def"){
+    h+=`<div class="lesson-type">Key Concept</div><div class="lesson-def"><div class="lesson-def-t">${card.title}</div><div class="lesson-def-b">${card.body}</div></div>`;
+  } else if(card.type==="eq"){
+    h+=`<div class="lesson-type">Equation</div><div class="lesson-eq">${card.body}</div>`;
+  } else if(card.type==="checkpoint"){
+    const st=cpState[lessonIdx]||{};
+    h+=`<div class="lesson-type">Checkpoint</div><div class="lesson-checkpoint"><div class="lesson-cp-t">✓ Try It Yourself</div><div class="lesson-cp-q">${card.q}</div>`;
+    if(!st.done){
+      h+=`<div class="aa"><div class="aw"><input class="ai" id="cpinp" type="text" inputmode="decimal" placeholder="${card.fields.placeholder}" value="${st.val||""}" onkeydown="if(event.key==='Enter')chkCP()"><span class="au">${card.fields.label}</span></div><button class="ab" onclick="chkCP()">Check</button></div>`;
+      h+=`<div class="btn-row"><button class="btn-sh" onclick="showHint()">Show Hint</button></div>`;
+      if(st.hint)h+=`<div class="hint-box">💡 ${card.hint}</div>`;
+    } else {
+      const ok=st.ok;
+      h+=`<div class="aa"><div class="aw"><input class="ai ${ok?"v-ok":"v-no"}" value="${st.val}" disabled><span class="au">${card.fields.label}</span></div></div>`;
+      h+=`<div class="fb ${ok?"fb-ok":"fb-no"}">${ok?"✓ Correct!":`✗ Answer: ${card.answer}`}</div>`;
+      h+=`<div class="hint-box">💡 ${card.hint}</div>`;
+    }
+    h+=`</div>`;
+  } else if(card.type==="quiz"){
+    h+=renderQuizCard(card);
+  }
+  h+=`</div>`;
+  // nav
+  h+=`<div class="lesson-nav" style="margin-top:16px"><button class="nav-btn" onclick="prevCard()" ${lessonIdx===0?"disabled":""}>← Back</button>`;
+  if(lessonIdx<total-1)h+=`<button class="nav-btn primary" onclick="nextCard()">Next →</button>`;
+  else h+=`<button class="nav-btn primary" onclick="lessonKey=null;renderLearn()">Finish ✓</button>`;
+  h+=`</div></div>`;
+  el.innerHTML=h;
+}
+function chkCP(){
+  const i=document.getElementById("cpinp");if(!i)return;
+  const card=LESSONS[lessonKey].cards[lessonIdx];
+  const val=i.value.trim();if(val==="")return;
+  const v=parseFloat(val.replace(/[+,\s]/g,""));
+  const ok=!isNaN(v)&&Math.abs(v-card.answer)<=card.tol;
+  cpState[lessonIdx]={done:true,ok,val};
+  renderLessonCard();
+}
+function showHint(){
+  const st=cpState[lessonIdx]||{};
+  const i=document.getElementById("cpinp");
+  st.val=i?i.value:"";st.hint=true;
+  cpState[lessonIdx]=st;
+  renderLessonCard();
+}
+function renderQuizCard(card){
+  const st=quizState[lessonIdx]||{idx:0,answers:[]};
+  if(st.done){
+    const score=st.answers.filter(Boolean).length;
+    const pct=Math.round(100*score/card.questions.length);
+    let h=`<div class="lesson-type">Quiz Complete</div><div style="text-align:center;padding:14px 0">`;
+    h+=`<div class="quiz-score ${pct>=80?"qok":""}">${score}/${card.questions.length}</div>`;
+    h+=`<div style="font:400 14px var(--f);color:var(--mut)">${pct}% — ${pct>=80?"Great work! 🎉":pct>=60?"Good effort — review the misses.":"Worth another read-through."}</div>`;
+    h+=`<button class="nav-btn primary" style="margin-top:14px" onclick="quizState[lessonIdx]={idx:0,answers:[]};renderLessonCard()">Retake Quiz</button>`;
+    h+=`</div>`;
+    return h;
+  }
+  const q=card.questions[st.idx];
+  let h=`<div class="lesson-type">Quiz · Question ${st.idx+1}/${card.questions.length}</div>`;
+  h+=`<div class="lesson-cp-q" style="margin-bottom:14px">${q.q}</div><div class="opts">`;
+  q.opts.forEach((o,i)=>{
+    let cls="opt";
+    if(st.picked!=null){cls+=" done";if(i===q.ci)cls+=" c-ok";else if(i===st.picked)cls+=" c-no"}
+    h+=`<button class="${cls}" onclick="pickQuiz(${i})"><span class="opt-ltr">${st.picked!=null&&i===q.ci?"✓":st.picked!=null&&i===st.picked?"✗":String.fromCharCode(65+i)}</span><span>${o}</span></button>`;
+  });
+  h+=`</div>`;
+  if(st.picked!=null){
+    h+=`<div class="sol" style="margin-top:12px"><div class="sol-tag">Explanation</div><div class="stp">${q.exp}</div></div>`;
+    h+=`<div class="btn-row" style="margin-top:10px"><button class="btn-nx" onclick="nextQuiz()">${st.idx<card.questions.length-1?"Next Question →":"See Results →"}</button></div>`;
+  }
+  return h;
+}
+function pickQuiz(i){
+  const card=LESSONS[lessonKey].cards[lessonIdx];
+  const st=quizState[lessonIdx]||{idx:0,answers:[]};
+  if(st.picked!=null)return;
+  st.picked=i;
+  st.answers[st.idx]=(i===card.questions[st.idx].ci);
+  quizState[lessonIdx]=st;
+  renderLessonCard();
+}
+function nextQuiz(){
+  const card=LESSONS[lessonKey].cards[lessonIdx];
+  const st=quizState[lessonIdx];
+  if(st.idx<card.questions.length-1){st.idx++;st.picked=null}
+  else st.done=true;
+  quizState[lessonIdx]=st;
+  renderLessonCard();
+}
+function nextCard(){if(lessonIdx<LESSONS[lessonKey].cards.length-1){lessonIdx++;renderLessonCard()}}
+function prevCard(){if(lessonIdx>0){lessonIdx--;renderLessonCard()}}
+
+// ============================================================
+// CHEATSHEET MODE
+// ============================================================
+function renderCheat(){
+  renderCtrls();
+  const el=document.getElementById("main");
+  let h="";
+  CS.forEach(sec=>{
+    h+=`<div class="cs-sec">${sec.section}</div>`;
+    sec.items.forEach(it=>{
+      h+=`<div class="cs-card"><div class="cs-title">${it.title}</div>`;
+      h+=`<div class="cs-fm">${it.fm.replace(/\n/g,"<br>")}</div>`;
+      if(it.vr)h+=`<div class="cs-vr">${it.vr}</div>`;
+      if(it.ex)h+=`<div class="cs-ex"><span class="lb">Example</span><br>${it.ex.replace(/\n/g,"<br>")}</div>`;
+      h+=`</div>`;
+    });
+  });
+  el.innerHTML=h;
+}
+// ============================================================
+// EXAM MODE
+// ============================================================
+const EXAM_LENGTH=50;
+
+// Build 50 questions for a section, spreading across all generators evenly
+function buildExamQuestions(sectionId){
+  const pool=EXAM_POOLS[sectionId];
+  const questions=[];
+  // Round-robin through the generator pool (shuffled order each cycle) so all
+  // template types appear, with no two identical types back to back.
+  let lastGen=null;
+  let cycle=shuffle(pool);
+  let ci=0;
+  for(let i=0;i<EXAM_LENGTH;i++){
+    if(ci>=cycle.length){cycle=shuffle(pool);ci=0}
+    let genId=cycle[ci++];
+    // avoid immediate repeat
+    if(genId===lastGen&&ci<cycle.length){const tmp=cycle[ci];cycle[ci]=genId;cycle[ci-1]=tmp;genId=cycle[ci-1]}
+    lastGen=genId;
+    const q=G[genId]();
+    q._gen=genId;
+    questions.push(q);
+  }
+  return questions;
+}
+
+function renderExam(){
+  renderCtrls();
+  const el=document.getElementById("main");
+  // ---- RESULTS SCREEN ----
+  if(examFinished){el.innerHTML=renderExamResults();return}
+  // ---- LANDING SCREEN ----
+  if(!examSection){
+    let h=`<div class="exam-landing">`;
+    h+=`<div class="exam-title">🎯 <i>Exam Mode</i></div>`;
+    h+=`<div class="exam-sub">Pick a section for a full <b>${EXAM_LENGTH}-question</b> exam. Every question is freshly randomized — variables, scenarios, and units change every run, so it's practically infinite.</div>`;
+    h+=`<div class="exam-section-grid">`;
+    Object.keys(EXAM_META).forEach(sid=>{
+      const m=EXAM_META[sid];
+      const best=examBest[sid];
+      h+=`<button class="exam-section-btn" onclick="examPick('${sid}')">`;
+      h+=`<span class="exam-section-icon">${m.icon}</span>`;
+      h+=`<div class="exam-section-name">${m.name}</div>`;
+      h+=`<div class="exam-section-meta">${EXAM_POOLS[sid].length} question types · ${EXAM_LENGTH} Q exam</div>`;
+      h+=`<div style="font:400 11px var(--f);color:var(--dim);margin-top:6px">${m.desc}</div>`;
+      if(best!=null)h+=`<div class="exam-best">★ Best: ${best}/${EXAM_LENGTH}</div>`;
+      h+=`</button>`;
+    });
+    h+=`</div>`;
+    h+=`<div style="font:400 13px var(--f);color:var(--dim);margin-top:10px">Choose a section above to set up your exam.</div>`;
+    h+=`</div>`;
+    el.innerHTML=h;
+    return;
+  }
+  // ---- SETUP SCREEN (section picked, not yet started) ----
+  if(examQuestions.length===0){
+    const m=EXAM_META[examSection];
+    let h=`<div class="exam-landing">`;
+    h+=`<div class="exam-title">${m.icon} <i>${m.name}</i></div>`;
+    h+=`<div class="exam-sub">${EXAM_LENGTH} randomized questions drawn from ${EXAM_POOLS[examSection].length} different problem types. Set your options and begin.</div>`;
+    h+=`<div class="exam-config">`;
+    h+=`<div class="exam-config-card"><div class="exam-config-l">Questions</div><div class="exam-config-v">${EXAM_LENGTH}</div></div>`;
+    h+=`<div class="exam-config-card"><div class="exam-config-l">Timer</div>`;
+    h+=`<div class="exam-toggle"><button class="exam-tog-btn${!examTimerOn?" on":""}" onclick="examTimerOn=false;renderExam()">Off</button><button class="exam-tog-btn${examTimerOn?" on":""}" onclick="examTimerOn=true;renderExam()">On</button></div></div>`;
+    if(examTimerOn){
+      h+=`<div class="exam-config-card"><div class="exam-config-l">Time Limit</div>`;
+      h+=`<div class="exam-toggle">`;
+      [20,30,45,60].forEach(min=>{
+        h+=`<button class="exam-tog-btn${examDurationMin===min?" on":""}" onclick="examDurationMin=${min};renderExam()">${min}m</button>`;
+      });
+      h+=`</div></div>`;
+    }
+    h+=`</div>`;
+    h+=`<button class="exam-start-btn" onclick="startExam()">Start Exam →</button>`;
+    h+=`<div style="margin-top:14px"><button class="btn-sh" onclick="examSection=null;renderExam()">← Pick a different section</button></div>`;
+    h+=`</div>`;
+    el.innerHTML=h;
+    return;
+  }
+  // ---- QUESTION SCREEN ----
+  el.innerHTML=renderExamQuestion();
+  const inp=document.getElementById("exinp");
+  if(inp&&examAnswers[examIdx]==null)setTimeout(()=>inp.focus(),50);
+}
+
+function examPick(sid){
+  examSection=sid;
+  examQuestions=[];examIdx=0;examAnswers=[];examInput="";examFinished=false;
+  renderExam();
+}
+
+function startExam(){
+  examQuestions=buildExamQuestions(examSection);
+  examIdx=0;examAnswers=new Array(EXAM_LENGTH).fill(null);examInput="";
+  examFinished=false;examElapsed=0;examStartTime=Date.now();
+  if(examTimerId){clearInterval(examTimerId);examTimerId=null}
+  if(examTimerOn){
+    examTimerId=setInterval(()=>{
+      examElapsed=Math.floor((Date.now()-examStartTime)/1000);
+      const remain=examDurationMin*60-examElapsed;
+      if(remain<=0){clearInterval(examTimerId);examTimerId=null;finishExam(true);return}
+      const tEl=document.getElementById("examTimer");
+      if(tEl){
+        tEl.textContent="⏱ "+fmtTime(remain);
+        tEl.className="exam-timer"+(remain<=60?" danger":remain<=300?" warn":"");
+      }
+    },1000);
+  }
+  renderExam();
+}
+
+function renderExamQuestion(){
+  const p=examQuestions[examIdx];
+  const ans=examAnswers[examIdx];
+  const answered=ans!=null;
+  const correctCount=examAnswers.filter(a=>a&&a.ok).length;
+  const attempted=examAnswers.filter(a=>a!=null).length;
+  let h="";
+  // exam bar
+  h+=`<div class="exam-bar">`;
+  h+=`<div class="exam-q-counter">Q <span>${examIdx+1}</span> / ${EXAM_LENGTH}</div>`;
+  h+=`<div class="exam-progress-bar"><div class="exam-progress-fill" style="width:${100*attempted/EXAM_LENGTH}%"></div></div>`;
+  if(examTimerOn){
+    const remain=examDurationMin*60-examElapsed;
+    h+=`<div class="exam-timer${remain<=60?" danger":remain<=300?" warn":""}" id="examTimer">⏱ ${fmtTime(Math.max(0,remain))}</div>`;
+  } else {
+    h+=`<div class="exam-mini-stats"><span class="ok">${correctCount} ✓</span><span>${attempted} done</span></div>`;
+  }
+  h+=`<button class="exam-quit" onclick="quitExam()">Quit</button>`;
+  h+=`</div>`;
+  // question card
+  const ok=answered&&ans.ok;
+  const cc=answered?(ok?"ok":"no"):"";
+  h+=`<div class="pc ${cc}"><div class="pc-top">`;
+  h+=`<span class="bg ${answered?(ok?"bg-ok":"bg-no"):"bg-q"}">${answered?(ok?"✓ Correct":"✗ Incorrect"):"Question "+(examIdx+1)}</span>`;
+  h+=`<span class="bg bg-ty">${p.ref}</span>`;
+  h+=`<span class="bg bg-ty">${EXAM_META[examSection].icon} ${EXAM_META[examSection].name}</span>`;
+  h+=`</div>`;
+  h+=`<div class="q-txt">${p.q}</div>`;
+  // givens/formula always shown in exam (it's a real exam, but givens help focus)
+  if(p.gv){
+    h+=`<div class="ir">`;
+    h+=`<div class="ib ib-g"><span class="ib-l">Given</span>${p.gv.replace(/\n/g,"<br>")}</div>`;
+    if(p.fm)h+=`<div class="ib ib-f"><span class="ib-l">Formula</span>${p.fm.replace(/\n/g,"<br>")}</div>`;
+    if(p.fi)h+=`<div class="ib ib-w"><span class="ib-l">Solve For</span>${p.fi.replace(/\n/g,"<br>")}</div>`;
+    h+=`</div>`;
+  }
+  if(!answered){
+    h+=`<div class="aa"><div class="aw"><input class="ai" id="exinp" type="text" inputmode="${p.isText?"text":"decimal"}" placeholder="Your answer…" value="${examInput}" onkeydown="if(event.key==='Enter')submitExamAnswer()"><span class="au">${p.u||""}</span></div><button class="ab" onclick="submitExamAnswer()">Submit</button></div>`;
+  } else {
+    h+=`<div class="aa"><div class="aw"><input class="ai ${ok?"v-ok":"v-no"}" value="${ans.val}" disabled><span class="au">${p.u||""}</span></div></div>`;
+    h+=`<div class="fb ${ok?"fb-ok":"fb-no"}">${ok?"✓ Correct":`✗ Correct answer: ${p.a} ${p.u||""}`}</div>`;
+    h+=`<div class="sol"><div class="sol-tag">Solution</div>`;
+    p.st.forEach(s=>{h+=`<div class="stp">${s}</div>`});
+    h+=`<div class="sol-note">${p.nt}</div></div>`;
+  }
+  h+=`</div>`;
+  // nav
+  h+=`<div class="lesson-nav">`;
+  h+=`<button class="nav-btn" onclick="examPrev()" ${examIdx===0?"disabled":""}>← Previous</button>`;
+  if(answered){
+    if(examIdx<EXAM_LENGTH-1)h+=`<button class="nav-btn primary" onclick="examNext()">Next Question →</button>`;
+    else h+=`<button class="nav-btn primary" onclick="finishExam(false)">Finish Exam ✓</button>`;
+  } else {
+    h+=`<div style="font:400 11px var(--f);color:var(--dim);align-self:center">Submit an answer to continue</div>`;
+  }
+  h+=`</div>`;
+  return h;
+}
+
+function submitExamAnswer(){
+  const inp=document.getElementById("exinp");if(!inp)return;
+  const val=inp.value.trim();if(val==="")return;
+  const p=examQuestions[examIdx];
+  const ok=isCorrect(p,val);
+  examAnswers[examIdx]={val,ok};
+  examInput="";
+  recordAnswer(ok);
+  renderExam();
+}
+function examNext(){
+  if(examIdx<EXAM_LENGTH-1){examIdx++;examInput="";renderExam()}
+}
+function examPrev(){
+  if(examIdx>0){examIdx--;examInput="";renderExam()}
+}
+function quitExam(){
+  if(confirm("Quit this exam? Your progress will be lost.")){
+    if(examTimerId){clearInterval(examTimerId);examTimerId=null}
+    examSection=null;examQuestions=[];examFinished=false;
+    renderExam();
+  }
+}
+function finishExam(timeUp){
+  if(examTimerId){clearInterval(examTimerId);examTimerId=null}
+  // auto-mark any unanswered as incorrect
+  for(let i=0;i<EXAM_LENGTH;i++){
+    if(examAnswers[i]==null)examAnswers[i]={val:"—",ok:false,skipped:true};
+  }
+  const score=examAnswers.filter(a=>a.ok).length;
+  if(examBest[examSection]==null||score>examBest[examSection]){
+    examBest[examSection]=score;
+    localStorage.setItem("m1_exam_best",JSON.stringify(examBest));
+  }
+  examFinished=true;examTimeUp=timeUp;examReviewIdx=-1;
+  renderExam();
+}
+let examTimeUp=false;
+
+function renderExamResults(){
+  const score=examAnswers.filter(a=>a.ok).length;
+  const pct=Math.round(100*score/EXAM_LENGTH);
+  const grade=pct>=90?"A":pct>=80?"B":pct>=70?"C":pct>=60?"D":"F";
+  const colorClass=pct>=90?"gold":pct>=75?"green":pct>=60?"orange":"red";
+  const m=EXAM_META[examSection];
+  let h=`<div class="exam-results">`;
+  h+=`<div style="font:400 22px var(--s);color:var(--mut)">${m.icon} ${m.name} Exam</div>`;
+  if(examTimeUp)h+=`<div style="font:600 12px var(--m);color:var(--red);margin-top:6px">⏱ Time expired — unanswered questions marked incorrect</div>`;
+  h+=`<div class="exam-results-score ${colorClass}">${score}<span style="font-size:28px;color:var(--dim)">/${EXAM_LENGTH}</span></div>`;
+  h+=`<div class="exam-results-pct">${pct}%</div>`;
+  h+=`<div class="exam-results-grade ${colorClass==="gold"||colorClass==="green"?"":""}" style="color:${pct>=90?"var(--ylw)":pct>=75?"var(--grn)":pct>=60?"var(--org)":"var(--red)"}">Grade: ${grade}</div>`;
+  // encouragement
+  const msg=pct>=90?"Outstanding! You've mastered this section. 🎉":pct>=80?"Great work — you really know this material!":pct>=70?"Solid pass. Review the misses below to level up.":pct>=60?"You passed, but there's room to grow. Study the solutions.":"Keep going — review the solutions and try again. You've got this! 💪";
+  h+=`<div style="font:400 14px var(--f);color:var(--mut);max-width:440px;margin:0 auto 10px">${msg}</div>`;
+  // meta cards
+  h+=`<div class="exam-results-meta">`;
+  h+=`<div class="exam-meta-card"><div class="exam-meta-l">Correct</div><div class="exam-meta-v" style="color:var(--grn)">${score}</div></div>`;
+  h+=`<div class="exam-meta-card"><div class="exam-meta-l">Incorrect</div><div class="exam-meta-v" style="color:var(--red)">${EXAM_LENGTH-score}</div></div>`;
+  if(examTimerOn)h+=`<div class="exam-meta-card"><div class="exam-meta-l">Time Used</div><div class="exam-meta-v">${fmtTime(examElapsed)}</div></div>`;
+  h+=`<div class="exam-meta-card"><div class="exam-meta-l">Best Ever</div><div class="exam-meta-v" style="color:var(--ylw)">${examBest[examSection]}</div></div>`;
+  h+=`</div>`;
+  // action buttons
+  h+=`<div class="btn-row" style="justify-content:center;margin:16px 0">`;
+  h+=`<button class="exam-start-btn" onclick="examPick('${examSection}')">Retake This Exam</button>`;
+  h+=`<button class="nav-btn" onclick="examSection=null;examQuestions=[];examFinished=false;renderExam()">Different Section</button>`;
+  h+=`</div>`;
+  // review list
+  h+=`<div class="exam-review-list"><div style="font:700 11px var(--m);letter-spacing:.1em;color:var(--acc);text-transform:uppercase;margin-bottom:10px">Question Review — tap any to expand</div>`;
+  examQuestions.forEach((p,i)=>{
+    const a=examAnswers[i];
+    const expanded=examReviewIdx===i;
+    // strip HTML graphs from the review snippet
+    const snippet=p.q.replace(/<svg[\s\S]*?<\/svg>/g,"[graph]").replace(/<[^>]+>/g,"").slice(0,90);
+    h+=`<div class="exam-review-item ${a.ok?"ok-row":"no-row"}" onclick="toggleReview(${i})">`;
+    h+=`<div class="exam-review-num">${i+1}</div>`;
+    h+=`<div class="exam-review-q">${snippet}${snippet.length>=90?"…":""}`;
+    if(expanded){
+      h+=`<div style="margin-top:8px;padding:10px;background:rgba(0,0,0,0.2);border-radius:8px">`;
+      h+=`<div style="font:400 13px/1.7 var(--s);color:var(--txt);margin-bottom:8px">${p.q}</div>`;
+      h+=`<div style="font:500 11px var(--m);color:${a.ok?"var(--grn)":"var(--red)"}">Your answer: ${a.val} ${a.skipped?"(skipped)":""} ${p.u||""}</div>`;
+      if(!a.ok)h+=`<div style="font:500 11px var(--m);color:var(--grn)">Correct: ${p.a} ${p.u||""}</div>`;
+      h+=`<div class="sol" style="margin-top:8px">`;
+      p.st.forEach(s=>{h+=`<div class="stp">${s}</div>`});
+      h+=`<div class="sol-note">${p.nt}</div></div>`;
+      h+=`</div>`;
+    }
+    h+=`</div>`;
+    h+=`<div class="exam-review-status ${a.ok?"ok":"no"}">${a.ok?"✓":"✗"}</div>`;
+    h+=`</div>`;
+  });
+  h+=`</div></div>`;
+  return h;
+}
+function toggleReview(i){
+  examReviewIdx=examReviewIdx===i?-1:i;
+  renderExam();
+}
+
+// ============================================================
+// INIT
+// ============================================================
+loadStats();
+renderStats();
+renderModes();
+renderCtrls();
+genP();
+</script>
+</body>
+</html>
