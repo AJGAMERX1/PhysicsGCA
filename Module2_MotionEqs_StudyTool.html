@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 2: 1D Motion Equations & Free Fall — Physics Study Tool</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;500;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0a0d14;--card:rgba(255,255,255,0.022);--bdr:rgba(255,255,255,0.055);--txt:#dfe6f0;--mut:#8a95a8;--dim:#5a6478;--prp:#6366f1;--pl:#a5b4fc;--pg:rgba(99,102,241,0.09);--grn:#2dd4a0;--gb:rgba(45,212,160,0.04);--gbd:rgba(45,212,160,0.18);--red:#f06b6b;--rb:rgba(240,107,107,0.04);--rbd:rgba(240,107,107,0.18);--ylw:#eab308;--blu:#58a6ff;--cyn:#20d3e8;--org:#f59e0b;--acc:#6366f1;--m:'JetBrains Mono',monospace;--s:'Instrument Serif',Georgia,serif;--f:'DM Sans',sans-serif}
+body{background:var(--bg);color:var(--txt);font-family:var(--f);min-height:100vh;display:flex;flex-direction:column}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.07);border-radius:3px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-4px)}40%,80%{transform:translateX(4px)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+input[type=text],textarea{-webkit-appearance:none;appearance:none}
+.hdr{padding:16px 22px 12px;border-bottom:1px solid var(--bdr);background:linear-gradient(180deg,rgba(99,102,241,0.025) 0%,transparent 100%)}
+.hdr-in{max-width:860px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.hdr-lab{font:700 9px/1 var(--m);letter-spacing:.2em;color:var(--acc);margin-bottom:2px;text-transform:uppercase}
+.hdr-t{font:400 22px/1.2 var(--s);color:var(--txt)}.hdr-t i{font-style:italic;color:var(--acc)}
+.hdr-r{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.stats{display:flex;gap:12px;align-items:center}.stat-box{text-align:center}.stat-n{font:700 16px/1 var(--m);color:var(--txt)}.stat-l{font:500 8px/1 var(--m);color:var(--dim);margin-top:2px;letter-spacing:.08em;text-transform:uppercase}
+.streak-n{color:var(--ylw)}.pct-n{color:var(--cyn)}
+.btn-r{background:rgba(240,107,107,0.06);border:1px solid rgba(240,107,107,0.15);color:var(--red);padding:6px 12px;border-radius:8px;font:600 10px var(--f);cursor:pointer}
+.modes{display:flex;gap:4px;padding:10px 22px;border-bottom:1px solid rgba(255,255,255,0.03);max-width:900px;margin:0 auto;overflow-x:auto}
+.mode-btn{flex:1;min-width:90px;padding:10px 6px;border-radius:10px;border:1.5px solid var(--bdr);background:rgba(255,255,255,0.01);color:var(--dim);font:600 11px var(--f);cursor:pointer;transition:all .2s;outline:none;text-align:center}
+.mode-btn.on{border-color:rgba(99,102,241,0.35);background:rgba(99,102,241,0.06);color:var(--acc)}
+.toolbar{padding:8px 22px;border-bottom:1px solid rgba(255,255,255,0.02);max-width:900px;margin:0 auto;display:flex;gap:5px;flex-wrap:wrap;align-items:center}
+.cl{font:600 9px var(--m);color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-right:3px}
+.cb{display:flex;align-items:center;gap:6px;padding:7px 13px;border-radius:8px;border:1px solid var(--bdr);background:rgba(255,255,255,0.012);color:var(--dim);font:600 11px var(--f);cursor:pointer;white-space:nowrap;transition:all .2s;outline:none}
+.cb:hover{border-color:rgba(99,102,241,0.15);color:var(--mut)}.cb.on{border-color:rgba(99,102,241,0.28);background:rgba(99,102,241,0.07);color:var(--acc)}
+.tg{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:7px;border:1px solid var(--bdr);background:rgba(255,255,255,0.015);color:var(--dim);font:600 10px var(--f);cursor:pointer;transition:all .2s;outline:none;user-select:none;-webkit-user-select:none}
+.tg:hover{border-color:rgba(255,255,255,0.1)}.tg.on{border-color:rgba(99,102,241,0.3);background:rgba(99,102,241,0.06);color:var(--acc)}
+.tg-dot{width:7px;height:7px;border-radius:50%;border:1.5px solid var(--dim);transition:all .2s;flex-shrink:0}.tg.on .tg-dot{background:var(--acc);border-color:var(--acc)}
+.cnt{max-width:740px;width:100%;margin:0 auto;padding:16px 22px 80px;flex:1}
+.pc{border-radius:14px;padding:24px;margin-bottom:16px;transition:all .3s;animation:fadeUp .3s ease;background:var(--card);border:1px solid var(--bdr)}.pc.ok{background:var(--gb);border-color:var(--gbd)}.pc.no{background:var(--rb);border-color:var(--rbd)}
+.pc-top{display:flex;align-items:center;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.bg{font:700 10px var(--m);padding:4px 8px;border-radius:6px;letter-spacing:.05em}.bg-q{background:var(--pg);color:#a5b4fc}.bg-ok{background:rgba(45,212,160,0.1);color:var(--grn)}.bg-no{background:rgba(240,107,107,0.1);color:var(--red)}.bg-ty{background:rgba(99,102,241,0.08);color:var(--acc);font-size:9px;letter-spacing:.08em}.bg-hard{background:rgba(240,107,107,0.08);color:var(--org);font-size:9px}
+.q-txt{color:var(--txt);font:400 15px/1.8 var(--s);margin-bottom:2px}.q-txt b{font-weight:700;color:#fff}
+.ir{display:flex;gap:6px;margin:12px 0 0;flex-wrap:wrap}
+.ib{flex:1;min-width:110px;padding:9px 12px;border-radius:8px;font:400 11px/1.7 var(--m)}.ib-g{background:rgba(99,102,241,0.05);border:1px solid rgba(99,102,241,0.09);color:var(--pl)}.ib-f{background:rgba(32,211,232,0.04);border:1px solid rgba(32,211,232,0.08);color:var(--cyn)}.ib-w{background:rgba(234,179,8,0.04);border:1px solid rgba(234,179,8,0.08);color:var(--ylw)}.ib-l{font:700 8px var(--m);letter-spacing:.12em;text-transform:uppercase;margin-bottom:3px;display:block;opacity:.5}
+.aa{margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;align-items:stretch}.aw{flex:1;min-width:160px;position:relative}
+.ai{width:100%;padding:12px 14px;padding-right:50px;background:rgba(255,255,255,0.035);border:1.5px solid rgba(255,255,255,0.09);border-radius:10px;color:var(--txt);font:500 15px var(--m);outline:none;transition:all .25s}.ai:focus{border-color:rgba(99,102,241,0.45)}.ai.v-ok{border-color:var(--grn);background:rgba(45,212,160,0.05)}.ai.v-no{border-color:var(--red);background:rgba(240,107,107,0.05);animation:shake .35s}.ai::placeholder{color:rgba(255,255,255,0.12);font-weight:400;font-size:12px}
+.au{position:absolute;right:12px;top:50%;transform:translateY(-50%);font:500 11px var(--m);color:var(--dim);pointer-events:none}
+.ab{padding:12px 22px;border-radius:10px;border:1.5px solid rgba(99,102,241,0.25);background:rgba(99,102,241,0.08);color:var(--acc);font:700 13px var(--f);cursor:pointer;transition:all .2s;white-space:nowrap}.ab:hover{background:rgba(99,102,241,0.16)}
+.fb{margin-top:5px;font:600 12px var(--m)}.fb-ok{color:var(--grn)}.fb-no{color:var(--red)}.fb-v{font:400 11px var(--m);color:var(--dim);margin-top:2px}
+.btn-row{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap}
+.btn-sh{padding:7px 14px;border-radius:7px;border:1px solid var(--bdr);background:rgba(255,255,255,0.025);color:var(--mut);font:500 11px var(--f);cursor:pointer;transition:all .2s}.btn-sh:hover{color:var(--txt)}
+.btn-nx{padding:8px 20px;border-radius:8px;border:1.5px solid rgba(99,102,241,0.25);background:rgba(99,102,241,0.08);color:var(--acc);font:700 12px var(--f);cursor:pointer;transition:all .2s}.btn-nx:hover{background:rgba(99,102,241,0.15)}
+.sol{margin-top:14px;padding:16px;border-radius:10px;animation:fadeUp .25s;border:1px solid rgba(99,102,241,0.1);background:rgba(99,102,241,0.02)}.sol-tag{font:700 9px var(--m);letter-spacing:.12em;color:var(--acc);margin-bottom:8px;text-transform:uppercase}
+.stp{font:400 12px/2 var(--m);color:var(--pl)}.stp .lb{color:rgba(165,180,252,0.4);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}.stp .ans{color:var(--grn);font-weight:700;font-size:13px}
+.sol-note{margin-top:10px;padding:10px 12px;background:rgba(255,255,255,0.015);border:1px solid var(--bdr);border-radius:8px;font:400 12px/1.7 var(--f);color:var(--mut)}
+.opt{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:11px 14px;cursor:pointer;color:#b0bec5;font:400 13px/1.5 var(--f);transition:all .2s;outline:none;width:100%;text-align:left;margin-bottom:6px}.opt:not(.done):hover{background:rgba(99,102,241,0.06);border-color:rgba(99,102,241,0.25)}.opt.done{cursor:default}.opt.c-ok{background:rgba(45,212,160,0.08);border-color:rgba(45,212,160,0.3);color:var(--grn)}.opt.c-no{background:rgba(240,107,107,0.08);border-color:rgba(240,107,107,0.3);color:var(--red)}
+.opt-ltr{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font:700 11px var(--m);flex-shrink:0;background:rgba(255,255,255,0.04);color:var(--dim)}.opt.c-ok .opt-ltr{background:rgba(45,212,160,0.15);color:var(--grn)}.opt.c-no .opt-ltr{background:rgba(240,107,107,0.15);color:var(--red)}
+.opts{display:flex;flex-direction:column;margin-top:14px}
+textarea.v-ta{width:100%;padding:12px;background:rgba(255,255,255,0.035);border:1.5px solid rgba(255,255,255,0.09);border-radius:10px;color:var(--txt);font:400 14px var(--f);outline:none;resize:vertical;min-height:70px;line-height:1.6}
+.cs-sec{font:700 11px var(--m);letter-spacing:.1em;color:var(--acc);text-transform:uppercase;margin:20px 0 10px;padding-bottom:6px;border-bottom:1px solid rgba(99,102,241,0.15)}
+.cs-card{border-radius:10px;padding:16px;margin-bottom:10px;background:var(--card);border:1px solid var(--bdr);animation:fadeUp .3s}
+.cs-title{font:700 13px var(--f);color:var(--txt);margin-bottom:6px}
+.cs-fm{background:rgba(99,102,241,0.05);border:1px solid rgba(99,102,241,0.1);border-radius:8px;padding:10px 14px;font:500 12.5px/1.8 var(--m);color:var(--acc);margin-bottom:8px}
+.cs-lb{font:700 8px var(--m);letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin:8px 0 4px}
+.cs-vr{font:400 11.5px/1.8 var(--m);color:var(--mut);margin-bottom:6px}.cs-vr b{color:var(--cyn);font-weight:600}
+.cs-ex{background:rgba(45,212,160,0.03);border:1px solid rgba(45,212,160,0.1);border-radius:8px;padding:10px 12px;font:400 12px/1.9 var(--m);color:var(--grn)}.cs-ex .lb{color:rgba(45,212,160,0.4);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.lesson-wrap{max-width:700px;margin:0 auto}
+.lesson-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:20px;padding:12px 16px;background:var(--card);border:1px solid var(--bdr);border-radius:10px;flex-wrap:wrap}
+.lesson-prog{font:700 11px var(--m);color:var(--dim);letter-spacing:.08em}
+.prog-bar{height:4px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden;margin-top:6px;width:200px}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--acc),#a5b4fc);transition:width .4s ease}
+.lesson-card{background:var(--card);border:1px solid var(--bdr);border-radius:14px;padding:28px;animation:fadeUp .3s}
+.lesson-type{font:700 9px var(--m);letter-spacing:.15em;color:var(--acc);text-transform:uppercase;margin-bottom:14px}
+.lesson-body{font:400 15px/1.9 var(--s);color:var(--mut);margin-bottom:14px}.lesson-body b{color:#fff;font-weight:600}.lesson-body em{color:var(--cyn);font-style:italic;font-weight:500}
+.lesson-def{background:rgba(99,102,241,0.05);border-left:3px solid var(--prp);padding:14px 18px;margin:12px 0;border-radius:6px}
+.lesson-def-t{font:700 10px var(--m);letter-spacing:.1em;color:var(--prp);text-transform:uppercase;margin-bottom:4px}
+.lesson-def-b{font:400 14px/1.7 var(--s);color:var(--pl)}
+.lesson-eq{background:rgba(32,211,232,0.04);border:1px solid rgba(32,211,232,0.1);border-radius:8px;padding:14px 18px;margin:12px 0;font:500 14px/1.9 var(--m);color:var(--cyn);text-align:center}
+.lesson-checkpoint{background:rgba(99,102,241,0.04);border:1.5px solid rgba(99,102,241,0.2);border-radius:12px;padding:20px 22px;margin:18px 0}
+.lesson-cp-t{font:700 10px var(--m);letter-spacing:.12em;color:var(--acc);text-transform:uppercase;margin-bottom:10px}
+.lesson-cp-q{font:400 15px/1.7 var(--s);color:var(--txt);margin-bottom:14px}.lesson-cp-q b{color:#fff}
+.hint-box{margin-top:10px;padding:12px 14px;background:rgba(234,179,8,0.05);border:1px solid rgba(234,179,8,0.2);border-radius:8px;font:400 13px/1.7 var(--f);color:var(--ylw);animation:fadeUp .3s}
+.nav-btn{padding:9px 18px;border-radius:9px;border:1.5px solid var(--bdr);background:rgba(255,255,255,0.025);color:var(--mut);font:600 12px var(--f);cursor:pointer;transition:all .2s}
+.nav-btn:hover:not(:disabled){background:rgba(255,255,255,0.05);color:var(--txt)}.nav-btn:disabled{opacity:.3;cursor:default}
+.nav-btn.primary{border-color:rgba(99,102,241,0.3);background:rgba(99,102,241,0.08);color:var(--acc)}
+.topic-picker{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:520px;margin:0 auto}@media(max-width:500px){.topic-picker{grid-template-columns:1fr}}
+.topic-btn{padding:20px 14px;border-radius:12px;border:1.5px solid var(--bdr);background:rgba(255,255,255,0.02);color:var(--txt);font:400 15px var(--s);cursor:pointer;transition:all .2s;text-align:left}.topic-btn:hover{border-color:rgba(99,102,241,0.3);background:rgba(99,102,241,0.05)}
+.topic-sub{font:400 11px var(--f);color:var(--dim);margin-top:4px}
+.quiz-score{font:700 32px var(--m);color:var(--acc);margin:12px 0}.quiz-score.qok{color:var(--grn)}
+.exam-landing{text-align:center;padding:30px 20px;animation:fadeUp .3s}
+.exam-title{font:400 28px/1.3 var(--s);color:var(--txt);margin-bottom:8px}
+.exam-title i{color:var(--acc);font-style:italic}
+.exam-sub{font:400 14px/1.6 var(--f);color:var(--mut);margin-bottom:24px;max-width:480px;margin-left:auto;margin-right:auto}
+.exam-section-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:560px;margin:0 auto 20px}
+@media(max-width:520px){.exam-section-grid{grid-template-columns:1fr}}
+.exam-section-btn{padding:18px 16px;border-radius:12px;border:1.5px solid var(--bdr);background:rgba(255,255,255,0.02);color:var(--txt);cursor:pointer;transition:all .2s;text-align:left;font-family:var(--f)}
+.exam-section-btn:hover{border-color:rgba(99,102,241,0.35);background:rgba(99,102,241,0.05);transform:translateY(-1px)}
+.exam-section-icon{font-size:22px;margin-bottom:4px;display:block}
+.exam-section-name{font:700 14px var(--f);color:var(--txt);margin-bottom:2px}
+.exam-section-meta{font:500 10px var(--m);color:var(--dim);letter-spacing:.08em;text-transform:uppercase}
+.exam-best{font:700 11px var(--m);color:var(--grn);margin-top:6px}
+.exam-config{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
+.exam-config-card{padding:14px 18px;border-radius:10px;border:1.5px solid var(--bdr);background:rgba(255,255,255,0.02);min-width:120px}
+.exam-config-l{font:700 9px var(--m);color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+.exam-config-v{font:700 18px var(--m);color:var(--txt)}
+.exam-toggle{display:inline-flex;gap:4px;background:rgba(255,255,255,0.03);border:1px solid var(--bdr);border-radius:8px;padding:3px}
+.exam-tog-btn{padding:6px 12px;border-radius:6px;border:none;background:transparent;color:var(--dim);font:600 11px var(--f);cursor:pointer;transition:all .15s}
+.exam-tog-btn.on{background:rgba(99,102,241,0.15);color:var(--acc)}
+.exam-start-btn{padding:14px 36px;border-radius:10px;border:1.5px solid rgba(99,102,241,0.4);background:rgba(99,102,241,0.12);color:var(--acc);font:700 14px var(--f);cursor:pointer;transition:all .2s;margin-top:10px}
+.exam-start-btn:hover{background:rgba(99,102,241,0.22)}
+.exam-bar{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;background:var(--card);border:1px solid var(--bdr);border-radius:12px;margin-bottom:16px;flex-wrap:wrap;gap:10px}
+.exam-q-counter{font:700 14px var(--m);color:var(--txt)}
+.exam-q-counter span{color:var(--acc)}
+.exam-progress-bar{flex:1;min-width:120px;height:5px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;margin:0 16px}
+.exam-progress-fill{height:100%;background:linear-gradient(90deg,var(--acc),#a5b4fc);transition:width .3s ease}
+.exam-timer{font:700 14px var(--m);color:var(--cyn);display:flex;align-items:center;gap:6px}
+.exam-timer.warn{color:var(--ylw)}.exam-timer.danger{color:var(--red);animation:pulse 1s infinite}
+.exam-mini-stats{display:flex;gap:14px;font:600 11px var(--m)}
+.exam-mini-stats span{color:var(--dim)}.exam-mini-stats .ok{color:var(--grn)}.exam-mini-stats .no{color:var(--red)}
+.exam-quit{padding:5px 11px;border-radius:6px;border:1px solid rgba(240,107,107,0.2);background:rgba(240,107,107,0.05);color:var(--red);font:600 10px var(--f);cursor:pointer}
+.exam-quit:hover{background:rgba(240,107,107,0.12)}
+.exam-results{text-align:center;padding:30px 20px;animation:fadeUp .4s}
+.exam-results-score{font:700 56px var(--m);margin:12px 0}
+.exam-results-score.gold{color:var(--ylw)}.exam-results-score.green{color:var(--grn)}.exam-results-score.orange{color:var(--org)}.exam-results-score.red{color:var(--red)}
+.exam-results-pct{font:400 22px var(--s);color:var(--mut);margin-bottom:4px}
+.exam-results-meta{display:flex;gap:14px;justify-content:center;margin:20px 0;flex-wrap:wrap}
+.exam-meta-card{padding:10px 16px;border-radius:10px;background:rgba(255,255,255,0.025);border:1px solid var(--bdr);min-width:100px}
+.exam-meta-l{font:700 9px var(--m);color:var(--dim);letter-spacing:.1em;text-transform:uppercase}
+.exam-meta-v{font:700 18px var(--m);color:var(--txt);margin-top:4px}
+.exam-review-list{margin-top:20px;text-align:left}
+.exam-review-item{padding:12px 14px;background:rgba(255,255,255,0.018);border:1px solid var(--bdr);border-radius:10px;margin-bottom:6px;display:flex;align-items:flex-start;gap:10px;cursor:pointer;transition:all .2s}
+.exam-review-item:hover{background:rgba(255,255,255,0.04)}
+.exam-review-item.ok-row{border-left:3px solid var(--grn)}.exam-review-item.no-row{border-left:3px solid var(--red)}
+.exam-review-num{font:700 10px var(--m);color:var(--dim);min-width:24px}
+.exam-review-q{font:400 12px/1.6 var(--f);color:var(--mut);flex:1}
+.exam-review-status{font:700 10px var(--m);text-transform:uppercase;letter-spacing:.08em}
+.exam-review-status.ok{color:var(--grn)}.exam-review-status.no{color:var(--red)}
+@media(max-width:600px){.hdr{padding:14px 12px 10px}.modes{padding:8px 12px}.toolbar{padding:6px 12px}.cnt{padding:12px 12px 70px}.pc{padding:18px 14px}.aa{flex-direction:column}.lesson-card{padding:20px 16px}.ir{flex-direction:column}.exam-bar{padding:10px 12px}.exam-progress-bar{margin:0 8px}}
+</style>
+</head>
+<body>
+<div class="hdr"><div class="hdr-in">
+<div><div class="hdr-lab">Module 2 · Physics Study Tool</div><h1 class="hdr-t"><i>1D Motion Equations</i> &amp; Free Fall</h1></div>
+<div class="hdr-r"><div class="stats">
+<div class="stat-box"><div class="stat-n" id="sC">0</div><div class="stat-l">Correct</div></div>
+<div class="stat-box"><div class="stat-n" id="sA">0</div><div class="stat-l">Attempted</div></div>
+<div class="stat-box"><div class="stat-n pct-n" id="sP">—</div><div class="stat-l">Accuracy</div></div>
+<div class="stat-box"><div class="stat-n streak-n" id="sS"><span id="fire">🔥</span> 0</div><div class="stat-l">Streak</div></div>
+</div><button class="btn-r" onclick="resetStats()">Reset</button></div>
+</div></div>
+<div id="modeBar" class="modes"></div>
+<div id="ctrlBar" class="toolbar"></div>
+<div class="cnt" id="main"></div>
+<script>
+// ========== CORE HELPERS ==========
+function R(a,b,d){d=d||0;const f=Math.pow(10,d);return Math.round((Math.random()*(b-a)+a)*f)/f}
+function rd(v,d){return Math.round(v*Math.pow(10,d))/Math.pow(10,d)}
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
+function fmtTime(s){const m=Math.floor(s/60),sec=s%60;return m+":"+(sec<10?"0":"")+sec}
+
+// ========== VOCAB ==========
+const VOCAB=[
+{t:"kinematic equations",d:"the three equations derived in Module 2 (v = v₀ + at, v² = v₀² + 2aΔx, Δx = v₀t + ½at²) that describe one-dimensional motion under constant acceleration"},
+{t:"v = v₀ + at",d:"Equation 2.6: relates final velocity, initial velocity, acceleration, and time; valid only when acceleration is constant"},
+{t:"v² = v₀² + 2a·Δx",d:"Equation 2.15: relates final velocity, initial velocity, acceleration, and displacement; useful when time is not given or needed"},
+{t:"Δx = v₀t + ½at²",d:"Equation 2.19: relates displacement, initial velocity, acceleration, and time; derived from the area under a velocity-time graph"},
+{t:"constant acceleration condition",d:"the requirement that must be satisfied before using any of the three Module 2 equations; if acceleration varies, these equations do not apply"},
+{t:"derivation",d:"a process that starts with known equations and uses algebra and reasoning to produce a brand-new equation; important for understanding where equations come from"},
+{t:"free fall",d:"the motion of an object when it is falling solely under the influence of gravity, with no other forces (like air resistance) acting on it"},
+{t:"acceleration due to gravity (g)",d:"the constant acceleration experienced by all objects in free fall near Earth's surface; g = 9.8 m/s² (or 32 ft/s²) directed straight down"},
+{t:"air resistance",d:"the force on a falling object caused by collisions with gas molecules and atoms in the air; opposes the motion of a falling object"},
+{t:"terminal velocity",d:"the maximum velocity a falling object subject to air resistance can achieve; reached when air resistance exactly cancels gravity, making net acceleration zero"},
+{t:"v₀ (v-naught)",d:"the initial velocity of an object at the start of the motion (when t = 0); pronounced 'v-naught'"},
+{t:"deceleration",d:"informal term for negative acceleration; when an object is slowing down, its acceleration and velocity have opposite signs"},
+{t:"stopping distance",d:"the displacement an object travels from the moment brakes are applied until it reaches zero velocity; calculated using v² = v₀² + 2aΔx with v = 0"},
+{t:"reaction time",d:"the time it takes a person to notice a situation and react; can be measured experimentally using free fall distance (Experiment 2.2 in the textbook)"},
+{t:"maximum height (projectile)",d:"the highest point reached by an object thrown upward; at this point the object's velocity is zero (though acceleration is still −9.8 m/s²)"},
+{t:"independence of g",d:"the fact that the acceleration due to gravity is the same for all objects regardless of their mass, shape, or composition (as long as air resistance is negligible)"}
+];
+// ========== RANDOMIZATION POOLS ==========
+const SUBS_VEH=[{n:"A car"},{n:"A truck"},{n:"A motorcycle"},{n:"A bus"},{n:"A sports car"},{n:"A van"}];
+const SUBS_ATH=[{n:"A sprinter"},{n:"A cyclist"},{n:"A skater"},{n:"A dragster"},{n:"A rocket sled"}];
+const SUBS_FF=[{n:"A penny"},{n:"A rock"},{n:"A coin"},{n:"A ball"},{n:"A marble"},{n:"A bolt"}];
+const DIRS=["east","north","forward","down the track"];
+const NICE_A=[0.5,1.0,1.5,2.0,2.5,3.0,4.0,5.0,6.0,8.0];
+const NICE_V=[5,8,10,12,15,18,20,24,25,30,35,40];
+const NICE_T=[2,3,4,5,6,8,10,12,15,20,25,30];
+
+// ========== QUESTION GENERATORS ==========
+const G={
+// ============================================================
+// 🔵 EQ 2.6 — v = v₀ + at (find any of the 4 variables)
+// ============================================================
+eq1_find_v(){
+  const v0=pick(NICE_V),a=pick(NICE_A),t=pick(NICE_T);
+  const v=v0+a*t;
+  const sub=pick([...SUBS_VEH,...SUBS_ATH]);
+  const dir=pick(DIRS);
+  return{ref:"Eq 2.6",q:`${sub.n} is moving at <b>${v0} m/s ${dir}</b> and accelerates at <b>${a} m/s²</b> for <b>${t} seconds</b>. What is the final velocity?`,gv:`v₀ = ${v0} m/s\na = ${a} m/s²\nt = ${t} s`,fm:`v = v₀ + at`,fi:`v = ? m/s`,u:"m/s",a:v,tol:Math.max(v*0.02,0.1),
+  st:[`<span class='lb'>FORMULA</span> v = v₀ + at`,`<span class='lb'>SUBSTITUTE</span> v = ${v0} + (${a})(${t})`,`<span class='lb'>SOLVE</span> v = ${v0} + ${a*t} = ${v} m/s`,`<span class='lb'>ANSWER</span> <span class='ans'>${v} m/s ${dir}</span>`],nt:`Eq 2.6 directly gives final velocity when you know starting velocity, acceleration, and time.`}
+},
+eq1_find_v0(){
+  const v=pick(NICE_V),a=pick(NICE_A),t=pick(NICE_T);
+  const v0=v-a*t;
+  if(v0<0)return G.eq1_find_v0();
+  const sub=pick(SUBS_VEH);
+  return{ref:"Ex 2.1",q:`${sub.n} decelerates at <b>${a} m/s²</b> and comes to rest in <b>${t} seconds</b>. How fast was it going initially?`,gv:`v = 0 m/s (stopped)\na = −${a} m/s²\nt = ${t} s`,fm:`v = v₀ + at\nv₀ = v − at`,fi:`v₀ = ? m/s`,u:"m/s",a:a*t,tol:Math.max(a*t*0.02,0.1),
+  st:[`<span class='lb'>REARRANGE</span> v₀ = v − at`,`<span class='lb'>SUBSTITUTE</span> v₀ = 0 − (−${a})(${t})`,`<span class='lb'>SOLVE</span> v₀ = ${a*t} m/s`,`<span class='lb'>ANSWER</span> <span class='ans'>${a*t} m/s</span>`],nt:`Textbook Example 2.1: "deceleration" means a is negative (opposite to motion). So v₀ = 0 − (−a)t = at.`}
+},
+eq1_find_t(){
+  const v0=pick([15,18,20,22,23,25,28,30]);
+  const v=v0+pick([5,8,10,12,15,20,25]);
+  const a=pick([1.5,2.0,2.5,3.0,4.0,5.0]);
+  const t=rd((v-v0)/a,1);
+  return{ref:"OYO 2.1",q:`A police car is moving at <b>${v0} m/s</b> and needs to speed up to <b>${v} m/s</b> to match a speeder. If it can accelerate at <b>${a} m/s²</b>, how long does that take?`,gv:`v₀ = ${v0} m/s\nv = ${v} m/s\na = ${a} m/s²`,fm:`v = v₀ + at\nt = (v − v₀)/a`,fi:`t = ? s`,u:"s",a:t,tol:Math.max(t*0.025,0.1),
+  st:[`<span class='lb'>REARRANGE</span> t = (v − v₀) / a`,`<span class='lb'>SUBSTITUTE</span> t = (${v} − ${v0}) / ${a}`,`<span class='lb'>SOLVE</span> t = ${rd(v-v0,1)} / ${a} = ${t} s`,`<span class='lb'>ANSWER</span> <span class='ans'>${t} s</span>`],nt:`Classic OYO 2.1 scenario. Police car needs to match the speeder's speed — solving for time to do so.`}
+},
+eq1_find_a(){
+  const v0=pick([0,5,8,10,12,15]);
+  const v=v0+pick([10,12,15,18,20,24,27,30]);
+  const t=pick(NICE_T);
+  const a=rd((v-v0)/t,2);
+  const sub=pick([...SUBS_VEH,...SUBS_ATH]);
+  return{ref:"Eq 2.6",q:`${sub.n} goes from <b>${v0} m/s</b> to <b>${v} m/s</b> in <b>${t} seconds</b>. What is the acceleration?`,gv:`v₀ = ${v0} m/s\nv = ${v} m/s\nt = ${t} s`,fm:`a = (v − v₀) / t`,fi:`a = ? m/s²`,u:"m/s²",a:a,tol:Math.max(Math.abs(a)*0.025,0.05),
+  st:[`<span class='lb'>REARRANGE</span> a = (v − v₀) / t`,`<span class='lb'>SUBSTITUTE</span> a = (${v} − ${v0}) / ${t}`,`<span class='lb'>SOLVE</span> a = ${rd(v-v0,0)} / ${t} = ${a} m/s²`,`<span class='lb'>ANSWER</span> <span class='ans'>${a} m/s²</span>`],nt:`Rearranging v = v₀ + at for acceleration gives a = Δv/t — same as the original a = Δv/Δt definition.`}
+},
+eq1_from_rest(){
+  const a=pick(NICE_A),t=pick(NICE_T);
+  const v=a*t;
+  const sub=pick([...SUBS_VEH,...SUBS_ATH]);
+  return{ref:"Eq 2.6",q:`${sub.n} starts from rest and accelerates at <b>${a} m/s²</b> for <b>${t} seconds</b>. What is its final speed?`,gv:`v₀ = 0 m/s (starts from rest)\na = ${a} m/s²\nt = ${t} s`,fm:`v = v₀ + at`,fi:`v = ? m/s`,u:"m/s",a:v,tol:Math.max(v*0.02,0.1),
+  st:[`<span class='lb'>FROM REST</span> v₀ = 0`,`<span class='lb'>SIMPLIFIES TO</span> v = at = ${a} × ${t}`,`<span class='lb'>ANSWER</span> <span class='ans'>${v} m/s</span>`],nt:`"Starts from rest" always means v₀ = 0. Equation simplifies to v = at.`}
+},
+eq1_brake_time(){
+  const v0=pick([15,18,20,22,25,28,30,32,35]);
+  const a=pick([2,2.5,3,4,5,6]);
+  const t=rd(v0/a,1);
+  const sub=pick(SUBS_VEH);
+  return{ref:"Ex 2.1 style",q:`${sub.n} is traveling at <b>${v0} m/s</b> when the driver applies the brakes, decelerating the vehicle at <b>${a} m/s²</b>. How long does it take to stop completely?`,gv:`v₀ = ${v0} m/s\nv = 0 (stop)\na = −${a} m/s²`,fm:`v = v₀ + at\nt = −v₀/a`,fi:`t = ? s`,u:"s",a:t,tol:Math.max(t*0.025,0.1),
+  st:[`<span class='lb'>SET v = 0</span> 0 = ${v0} + (−${a})t`,`<span class='lb'>REARRANGE</span> t = ${v0} / ${a}`,`<span class='lb'>ANSWER</span> <span class='ans'>${t} s</span>`],nt:`Deceleration means negative acceleration. Dividing a positive by a positive gives a positive time — always a good sign check.`}
+},
+eq1_match_velocity(){
+  const v0=pick([10,12,15,18,20]);
+  const vt=v0+pick([8,10,12,15,20]);
+  const a=pick([2.0,2.5,3.0,4.0,5.0]);
+  const t=rd((vt-v0)/a,1);
+  return{ref:"OYO 2.1",q:`A car is moving at <b>${v0} m/s</b>. It needs to reach a speed of <b>${vt} m/s</b>. If its maximum acceleration is <b>${a} m/s²</b>, how long will it take?`,gv:`v₀ = ${v0} m/s\nv = ${vt} m/s\na = ${a} m/s²`,fm:`t = (v − v₀) / a`,fi:`t = ? s`,u:"s",a:t,tol:Math.max(t*0.025,0.1),
+  st:[`<span class='lb'>REARRANGE</span> t = (v − v₀) / a`,`<span class='lb'>SOLVE</span> t = (${vt} − ${v0}) / ${a} = ${rd(vt-v0,0)} / ${a} = ${t} s`,`<span class='lb'>ANSWER</span> <span class='ans'>${t} s</span>`],nt:`Identical structure to OYO 2.1. Just need to identify which of the four variables is unknown.`}
+},
+eq1_find_a_brake(){
+  const v0=pick([15,20,22,25,27,30]);
+  const t=pick([3,4,5,6,8,10]);
+  const a=rd(-v0/t,1);
+  const sub=pick(SUBS_VEH);
+  return{ref:"Eq 2.6 / braking",q:`${sub.n} traveling at <b>${v0} m/s</b> comes to a complete stop in <b>${t} seconds</b>. What was the deceleration?`,gv:`v₀ = ${v0} m/s\nv = 0\nt = ${t} s`,fm:`a = (v − v₀) / t`,fi:`a = ? m/s²`,u:"m/s²",a:a,tol:Math.max(Math.abs(a)*0.025,0.05),
+  st:[`<span class='lb'>REARRANGE</span> a = (v − v₀) / t`,`<span class='lb'>SUBSTITUTE</span> a = (0 − ${v0}) / ${t}`,`<span class='lb'>SOLVE</span> a = ${-v0} / ${t} = ${a} m/s²`,`<span class='lb'>ANSWER</span> <span class='ans'>${a} m/s² (negative = braking)</span>`],nt:`Negative acceleration is not "wrong" — it tells you the car is slowing in the positive direction.`}
+},
+
+// ============================================================
+// 🟢 EQ 2.15 — v² = v₀² + 2a·Δx
+// ============================================================
+eq2_find_dx_brake(){
+  const v0=pick([15,18,20,22,24,25,27,30]);
+  const a=pick([2.0,2.1,2.5,3.0,4.0,5.0,7.5]);
+  const dx=rd(v0*v0/(2*a),0);
+  const sub=pick(SUBS_VEH);
+  return{ref:"Ex 2.2 / stopping distance",q:`${sub.n} is moving at <b>${v0} m/s</b> when the brakes apply a deceleration of <b>${a} m/s²</b>. What is the <b>stopping distance</b>?`,gv:`v₀ = ${v0} m/s\nv = 0 m/s\na = −${a} m/s²`,fm:`v² = v₀² + 2a·Δx\nΔx = −v₀²/(2a)`,fi:`Δx = ? m`,u:"m",a:dx,tol:Math.max(dx*0.025,0.5),
+  st:[`<span class='lb'>SET v = 0</span> 0 = ${v0}² + 2(−${a})Δx`,`<span class='lb'>REARRANGE</span> Δx = −${v0*v0} / (−${2*a})`,`<span class='lb'>SOLVE</span> Δx = ${v0*v0} / ${2*a} = ${dx} m`,`<span class='lb'>ANSWER</span> <span class='ans'>${dx} m</span>`],nt:`Example 2.2 pattern — "stopping distance" problems always have v = 0 as the final condition.`}
+},
+eq2_find_v_from_rest(){
+  const a=pick(NICE_A),dx=pick([10,15,20,25,30,40,50,60,80,100]);
+  const v=rd(Math.sqrt(2*a*dx),1);
+  const sub=pick([...SUBS_ATH,...SUBS_VEH]);
+  return{ref:"Ex 2.2b / sprinter",q:`${sub.n} starts from rest and accelerates at <b>${a} m/s²</b> over a distance of <b>${dx} m</b>. What is the final velocity?`,gv:`v₀ = 0 m/s\na = ${a} m/s²\nΔx = ${dx} m`,fm:`v² = v₀² + 2a·Δx\nv = √(2a·Δx)`,fi:`v = ? m/s`,u:"m/s",a:v,tol:Math.max(v*0.025,0.1),
+  st:[`<span class='lb'>v₀ = 0</span> v² = 2a·Δx`,`<span class='lb'>SUBSTITUTE</span> v² = 2(${a})(${dx}) = ${2*a*dx}`,`<span class='lb'>SQRT</span> v = √${2*a*dx} = ${v} m/s`,`<span class='lb'>ANSWER</span> <span class='ans'>${v} m/s</span>`],nt:`From rest: v₀² drops out, leaving v = √(2aΔx). Same pattern as Example 2.2 (sprinter radar).`}
+},
+eq2_find_a(){
+  const v0=pick([0,5,8,10,12]);
+  const v=pick([15,18,20,22,24,26,28,30]);
+  const dx=pick([10,15,20,25,30,40,50]);
+  const a=rd((v*v-v0*v0)/(2*dx),2);
+  const sub=pick([...SUBS_ATH,...SUBS_VEH]);
+  return{ref:"Ex 2.2b / find acceleration",q:`${sub.n} accelerates from <b>${v0} m/s</b> to <b>${v} m/s</b> over <b>${dx} m</b>. What was the acceleration?`,gv:`v₀ = ${v0} m/s\nv = ${v} m/s\nΔx = ${dx} m`,fm:`a = (v² − v₀²) / (2Δx)`,fi:`a = ? m/s²`,u:"m/s²",a:a,tol:Math.max(Math.abs(a)*0.025,0.05),
+  st:[`<span class='lb'>REARRANGE</span> a = (v² − v₀²) / (2Δx)`,`<span class='lb'>SUBSTITUTE</span> a = (${v*v} − ${v0*v0}) / (2×${dx})`,`<span class='lb'>SOLVE</span> a = ${v*v-v0*v0} / ${2*dx} = ${a} m/s²`,`<span class='lb'>ANSWER</span> <span class='ans'>${a} m/s²</span>`],nt:`Rearranging for a: isolate it by subtracting v₀² and dividing by 2Δx. Note we never need time here!`}
+},
+eq2_find_v0(){
+  const v=pick([10,12,15,18,20,24,25]);
+  const a=pick([1.5,2.0,2.5,3.0,4.0]);
+  const dx=pick([20,30,40,50,60,80,100]);
+  const v0sq=v*v-2*a*dx;
+  if(v0sq<0)return G.eq2_find_v0();
+  const v0=rd(Math.sqrt(v0sq),1);
+  const sub=pick(SUBS_VEH);
+  return{ref:"Eq 2.15 / find v₀",q:`${sub.n} accelerates at <b>${a} m/s²</b> over <b>${dx} m</b> and reaches <b>${v} m/s</b>. What was its initial speed?`,gv:`v = ${v} m/s\na = ${a} m/s²\nΔx = ${dx} m`,fm:`v₀ = √(v² − 2a·Δx)`,fi:`v₀ = ? m/s`,u:"m/s",a:v0,tol:Math.max(v0*0.025,0.1),
+  st:[`<span class='lb'>REARRANGE</span> v₀² = v² − 2a·Δx`,`<span class='lb'>SUBSTITUTE</span> v₀² = ${v*v} − 2(${a})(${dx}) = ${v0sq}`,`<span class='lb'>SQRT</span> v₀ = √${v0sq} = ${v0} m/s`,`<span class='lb'>ANSWER</span> <span class='ans'>${v0} m/s</span>`],nt:`Time doesn't appear in Eq 2.15 — perfect when you know velocity, acceleration, and displacement.`}
+},
+eq2_will_stop(){
+  // Scenario: car + cat / obstacle at known distance — will it stop in time?
+  const v0=pick([20,22,24,25,27,28,30]);
+  const a=pick([5,6,7,7.5,8,10]);
+  const dx_stop=rd(v0*v0/(2*a),0);
+  const margin=pick([-5,-3,-2,2,3,5,8]);
+  const dist=dx_stop+margin;
+  const ask=pick(["dist","willit"]);
+  if(ask==="dist"){
+    return{ref:"Ex 2.4 / stopping distance",q:`A driver traveling at <b>${v0} m/s</b> hits the brakes hard (deceleration = <b>${a} m/s²</b>). How far does the car travel before stopping?`,gv:`v₀ = ${v0} m/s\nv = 0\na = −${a} m/s²`,fm:`Δx = v₀²/(2a)`,fi:`Δx = ? m`,u:"m",a:dx_stop,tol:Math.max(dx_stop*0.025,0.5),
+    st:[`<span class='lb'>SET v = 0</span> 0 = ${v0}² + 2(−${a})Δx`,`<span class='lb'>SOLVE</span> Δx = ${v0*v0}/(${2*a}) = ${dx_stop} m`,`<span class='lb'>ANSWER</span> <span class='ans'>${dx_stop} m</span>`],nt:`Example 2.4 style: stopping distance = v₀²/(2|a|) when starting at v₀ and ending at rest.`}
+  }
+  return{ref:"Ex 2.4 style",q:`A car moving at <b>${v0} m/s</b> brakes at <b>${a} m/s²</b>. An obstacle is <b>${dist} m</b> away. Does the car stop in time? Enter the stopping distance in meters.`,gv:`v₀ = ${v0} m/s\nv = 0\na = −${a} m/s²\nObstacle: ${dist} m away`,fm:`Δx = v₀²/(2a)`,fi:`Stopping distance = ? m`,u:"m",a:dx_stop,tol:Math.max(dx_stop*0.025,0.5),
+  st:[`<span class='lb'>STOPPING DISTANCE</span> Δx = ${v0*v0}/(${2*a}) = ${dx_stop} m`,`<span class='lb'>COMPARE</span> ${dx_stop} m vs ${dist} m obstacle`,`<span class='lb'>ANSWER</span> <span class='ans'>${dx_stop} m (car ${dx_stop<=dist?"stops safely ✓":"does NOT stop in time ✗"})</span>`],nt:`Stopping distance determines safety. Here ${dx_stop} ≤ ${dist}? ${dx_stop<=dist?"Yes — safe.":"No — collision."}`}
+},
+eq2_runway_length(){
+  const v=pick([40,50,60,80,100]);
+  const a=pick([2.0,2.5,3.0,4.0,5.0]);
+  const dx=rd(v*v/(2*a),0);
+  return{ref:"OYO 2.5 style",q:`A plane needs to reach <b>${v} m/s</b> before leaving the runway. If it accelerates from rest at <b>${a} m/s²</b>, what is the <b>minimum runway length</b>?`,gv:`v₀ = 0 m/s\nv = ${v} m/s\na = ${a} m/s²`,fm:`v² = v₀² + 2a·Δx\nΔx = v²/(2a)`,fi:`Δx = ? m`,u:"m",a:dx,tol:Math.max(dx*0.025,1),
+  st:[`<span class='lb'>v₀ = 0</span> v² = 2a·Δx`,`<span class='lb'>REARRANGE</span> Δx = v²/(2a)`,`<span class='lb'>SOLVE</span> Δx = ${v*v}/(${2*a}) = ${dx} m`,`<span class='lb'>ANSWER</span> <span class='ans'>${dx} m</span>`],nt:`Minimum runway = stopping distance in reverse. OYO 2.5 uses this logic for takeoff planning.`}
+},
+eq2_nonzero_v0(){
+  const v0=pick([5,8,10]),a=pick([2,3,4,5]),dx=pick([20,30,40,50,60]);
+  const v=rd(Math.sqrt(v0*v0+2*a*dx),1);
+  const sub=pick(SUBS_ATH);
+  return{ref:"Eq 2.15",q:`${sub.n} is already moving at <b>${v0} m/s</b> and accelerates at <b>${a} m/s²</b> for <b>${dx} m</b>. What is the final velocity?`,gv:`v₀ = ${v0} m/s\na = ${a} m/s²\nΔx = ${dx} m`,fm:`v² = v₀² + 2a·Δx`,fi:`v = ? m/s`,u:"m/s",a:v,tol:Math.max(v*0.025,0.1),
+  st:[`<span class='lb'>SUBSTITUTE</span> v² = ${v0}² + 2(${a})(${dx}) = ${v0*v0} + ${2*a*dx} = ${v0*v0+2*a*dx}`,`<span class='lb'>SQRT</span> v = √${v0*v0+2*a*dx} = ${v} m/s`,`<span class='lb'>ANSWER</span> <span class='ans'>${v} m/s</span>`],nt:`Non-zero v₀: need to square it before adding. A common mistake is forgetting to square v₀.`}
+},
+
+// ============================================================
+// 🟡 EQ 2.19 — Δx = v₀t + ½at²
+// ============================================================
+eq3_find_dx_rest(){
+  const a=pick([1.0,1.5,2.0,2.3,2.5,3.0,4.0]);
+  const t=pick([5,8,10,12,15,20,25,28]);
+  const dx=rd(0.5*a*t*t,0);
+  const sub=pick([...SUBS_VEH,{n:"A plane"},{n:"A rocket"}]);
+  return{ref:"Ex 2.3",q:`${sub.n} starts from rest and accelerates at <b>${a} m/s²</b> for <b>${t} seconds</b>. How far does it travel?`,gv:`v₀ = 0 m/s\na = ${a} m/s²\nt = ${t} s`,fm:`Δx = v₀t + ½at²`,fi:`Δx = ? m`,u:"m",a:dx,tol:Math.max(dx*0.02,1),
+  st:[`<span class='lb'>v₀ = 0</span> Δx = ½at²`,`<span class='lb'>SUBSTITUTE</span> Δx = ½(${a})(${t})² = ½(${a})(${t*t})`,`<span class='lb'>SOLVE</span> Δx = ${0.5*a} × ${t*t} = ${dx} m`,`<span class='lb'>ANSWER</span> <span class='ans'>${dx} m</span>`],nt:`Example 2.3: plane on runway from rest. v₀ = 0 means the v₀t term vanishes, leaving Δx = ½at².`}
+},
+eq3_find_dx_moving(){
+  const v0=pick([5,8,10,12]),a=pick([1,1.5,2.0,2.5,3]),t=pick([3,4,5,6,8,10]);
+  const dx=rd(v0*t+0.5*a*t*t,0);
+  const sub=pick([...SUBS_VEH,...SUBS_ATH]);
+  return{ref:"Eq 2.19",q:`${sub.n} starts at <b>${v0} m/s</b> and accelerates at <b>${a} m/s²</b> for <b>${t} seconds</b>. What is the displacement?`,gv:`v₀ = ${v0} m/s\na = ${a} m/s²\nt = ${t} s`,fm:`Δx = v₀t + ½at²`,fi:`Δx = ? m`,u:"m",a:dx,tol:Math.max(dx*0.02,1),
+  st:[`<span class='lb'>BOTH TERMS</span> Δx = v₀t + ½at²`,`<span class='lb'>TERM 1</span> v₀t = ${v0}(${t}) = ${v0*t} m`,`<span class='lb'>TERM 2</span> ½at² = ½(${a})(${t*t}) = ${rd(0.5*a*t*t,1)} m`,`<span class='lb'>SUM</span> Δx = ${v0*t} + ${rd(0.5*a*t*t,1)} = ${dx} m`,`<span class='lb'>ANSWER</span> <span class='ans'>${dx} m</span>`],nt:`Both terms matter here. Don't forget the ½ in the second term!`}
+},
+eq3_find_t_rest(){
+  const a=pick([0.8,1.0,1.2,1.5,2.0,2.3,2.5,3.0]);
+  const dx=pick([50,80,100,120,150,180,200,300,500]);
+  const t=rd(Math.sqrt(2*dx/a),1);
+  const sub=pick([...SUBS_VEH,{n:"A plane"},{n:"A rocket"}]);
+  return{ref:"Ex 2.3 / OYO 2.6",q:`${sub.n} starts from rest and accelerates at <b>${a} m/s²</b>. How long does it take to travel <b>${dx} m</b>?`,gv:`v₀ = 0 m/s\na = ${a} m/s²\nΔx = ${dx} m`,fm:`Δx = ½at²\nt = √(2Δx/a)`,fi:`t = ? s`,u:"s",a:t,tol:Math.max(t*0.025,0.1),
+  st:[`<span class='lb'>v₀ = 0</span> Δx = ½at²`,`<span class='lb'>REARRANGE</span> t² = 2Δx/a = 2(${dx})/${a} = ${rd(2*dx/a,2)}`,`<span class='lb'>SQRT</span> t = √${rd(2*dx/a,2)} = ${t} s`,`<span class='lb'>ANSWER</span> <span class='ans'>${t} s</span>`],nt:`From rest: Δx = ½at² → t = √(2Δx/a). Need to take the square root at the end!`}
+},
+eq3_find_a_rest(){
+  const dx=pick([50,100,150,200,300,500,900]);
+  const t=pick([5,10,12,15,20,25,28,30]);
+  const a=rd(2*dx/(t*t),2);
+  const sub=pick([...SUBS_VEH,{n:"A plane"},{n:"A rocket"}]);
+  return{ref:"OYO 2.3 / Ex 2.3",q:`${sub.n} starts from rest and travels <b>${dx} m</b> in <b>${t} seconds</b>. What is its acceleration?`,gv:`v₀ = 0\nΔx = ${dx} m\nt = ${t} s`,fm:`Δx = ½at²\na = 2Δx/t²`,fi:`a = ? m/s²`,u:"m/s²",a:a,tol:Math.max(a*0.025,0.02),
+  st:[`<span class='lb'>v₀ = 0</span> Δx = ½at²`,`<span class='lb'>REARRANGE</span> a = 2Δx/t²`,`<span class='lb'>SUBSTITUTE</span> a = 2(${dx})/${t}² = ${2*dx}/${t*t}`,`<span class='lb'>SOLVE</span> a = ${a} m/s²`,`<span class='lb'>ANSWER</span> <span class='ans'>${a} m/s²</span>`],nt:`OYO 2.3 (race car quarter mile): v₀ = 0 simplifies the equation enormously.`}
+},
+eq3_units_convert(){
+  // distance in km, acceleration in m/s² → need unit conversion first
+  const a=pick([0.5,0.8,1.0,1.2,1.5,2.0]);
+  const t=pick([20,30,40,50,60,80,100]);
+  const dx_m=rd(0.5*a*t*t,0);
+  const dx_km=rd(dx_m/1000,3);
+  return{ref:"OYO 2.6 / unit conversion",q:`A biker starts from rest and accelerates at <b>${a} m/s²</b>. After <b>${t} seconds</b>, how far did she travel in <b>km</b>?`,gv:`v₀ = 0\na = ${a} m/s²\nt = ${t} s`,fm:`Δx = ½at²\nthen convert m → km`,fi:`Δx = ? km`,u:"km",a:dx_km,tol:Math.max(dx_km*0.025,0.001),
+  st:[`<span class='lb'>DISPLACEMENT (m)</span> Δx = ½(${a})(${t})² = ${dx_m} m`,`<span class='lb'>CONVERT</span> ${dx_m} m ÷ 1000 = ${dx_km} km`,`<span class='lb'>ANSWER</span> <span class='ans'>${dx_km} km</span>`],nt:`Units must match across the equation. Always convert first, then plug in.`}
+},
+eq3_find_dx_braking(){
+  // car braking — both v₀t and ½at² terms present
+  const v0=pick([20,22,24,25,27,30]);
+  const a=pick([3,4,5,6,7.5]);
+  const t=rd(v0/a,1);
+  const dx=rd(v0*t-0.5*a*t*t,0);
+  const sub=pick(SUBS_VEH);
+  return{ref:"Eq 2.19 / braking",q:`${sub.n} is moving at <b>${v0} m/s</b> when it brakes at <b>${a} m/s²</b>. It takes <b>${t} s</b> to stop. How far does it travel before stopping?`,gv:`v₀ = ${v0} m/s\na = −${a} m/s²\nt = ${t} s`,fm:`Δx = v₀t + ½at²`,fi:`Δx = ? m`,u:"m",a:dx,tol:Math.max(dx*0.025,0.5),
+  st:[`<span class='lb'>TERM 1</span> v₀t = ${v0}(${t}) = ${rd(v0*t,1)} m`,`<span class='lb'>TERM 2</span> ½at² = ½(−${a})(${rd(t*t,2)}) = ${rd(-0.5*a*t*t,1)} m`,`<span class='lb'>SUM</span> Δx = ${rd(v0*t,1)} + ${rd(-0.5*a*t*t,1)} = ${dx} m`,`<span class='lb'>ANSWER</span> <span class='ans'>${dx} m</span>`],nt:`Both terms present! The negative a term reduces displacement — the car is slowing down.`}
+},
+eq3_time_convert(){
+  // time given in minutes, acceleration in m/s²
+  const a=pick([0.020,0.025,0.030,0.040,0.050]);
+  const t_min=pick([3,4,5,6,8,10]);
+  const t_sec=t_min*60;
+  const dx=rd(0.5*a*t_sec*t_sec,0);
+  return{ref:"OYO 2.6",q:`A biker starts from rest and maintains a constant acceleration of <b>${a} m/s²</b>. If she keeps it up for <b>${t_min} minutes</b>, how far does she travel?`,gv:`v₀ = 0\na = ${a} m/s²\nt = ${t_min} min = ${t_sec} s`,fm:`Δx = ½at²`,fi:`Δx = ? m`,u:"m",a:dx,tol:Math.max(dx*0.02,1),
+  st:[`<span class='lb'>CONVERT TIME</span> ${t_min} min × 60 = ${t_sec} s`,`<span class='lb'>APPLY</span> Δx = ½(${a})(${t_sec})² = ½(${a})(${t_sec*t_sec})`,`<span class='lb'>SOLVE</span> Δx = ${rd(0.5*a,4)} × ${t_sec*t_sec} = ${dx} m`,`<span class='lb'>ANSWER</span> <span class='ans'>${dx} m</span>`],nt:`Units must be consistent! Minutes → seconds before plugging in.`}
+},
+
+// ============================================================
+// 🌊 FREE FALL — drop from rest (a = −9.8 m/s², v₀ = 0)
+// ============================================================
+ff_find_v_drop(){
+  const h=pick([5,10,15,20,25,30,40,50,60,80,100,150,200]);
+  const v=rd(Math.sqrt(2*9.8*h),1);
+  const sub=pick(SUBS_FF);
+  return{ref:"Ex 2.5",q:`${sub.n} is dropped from rest from a height of <b>${h} m</b>. What is its velocity when it hits the ground? (define downward as negative)`,gv:`v₀ = 0 m/s\na = −9.8 m/s²\nΔx = −${h} m (downward)`,fm:`v² = v₀² + 2a·Δx`,fi:`v = ? m/s`,u:"m/s",a:-v,tol:Math.max(v*0.025,0.1),
+  st:[`<span class='lb'>SUBSTITUTE</span> v² = 0 + 2(−9.8)(−${h}) = ${rd(2*9.8*h,1)}`,`<span class='lb'>SQRT</span> v = −√${rd(2*9.8*h,1)} = −${v} m/s (downward)`,`<span class='lb'>ANSWER</span> <span class='ans'>−${v} m/s (= ${v} m/s downward)</span>`],nt:`Negative because we defined downward as negative. The magnitude is ${v} m/s — that's the speed.`}
+},
+ff_find_t_drop(){
+  const h=pick([5,10,15,20,25,30,45,50,80,100,150]);
+  const t=rd(Math.sqrt(2*h/9.8),2);
+  const sub=pick(SUBS_FF);
+  return{ref:"OYO 2.7 / Leaning Tower",q:`${sub.n} is dropped from a height of <b>${h} m</b>. How long does it take to reach the ground?`,gv:`v₀ = 0 m/s\na = −9.8 m/s²\nΔx = −${h} m`,fm:`Δx = ½at²\nt = √(2h/g)`,fi:`t = ? s`,u:"s",a:t,tol:Math.max(t*0.025,0.05),
+  st:[`<span class='lb'>v₀ = 0</span> |Δx| = ½gt²`,`<span class='lb'>REARRANGE</span> t² = 2h/g = 2(${h})/9.8 = ${rd(2*h/9.8,3)}`,`<span class='lb'>SQRT</span> t = √${rd(2*h/9.8,3)} = ${t} s`,`<span class='lb'>ANSWER</span> <span class='ans'>${t} s</span>`],nt:`OYO 2.7: Leaning Tower of Pisa (h = 54.6 m) takes 3.3 s. Here h = ${h} m.`}
+},
+ff_find_h_from_t(){
+  const t=pick([1,1.5,2,2.5,3,3.5,4,5]);
+  const h=rd(0.5*9.8*t*t,0);
+  return{ref:"OYO 2.8 / bridge height",q:`A physics student drops a rock off a bridge. It takes <b>${t} seconds</b> to hit the water below. How high is the bridge?`,gv:`v₀ = 0\nt = ${t} s\na = −9.8 m/s²`,fm:`Δx = ½at²\nheight = |Δx|`,fi:`Height = ? m`,u:"m",a:h,tol:Math.max(h*0.025,0.5),
+  st:[`<span class='lb'>APPLY</span> |Δx| = ½(9.8)(${t})² = ½(9.8)(${t*t})`,`<span class='lb'>SOLVE</span> h = ${4.9} × ${t*t} = ${h} m`,`<span class='lb'>ANSWER</span> <span class='ans'>${h} m</span>`],nt:`OYO 2.8 bridge height. Always use 9.8 (not 9.81 or 10) for free fall in this textbook.`}
+},
+ff_find_v_given_t(){
+  const t=pick([1,2,3,4,5,6,8,10]);
+  const v=rd(9.8*t,1);
+  const sub=pick(SUBS_FF);
+  return{ref:"Free fall / find v",q:`${sub.n} is dropped from rest and falls for <b>${t} seconds</b>. What is its speed? (Use g = 9.8 m/s²)`,gv:`v₀ = 0\nt = ${t} s\na = 9.8 m/s² downward`,fm:`v = v₀ + gt`,fi:`v = ? m/s`,u:"m/s",a:v,tol:Math.max(v*0.02,0.1),
+  st:[`<span class='lb'>FROM REST</span> v = gt = 9.8 × ${t}`,`<span class='lb'>ANSWER</span> <span class='ans'>${v} m/s downward</span>`],nt:`Free fall from rest gains 9.8 m/s of speed every second. After ${t} s: ${v} m/s.`}
+},
+ff_penny_km(){
+  // Ex 2.5 style — height in km, convert first
+  const h_km=pick([0.05,0.08,0.10,0.12,0.15,0.20,0.25]);
+  const h_m=h_km*1000;
+  const v=rd(Math.sqrt(2*9.8*h_m),0);
+  return{ref:"Ex 2.5",q:`A penny is dropped from a building <b>${h_km} km</b> tall. What is its speed when it reaches the ground? (neglect air resistance)`,gv:`h = ${h_km} km = ${h_m} m\nv₀ = 0\na = 9.8 m/s²`,fm:`Convert km→m, then v = √(2gh)`,fi:`v = ? m/s`,u:"m/s",a:v,tol:Math.max(v*0.025,0.5),
+  st:[`<span class='lb'>CONVERT</span> ${h_km} km × 1000 = ${h_m} m`,`<span class='lb'>APPLY</span> v² = 2(9.8)(${h_m}) = ${2*9.8*h_m}`,`<span class='lb'>SQRT</span> v = √${2*9.8*h_m} ≈ ${v} m/s`,`<span class='lb'>ANSWER</span> <span class='ans'>${v} m/s</span>`],nt:`That's about ${rd(v*2.237,0)} mph. Dropping objects from heights is genuinely dangerous!`}
+},
+ff_reaction_time(){
+  // Experiment 2.2 — measure reaction time from ruler drop distance
+  const d_cm=pick([5,8,10,12,15,18,20,22,25]);
+  const d_m=d_cm/100;
+  const t=rd(Math.sqrt(2*d_m/9.8)*1000,1); // in ms for nicer numbers
+  const t_s=rd(t/1000,3);
+  return{ref:"Experiment 2.2",q:`In the ruler-drop experiment, a student catches the ruler after it falls <b>${d_cm} cm</b>. What is the student's reaction time? (a = 9.8 m/s²)`,gv:`Δx = ${d_cm} cm = ${d_m} m\nv₀ = 0`,fm:`t = √(2Δx/g)`,fi:`t = ? s`,u:"s",a:t_s,tol:Math.max(t_s*0.03,0.002),
+  st:[`<span class='lb'>CONVERT</span> ${d_cm} cm = ${d_m} m`,`<span class='lb'>APPLY</span> t = √(2 × ${d_m} / 9.8) = √${rd(2*d_m/9.8,5)}`,`<span class='lb'>ANSWER</span> <span class='ans'>${t_s} s (= ${t} ms)</span>`],nt:`Experiment 2.2: free fall + reaction time measurement. Average human reaction: ~0.20 s.`}
+},
+
+// ============================================================
+// 🚀 THROWN UPWARD — free fall with nonzero v₀
+// ============================================================
+tu_max_height(){
+  const v0=pick([5,6,8,10,12,15,18,20,24,25,30]);
+  const h=rd(v0*v0/(2*9.8),1);
+  const sub=pick(["A ball","A rock","A coin","A rubber ball","A stone"]);
+  return{ref:"Ex 2.6",q:`${sub} is thrown straight up at <b>${v0} m/s</b>. What is the maximum height it reaches? (upward = positive)`,gv:`v₀ = +${v0} m/s\nv = 0 (at max height)\na = −9.8 m/s²`,fm:`v² = v₀² + 2a·Δx\n0 = v₀² − 2g·h\nh = v₀²/(2g)`,fi:`h = ? m`,u:"m",a:h,tol:Math.max(h*0.025,0.1),
+  st:[`<span class='lb'>AT MAX HEIGHT</span> v = 0`,`<span class='lb'>REARRANGE</span> 0 = ${v0}² + 2(−9.8)h`,`<span class='lb'>SOLVE</span> h = ${v0*v0}/(2×9.8) = ${v0*v0}/19.6 = ${h} m`,`<span class='lb'>ANSWER</span> <span class='ans'>${h} m</span>`],nt:`Key fact: at maximum height, v = 0. Gravity is still pulling at −9.8 m/s² — it just momentarily slowed the object to zero.`}
+},
+tu_find_v0_from_h(){
+  const h=pick([0.5,1.0,1.5,2.0,2.5,3.0,4.0,4.5,5.0,6.0,8.0,10.0]);
+  const v0=rd(Math.sqrt(2*9.8*h),1);
+  return{ref:"OYO 2.10",q:`A ball reaches a maximum height of <b>${h} m</b>. What was its initial upward velocity?`,gv:`Δx = +${h} m (upward)\nv = 0 (at top)\na = −9.8 m/s²`,fm:`v₀ = √(2gh)`,fi:`v₀ = ? m/s`,u:"m/s",a:v0,tol:Math.max(v0*0.025,0.1),
+  st:[`<span class='lb'>AT TOP</span> v = 0, so 0 = v₀² − 2(9.8)(${h})`,`<span class='lb'>REARRANGE</span> v₀² = 2(9.8)(${h}) = ${2*9.8*h}`,`<span class='lb'>SQRT</span> v₀ = √${rd(2*9.8*h,2)} = ${v0} m/s`,`<span class='lb'>ANSWER</span> <span class='ans'>${v0} m/s upward</span>`],nt:`OYO 2.10 structure. "Maximum height" always means v = 0 at that point.`}
+},
+tu_time_to_peak(){
+  const v0=pick([4.9,9.8,14.7,19.6,24.5,4,6,8,10,12,15,20]);
+  const t=rd(v0/9.8,2);
+  return{ref:"Thrown upward / time to peak",q:`A ball is thrown straight up at <b>${v0} m/s</b>. How long does it take to reach its maximum height?`,gv:`v₀ = ${v0} m/s\nv = 0 at peak\na = −9.8 m/s²`,fm:`t = v₀/g`,fi:`t = ? s`,u:"s",a:t,tol:Math.max(t*0.025,0.05),
+  st:[`<span class='lb'>AT PEAK</span> v = 0`,`<span class='lb'>FROM Eq 2.6</span> 0 = ${v0} − 9.8t`,`<span class='lb'>SOLVE</span> t = ${v0}/9.8 = ${t} s`,`<span class='lb'>ANSWER</span> <span class='ans'>${t} s</span>`],nt:`Time to peak = v₀/g. The object gains -9.8 m/s every second, so it hits v=0 after v₀/g seconds.`}
+},
+tu_displacement_at_t(){
+  // Ex 2.7 style — thrown up from bridge, find displacement at time t
+  const v0=pick([2,3,4,5,6,8]);
+  const t=pick([0.3,0.4,0.5,0.6,0.7,0.8,1.0]);
+  const dx=rd(v0*t-0.5*9.8*t*t,1);
+  return{ref:"Ex 2.7",q:`A physics student throws a rock upward from a bridge at <b>${v0} m/s</b>. What is the rock's displacement after <b>${t} seconds</b>? (upward = positive)`,gv:`v₀ = +${v0} m/s\na = −9.8 m/s²\nt = ${t} s`,fm:`Δx = v₀t + ½at²`,fi:`Δx = ? m`,u:"m",a:dx,tol:Math.max(Math.abs(dx)*0.05,0.05),
+  st:[`<span class='lb'>TERM 1</span> v₀t = (${v0})(${t}) = ${rd(v0*t,2)} m`,`<span class='lb'>TERM 2</span> ½at² = ½(−9.8)(${rd(t*t,3)}) = ${rd(-0.5*9.8*t*t,2)} m`,`<span class='lb'>SUM</span> Δx = ${rd(v0*t,2)} + ${rd(-0.5*9.8*t*t,2)} = ${dx} m`,`<span class='lb'>ANSWER</span> <span class='ans'>${dx} m ${dx>=0?"(above start)":"(below start)"}</span>`],nt:`Example 2.7 scenario: upward v₀ fights downward g. Negative Δx means below where it was thrown.`}
+},
+tu_bullet_height(){
+  // Ex 2.6 — bullet fired up, find max height
+  const v0=pick([100,150,200,250,300,335,400,500]);
+  const h=rd(v0*v0/(2*9.8),0);
+  return{ref:"Ex 2.6 / bullet",q:`A bullet is fired straight up at <b>${v0} m/s</b>. What is the maximum height it reaches before falling back? (neglect air resistance)`,gv:`v₀ = +${v0} m/s\nv = 0 (at max)\na = −9.8 m/s²`,fm:`h = v₀²/(2g)`,fi:`h = ? m`,u:"m",a:h,tol:Math.max(h*0.02,1),
+  st:[`<span class='lb'>SET v = 0</span> 0 = ${v0}² + 2(−9.8)h`,`<span class='lb'>SOLVE</span> h = ${v0*v0}/(19.6) = ${h} m`,`<span class='lb'>ANSWER</span> <span class='ans'>${h} m</span>`],nt:`Example 2.6: a bullet at ${v0} m/s reaches ${h} m. At that height it momentarily has zero velocity — then falls back at the same speed!`}
+},
+tu_returns_same_height(){
+  // Ball thrown up, caught at same height — final v = -v₀
+  const v0=pick([3,4,5,6,8,10,12,15]);
+  return{ref:"Free fall symmetry",q:`A ball is thrown up at <b>${v0} m/s</b> and caught at the same height from which it was thrown. What is its velocity when caught?`,gv:`v₀ = +${v0} m/s (upward)\nΔx = 0 (returns to start height)\na = −9.8 m/s²`,fm:`v² = v₀² + 2a·Δx\nΔx = 0 → v² = v₀²`,fi:`v = ? m/s`,u:"m/s",a:-v0,tol:0.2,
+  st:[`<span class='lb'>SYMMETRY</span> Δx = 0, so v² = v₀² = ${v0*v0}`,`<span class='lb'>v = ±v₀</span> v = ±${v0} m/s`,`<span class='lb'>DIRECTION</span> Object is falling → v = −${v0} m/s (downward)`,`<span class='lb'>ANSWER</span> <span class='ans'>−${v0} m/s (downward)</span>`],nt:`Key textbook fact: when an object returns to its launch height, its speed is the same but direction reverses.`}
+},
+tu_thrown_from_cliff(){
+  // OYO 2.9 — thrown up from cliff, find v when it reaches bottom
+  const v0=pick([3,4,5,6,8,9]);
+  const h=pick([40,50,60,80,100,120]);
+  const v2=v0*v0+2*9.8*h;
+  const v=rd(Math.sqrt(v2),1);
+  return{ref:"OYO 2.9",q:`A student stands on a cliff <b>${h} m</b> above the ground and throws a rock upward at <b>${v0} m/s</b>. What is the rock's speed when it reaches the ground? (upward = +)`,gv:`v₀ = +${v0} m/s\nΔx = −${h} m (falls ${h} m down)\na = −9.8 m/s²`,fm:`v² = v₀² + 2a·Δx`,fi:`|v| = ? m/s`,u:"m/s",a:v,tol:Math.max(v*0.025,0.2),
+  st:[`<span class='lb'>NET Δx</span> = −${h} m (downward from start)`,`<span class='lb'>SUBSTITUTE</span> v² = ${v0}² + 2(−9.8)(−${h}) = ${v0*v0} + ${2*9.8*h} = ${rd(v2,1)}`,`<span class='lb'>SQRT</span> |v| = √${rd(v2,1)} = ${v} m/s`,`<span class='lb'>ANSWER</span> <span class='ans'>${v} m/s downward</span>`],nt:`OYO 2.9: regardless of throwing up initially, the net displacement is what determines final speed.`}
+},
+
+// ============================================================
+// 💡 CONCEPT CHECK
+// ============================================================
+cc_which_eq(){
+  const cases=[
+    {given:"v₀, a, t",find:"v",eq:"v = v₀ + at (Eq 2.6)",num:1,why:"We have initial velocity, acceleration, and time — Eq 2.6 directly gives final v."},
+    {given:"v₀, v, a",find:"Δx",eq:"v² = v₀² + 2a·Δx (Eq 2.15)",num:2,why:"We have both velocities and acceleration but NOT time — Eq 2.15 is the only one that doesn't need t."},
+    {given:"v₀, a, t",find:"Δx",eq:"Δx = v₀t + ½at² (Eq 2.19)",num:3,why:"We have v₀, a, and t, and we want displacement — Eq 2.19 fits perfectly."},
+    {given:"v₀, v, t",find:"a",eq:"v = v₀ + at (Eq 2.6)",num:1,why:"We have both velocities and time — Eq 2.6 rearranges to a = (v−v₀)/t."},
+    {given:"v₀, Δx, t",find:"a",eq:"Δx = v₀t + ½at² (Eq 2.19)",num:3,why:"We have v₀, Δx, and t — Eq 2.19 rearranges to give a = 2(Δx−v₀t)/t²."}
+  ];
+  const c=pick(cases);
+  return{ref:"Equation selection",q:`Given: <b>${c.given}</b>. Find: <b>${c.find}</b>. Which numbered equation should you use? (1 = v=v₀+at, 2 = v²=v₀²+2aΔx, 3 = Δx=v₀t+½at²)`,gv:`Known: ${c.given}\nUnknown: ${c.find}`,fm:`Match known/unknown to each equation`,fi:`Equation number (1, 2, or 3)`,u:"",a:c.num,tol:0.5,
+  st:[`<span class='lb'>STRATEGY</span> List what you know; find which equation connects those variables`,`<span class='lb'>WHY</span> ${c.why}`,`<span class='lb'>ANSWER</span> <span class='ans'>Equation ${c.num}: ${c.eq}</span>`],nt:`The real trick is not just knowing the equations — it's knowing WHICH one to reach for.`}
+},
+cc_constant_accel(){
+  const items=[
+    {q:"A car constantly speeding up and then slowing down through rush-hour traffic. Can you use Eqs 2.6, 2.15, 2.19?",ans:0,why:"NON-constant acceleration. The three equations require constant acceleration — they do NOT apply here."},
+    {q:"A rock dropped from a bridge (neglect air resistance). Can you use Eqs 2.6, 2.15, 2.19?",ans:1,why:"FREE FALL with neglected air resistance = constant acceleration (g = 9.8 m/s²). Equations apply."},
+    {q:"A parachutist falling through air (air resistance included). Can you use Eqs 2.6, 2.15, 2.19?",ans:0,why:"Air resistance changes as speed changes → acceleration is NOT constant. Equations do NOT apply."},
+    {q:"A plane accelerating steadily down a runway from rest to takeoff speed. Can you use the three equations?",ans:1,why:"Steady (constant) acceleration → equations apply. This is exactly Example 2.3."}
+  ];
+  const c=pick(items);
+  return{ref:"Constant a requirement",q:`${c.q} Enter 1 (yes) or 0 (no).`,gv:c.q,fm:`Eqs 2.6, 2.15, 2.19 require CONSTANT acceleration`,fi:`1 = yes, 0 = no`,u:"",a:c.ans,tol:0.5,
+  st:[`<span class='lb'>ANSWER</span> <span class='ans'>${c.ans===1?"Yes (1)":"No (0)"}</span>`,`<span class='lb'>WHY</span> ${c.why}`],nt:`This is THE most important constraint of Module 2. Always check: is a constant here?`}
+},
+cc_free_fall_facts(){
+  const items=[
+    {q:"A feather and a cannonball are dropped at the same instant in a vacuum. Which hits the ground first?",ans:"same",why:"In a vacuum (no air resistance), ALL objects experience the same g = 9.8 m/s² regardless of mass. They land simultaneously."},
+    {q:"At the instant a thrown ball reaches maximum height, its acceleration is:",ans:"9.8",why:"Acceleration due to gravity is ALWAYS 9.8 m/s² downward — even when v = 0 momentarily at the peak."},
+    {q:"An object thrown upward returns to its launch height. Its speed at return is:",ans:"same",why:"By symmetry (Δx = 0), v² = v₀², so |v| = |v₀|. Speed is the same, direction reversed."}
+  ];
+  const c=pick(items);
+  if(c.ans==="same")return{ref:"Free fall concept",q:`${c.q} Enter 1 if same time, 2 if cannonball first.`,gv:c.q,fm:`g is independent of mass`,fi:`1 = same, 2 = cannonball first`,u:"",a:1,tol:0.5,
+    st:[`<span class='lb'>WHY</span> ${c.why}`,`<span class='lb'>ANSWER</span> <span class='ans'>1 (same time)</span>`],nt:`This is Galileo's famous insight, confirmed by Apollo 15 astronaut David Scott on the Moon.`};
+  if(c.ans==="9.8")return{ref:"Peak height / a = ?",q:`${c.q}`,gv:`v = 0 at peak, but a = ?`,fm:`a = g = 9.8 m/s² always`,fi:`a = ? m/s²`,u:"m/s²",a:9.8,tol:0.2,
+    st:[`<span class='lb'>WHY</span> ${c.why}`,`<span class='lb'>ANSWER</span> <span class='ans'>9.8 m/s²</span>`],nt:`v = 0 ≠ a = 0. The ball stops for just one instant, but gravity never stops acting.`};
+  return{ref:"Symmetry",q:`${c.q} Enter 1 if same speed, 2 if slower.`,gv:`Ball thrown up, caught at same height`,fm:`v² = v₀² + 2a·Δx, Δx = 0`,fi:`1 = same speed, 2 = slower`,u:"",a:1,tol:0.5,
+    st:[`<span class='lb'>MATH</span> Δx = 0 → v² = v₀² → |v| = |v₀|`,`<span class='lb'>WHY</span> ${c.why}`,`<span class='lb'>ANSWER</span> <span class='ans'>1 (same speed)</span>`],nt:`Only direction changes, not speed. This is why a gun fired into the air returns at the same speed it left.`}
+},
+cc_terminal_v(){
+  const items=[
+    {q:"A falling object reaches terminal velocity. What is its acceleration at that moment?",ans:0,why:"At terminal velocity, air resistance = gravity, so net force = 0 → a = 0. Velocity is constant."},
+    {q:"Which shape of paper reaches the highest terminal velocity when dropped: (A) wadded ball, (B) flat sheet held horizontally? Enter 1 for A, 2 for B.",ans:1,why:"Wadded ball is more compact → less surface area exposed → less air resistance → higher terminal velocity."},
+    {q:"What is the terminal velocity of a skydiver (in terms of acceleration at that moment)?",ans:0,why:"By definition, terminal velocity = acceleration has reached zero. The skydiver has stopped accelerating."}
+  ];
+  const c=pick(items);
+  if(c.ans===0&&c.q.includes("acceleration"))return{ref:"Terminal velocity",q:c.q,gv:"Object at terminal velocity",fm:`a = 0 at terminal velocity`,fi:`a = ? m/s²`,u:"m/s²",a:0,tol:0.1,
+    st:[`<span class='lb'>DEFINITION</span> Terminal velocity = acceleration = 0`,`<span class='lb'>WHY</span> ${c.why}`,`<span class='lb'>ANSWER</span> <span class='ans'>0 m/s²</span>`],nt:`Terminal velocity is the max speed an object can reach in free fall in air. After that, velocity is constant.`};
+  return{ref:"Terminal velocity / shape",q:c.q,gv:c.q,fm:`More compact → less air resistance → higher terminal v`,fi:c.ans===1?"1 = wadded ball, 2 = flat":"1 = same, 2 = cannonball first",u:"",a:c.ans,tol:0.5,
+    st:[`<span class='lb'>ANSWER</span> <span class='ans'>${c.ans}</span>`,`<span class='lb'>WHY</span> ${c.why}`],nt:`Experiment 2.3 shows exactly this: shape and orientation both affect terminal velocity through surface area.`}
+}
+};
+// ========== SECTIONS ==========
+const SEC=[
+{id:"eq1",icon:"🔵",title:"v = v₀ + at",types:[
+  {id:"eq1_find_v",name:"Find v"},{id:"eq1_find_v0",name:"Find v₀"},
+  {id:"eq1_find_t",name:"Find t"},{id:"eq1_find_a",name:"Find a"},
+  {id:"eq1_from_rest",name:"From rest"},{id:"eq1_brake_time",name:"Brake time"},
+  {id:"eq1_match_velocity",name:"Match velocity"},{id:"eq1_find_a_brake",name:"a from braking"}
+]},
+{id:"eq2",icon:"🟢",title:"v² = v₀² + 2aΔx",types:[
+  {id:"eq2_find_dx_brake",name:"Stopping dist."},{id:"eq2_find_v_from_rest",name:"v from rest"},
+  {id:"eq2_find_a",name:"Find a"},{id:"eq2_find_v0",name:"Find v₀"},
+  {id:"eq2_will_stop",name:"Will it stop?"},{id:"eq2_runway_length",name:"Runway length"},
+  {id:"eq2_nonzero_v0",name:"Non-zero v₀"}
+]},
+{id:"eq3",icon:"🟡",title:"Δx = v₀t + ½at²",types:[
+  {id:"eq3_find_dx_rest",name:"Δx from rest"},{id:"eq3_find_dx_moving",name:"Δx with v₀"},
+  {id:"eq3_find_t_rest",name:"Find t (rest)"},{id:"eq3_find_a_rest",name:"Find a (rest)"},
+  {id:"eq3_units_convert",name:"km convert"},{id:"eq3_find_dx_braking",name:"Δx braking"},
+  {id:"eq3_time_convert",name:"Min → sec"}
+]},
+{id:"freefall",icon:"🌊",title:"Free Fall",types:[
+  {id:"ff_find_v_drop",name:"Find v (drop)"},{id:"ff_find_t_drop",name:"Find t (drop)"},
+  {id:"ff_find_h_from_t",name:"Bridge height"},{id:"ff_find_v_given_t",name:"Speed after t sec"},
+  {id:"ff_penny_km",name:"Penny in km"},{id:"ff_reaction_time",name:"Reaction time"}
+]},
+{id:"thrown",icon:"🚀",title:"Thrown Upward",types:[
+  {id:"tu_max_height",name:"Max height"},{id:"tu_find_v0_from_h",name:"Find v₀"},
+  {id:"tu_time_to_peak",name:"Time to peak"},{id:"tu_displacement_at_t",name:"Δx at time t"},
+  {id:"tu_bullet_height",name:"Bullet height"},{id:"tu_returns_same_height",name:"Return velocity"},
+  {id:"tu_thrown_from_cliff",name:"Cliff throw"}
+]},
+{id:"concept",icon:"💡",title:"Concept Check",types:[
+  {id:"cc_which_eq",name:"Which equation?"},{id:"cc_constant_accel",name:"Constant a check"},
+  {id:"cc_free_fall_facts",name:"Free fall facts"},{id:"cc_terminal_v",name:"Terminal velocity"}
+]}
+];
+
+// ========== EXAM POOLS ==========
+const EXAM_POOLS={
+eq1:["eq1_find_v","eq1_find_v0","eq1_find_t","eq1_find_a","eq1_from_rest","eq1_brake_time","eq1_match_velocity","eq1_find_a_brake"],
+eq2:["eq2_find_dx_brake","eq2_find_v_from_rest","eq2_find_a","eq2_find_v0","eq2_will_stop","eq2_runway_length","eq2_nonzero_v0"],
+eq3:["eq3_find_dx_rest","eq3_find_dx_moving","eq3_find_t_rest","eq3_find_a_rest","eq3_units_convert","eq3_find_dx_braking","eq3_time_convert"],
+freefall:["ff_find_v_drop","ff_find_t_drop","ff_find_h_from_t","ff_find_v_given_t","ff_penny_km","ff_reaction_time","tu_max_height","tu_find_v0_from_h","tu_time_to_peak","tu_displacement_at_t","tu_bullet_height","tu_returns_same_height","tu_thrown_from_cliff"]
+};
+
+const EXAM_META={
+eq1:{icon:"🔵",name:"v = v₀ + at",desc:"Find any of the four variables using Equation 2.6",color:"#6366f1"},
+eq2:{icon:"🟢",name:"v² = v₀² + 2aΔx",desc:"Stopping distances, runway lengths, no time needed",color:"#10b981"},
+eq3:{icon:"🟡",name:"Δx = v₀t + ½at²",desc:"Displacement with all four variables",color:"#eab308"},
+freefall:{icon:"🌊",name:"Free Fall & Thrown Up",desc:"g = 9.8 m/s², drops, thrown up, max height",color:"#3b82f6"}
+};
+
+// ========== LESSONS ==========
+const LESSONS={
+eq1:{title:"Equation 1: v = v₀ + at",icon:"🔵",cards:[
+{type:"intro",body:`Module 2 is all about <b>three powerful equations</b> that unlock one-dimensional motion problems. In Module 1 we just had the definitions (a = Δv/Δt, v = Δx/Δt). Now we rearrange and combine those definitions to get formulas that can solve a huge range of real problems.`},
+{type:"def",title:"The First Equation",body:`The first equation comes straight from rearranging a = Δv/Δt. If we let t₀ = 0 (timing starts when the situation begins), it becomes:<br><br>Starting with a = (v − v₀) / t, multiply both sides by t, then add v₀:`},
+{type:"eq",body:"v = v₀ + at      (Equation 2.6)"},
+{type:"def",title:"Reading the Equation",body:`<b>v</b> = final velocity · <b>v₀</b> = initial velocity ("v-naught") · <b>a</b> = acceleration · <b>t</b> = time elapsed.<br><br>Given ANY three of these, you can find the fourth by algebra. This equation has four variables — four possible problems!`},
+{type:"def",title:"Critical Restriction",body:`<em>Equations 2.6, 2.15, and 2.19 are only valid when acceleration is constant.</em> If the car is constantly changing its acceleration (like in stop-and-go traffic), these equations do NOT apply.`},
+{type:"checkpoint",q:`A car decelerates at <b>2.3 m/s²</b> and stops in <b>15 seconds</b>. What was its initial velocity? (Example 2.1)`,fields:{label:"v₀ (m/s)",placeholder:"34.5"},answer:34.5,tol:0.5,hint:"v = 0 (stopped). v₀ = v − at = 0 − (−2.3)(15) = 34.5 m/s. Note: deceleration → a is negative."},
+{type:"checkpoint",q:`A police car at <b>23 m/s</b> accelerates at <b>2.5 m/s²</b> to reach <b>35 m/s</b>. How long does that take? (OYO 2.1)`,fields:{label:"t (s)",placeholder:"4.8"},answer:4.8,tol:0.2,hint:"t = (v − v₀)/a = (35 − 23)/2.5 = 12/2.5 = 4.8 s"},
+{type:"quiz",questions:[
+{q:"What variable does v₀ represent?",opts:["Final velocity","Initial velocity","Average velocity","Acceleration"],ci:1,exp:"v₀ (v-naught) = initial velocity, at t = 0."},
+{q:"What condition must be met to use v = v₀ + at?",opts:["a > 0","v₀ = 0","Constant acceleration","Long time intervals only"],ci:2,exp:"All three Module 2 equations require constant acceleration."},
+{q:"A car starts at 10 m/s and has a = 3 m/s². After 5 seconds, v = ?",opts:["15 m/s","25 m/s","35 m/s","50 m/s"],ci:1,exp:"v = 10 + 3(5) = 25 m/s."},
+{q:"A ball decelerates from 20 m/s to 0 in 4 s. What is |a|?",opts:["4 m/s²","5 m/s²","8 m/s²","80 m/s²"],ci:1,exp:"a = Δv/t = −20/4 = −5 m/s². Magnitude = 5."},
+{q:"Which of these can you solve with Eq 2.6 alone?",opts:["Find Δx given v₀, a, t","Find v given v₀, a, t","Find t given v₀, a, Δx","Find a given v₀, Δx, t"],ci:1,exp:"Eq 2.6 has v, v₀, a, t. It can directly find v given the other three."}
+]}
+]},
+eq2:{title:"Equation 2: v² = v₀² + 2aΔx",icon:"🟢",cards:[
+{type:"intro",body:`Sometimes time is neither given nor wanted. The second equation brilliantly connects velocity, acceleration, and displacement — <em>without time appearing at all</em>. It's derived by combining Equations 1.1, 1.3, and 2.9 from the textbook.`},
+{type:"eq",body:"v² = v₀² + 2a·Δx      (Equation 2.15)"},
+{type:"def",title:"The Power of This Equation",body:`<b>v</b> = final velocity · <b>v₀</b> = initial velocity · <b>a</b> = acceleration · <b>Δx</b> = displacement.<br><br>This is THE equation for stopping distances, runway lengths, and any problem where you know two velocities + acceleration but not time.`},
+{type:"def",title:"Stopping Distance",body:`Classic setup: a car braking to a stop. Here v = 0, so:<br><br>0 = v₀² + 2a·Δx → Δx = −v₀²/(2a)<br><br>Since a is negative (deceleration) and Δx is positive, the negatives cancel to give a positive distance. Example 2.2 used exactly this.`},
+{type:"checkpoint",q:`A woman driving at <b>20.0 m/s</b> brakes with a = <b>−2.1 m/s²</b>. How far does she travel before stopping? (Example 2.2)`,fields:{label:"Δx (m)",placeholder:"95"},answer:95,tol:3,hint:"v = 0. 0 = 20² + 2(−2.1)Δx → Δx = 400/4.2 = 95 m."},
+{type:"checkpoint",q:`A sprinter starts from rest and runs <b>30 ft</b>, reaching <b>26 ft/sec</b>. What was the acceleration?`,fields:{label:"a (ft/s²)",placeholder:"11"},answer:11,tol:1,hint:"v₀=0. a = v²/(2Δx) = 26²/(2×30) = 676/60 ≈ 11 ft/s². (Example 2.2b)"},
+{type:"quiz",questions:[
+{q:"Which scenario best uses v² = v₀² + 2aΔx?",opts:["Given v₀, a, t → find v","Given v₀, a, Δx → find v","Given v₀, a, t → find Δx","Given v₀, Δx, t → find a"],ci:1,exp:"Eq 2.15 is the choice when time is not involved."},
+{q:"A car brakes to a stop from 30 m/s with a = −6 m/s². Stopping distance = ?",opts:["5 m","75 m","90 m","180 m"],ci:1,exp:"Δx = v₀²/(2|a|) = 900/12 = 75 m."},
+{q:"Doubling initial speed has what effect on stopping distance?",opts:["Doubles it","Triples it","Quadruples it","Halves it"],ci:2,exp:"Δx ∝ v₀², so doubling v₀ → 4× stopping distance. This is why speed limits matter!"},
+{q:"v² = v₀² + 2aΔx with v₀ = 0 simplifies to:",opts:["v = √(aΔx)","v = √(2aΔx)","v = 2aΔx","v = a·Δx"],ci:1,exp:"0 + 2aΔx = v² → v = √(2aΔx)."},
+{q:"Rearranging for Δx gives:",opts:["Δx = (v²−v₀²)/a","Δx = (v²−v₀²)/(2a)","Δx = 2a/(v²−v₀²)","Δx = v²/(v₀·a)"],ci:1,exp:"2aΔx = v²−v₀² → Δx = (v²−v₀²)/(2a)."}
+]}
+]},
+eq3:{title:"Equation 3: Δx = v₀t + ½at²",icon:"🟡",cards:[
+{type:"intro",body:`The third equation was derived by calculating the <em>area under a velocity-time graph</em>. It's a rectangle (Area 1 = v₀·t, representing constant motion) plus a triangle (Area 2 = ½at², representing the extra displacement from acceleration). Add them to get total displacement.`},
+{type:"eq",body:"Δx = v₀t + ½at²      (Equation 2.19)"},
+{type:"def",title:"Two Terms Explained",body:`<b>Term 1: v₀t</b> — how far you'd go at constant initial velocity.<br><b>Term 2: ½at²</b> — the extra displacement caused by acceleration.<br><br>From rest (v₀ = 0), the first term vanishes: Δx = ½at².`},
+{type:"def",title:"Finding Time",body:`From rest: Δx = ½at² → t² = 2Δx/a → <em>t = √(2Δx/a)</em>.<br><br>This is used in Experiment 2.2 (reaction time with a falling ruler): the time you take to react equals how far the ruler fell divided back through the equation.`},
+{type:"checkpoint",q:`A plane starts from rest at <b>2.3 m/s²</b>. It takes off in <b>28 seconds</b>. How far down the runway did it travel? (Example 2.3)`,fields:{label:"Δx (m)",placeholder:"900"},answer:900,tol:20,hint:"v₀=0. Δx = ½at² = ½(2.3)(28)² = ½(2.3)(784) = 902 ≈ 9.0×10² m"},
+{type:"checkpoint",q:`A car starts from rest and takes <b>17 seconds</b> to travel <b>180 m</b>. What was the acceleration?`,fields:{label:"a (m/s²)",placeholder:"1.2"},answer:1.2,tol:0.05,hint:"v₀=0. Δx = ½at² → a = 2Δx/t² = 2(180)/289 ≈ 1.25 ≈ 1.2 m/s²"},
+{type:"quiz",questions:[
+{q:"Δx = v₀t + ½at² was derived from:",opts:["Newton's second law","Area under a V-T graph","The definition of acceleration","Relative velocity"],ci:1,exp:"The area under V-T = displacement. Rectangle + triangle areas give Eq 2.19."},
+{q:"If v₀ = 0, the equation becomes:",opts:["Δx = at²","Δx = ½at","Δx = ½at²","Δx = v·t"],ci:2,exp:"With v₀ = 0, the v₀t term vanishes, leaving Δx = ½at²."},
+{q:"Which is the correct rearrangement to find t (with v₀ = 0)?",opts:["t = Δx/a","t = √(2Δx/a)","t = Δx/(½a)","t = 2a/Δx"],ci:1,exp:"Δx = ½at² → t² = 2Δx/a → t = √(2Δx/a)."},
+{q:"A car starts from rest with a = 4 m/s². After 5 s, Δx = ?",opts:["20 m","50 m","100 m","200 m"],ci:1,exp:"Δx = ½(4)(25) = 50 m."},
+{q:"Time appears in Eq 2.19 as t squared. This means that if time doubles, displacement from rest:",opts:["doubles","triples","quadruples","stays same"],ci:2,exp:"Δx = ½at². If t → 2t: Δx → ½a(4t²) = 4×original Δx."}
+]}
+]},
+freefall:{title:"Free Fall & Thrown Objects",icon:"🌊",cards:[
+{type:"intro",body:`Free fall is one-dimensional motion where the only force acting is gravity. Since gravity produces a <em>constant</em> acceleration, all three Module 2 equations apply!`},
+{type:"def",title:"Free Fall Defined",body:`<b>Free fall</b>: motion of an object falling <em>solely</em> under the influence of gravity. Objects in free fall experience a constant downward acceleration of <b>g = 9.8 m/s²</b> (or 32 ft/s²).`},
+{type:"def",title:"Independence from Mass",body:`The acceleration due to gravity is the <em>same for all objects</em> regardless of mass, shape, or composition — as long as air resistance is negligible. A feather and a cannonball fall at the same rate in a vacuum!`},
+{type:"def",title:"Sign Convention",body:`Define UP as positive, DOWN as negative (standard for thrown-up problems).<br>• If object is dropped or falling: a = −9.8 m/s², v is negative<br>• If object is thrown upward: v₀ = positive, a = −9.8 m/s²<br>• Displacement down from start: Δx is negative`},
+{type:"def",title:"Thrown Upward Key Facts",body:`When an object is thrown up:<br>1. <b>At maximum height:</b> v = 0 (momentarily stopped), but a = −9.8 m/s² (always!)<br>2. <b>On return:</b> when it comes back to the same height, speed = v₀ but direction is reversed<br>3. The whole trip is one continuous free-fall situation`},
+{type:"checkpoint",q:`A penny is dropped from a <b>0.150 km</b> building. What is its speed when it hits the ground? (Example 2.5)`,fields:{label:"|v| (m/s)",placeholder:"54"},answer:54,tol:1,hint:"Convert: 0.150 km = 150 m. v² = 2(9.8)(150) = 2940. v = √2940 ≈ 54 m/s."},
+{type:"checkpoint",q:`A bullet is fired straight up at <b>335 m/s</b>. What is its maximum height? (Example 2.6)`,fields:{label:"h (m)",placeholder:"5700"},answer:5700,tol:200,hint:"At max height, v = 0. h = v₀²/(2g) = 335²/19.6 = 112225/19.6 ≈ 5700 m (= 5.7 km!)"},
+{type:"quiz",questions:[
+{q:"In free fall, the acceleration is:",opts:["0 m/s²","9.8 m/s² (variable)","9.8 m/s² (constant, downward)","Depends on mass"],ci:2,exp:"g = 9.8 m/s² downward, constant, and independent of mass."},
+{q:"At the very peak of a thrown ball's flight, its acceleration is:",opts:["0","9.8 m/s² downward","9.8 m/s² upward","−v₀"],ci:1,exp:"Gravity never stops acting. a = g = 9.8 m/s² downward, even when v = 0."},
+{q:"A ball thrown up at 5 m/s is caught at the same height. Its final velocity is:",opts:["+5 m/s","-5 m/s","0","+2.5 m/s"],ci:1,exp:"By symmetry: same speed, reversed direction. v = -v₀ = −5 m/s."},
+{q:"Why do a feather and a rock fall at different speeds in air?",opts:["Different gravity","Different air resistance","Different mass","Different initial velocity"],ci:1,exp:"Air resistance depends on shape and size. In vacuum, they'd fall identically."},
+{q:"What is terminal velocity?",opts:["Maximum velocity in free fall","Velocity when a = 0 due to air resistance = gravity","Initial velocity for free fall","Average velocity during free fall"],ci:1,exp:"Terminal velocity = acceleration = 0, air resistance perfectly cancels gravity."}
+]}
+]}
+};
+
+// ========== CHEATSHEET ==========
+const CS=[
+{section:"The Five Key Equations",items:[
+{title:"(1.1) Velocity Definition",fm:"v = Δx / Δt",vr:"<b>v</b> = velocity · <b>Δx</b> = displacement · <b>Δt</b> = time\nValid ALWAYS (definition, no restrictions)",ex:"120 m in 40 s → v = 3 m/s"},
+{title:"(1.3) Acceleration Definition",fm:"a = Δv / Δt",vr:"<b>a</b> = acceleration · <b>Δv</b> = change in velocity\nValid ALWAYS (definition, no restrictions)",ex:"Goes from 0 to 20 m/s in 4 s → a = 5 m/s²"},
+{title:"(2.6) Velocity, Accel, Time",fm:"v = v₀ + at",vr:"<b>v₀</b> = initial velocity (v-naught)\nConstant a REQUIRED",ex:"v₀=10, a=3, t=5 → v = 25 m/s"},
+{title:"(2.15) Velocity, Accel, Displacement",fm:"v² = v₀² + 2a · Δx",vr:"No time variable — useful when t is unknown!\nConstant a REQUIRED",ex:"v₀=20, a=−2.1, v=0 → Δx = 95 m (stop)"},
+{title:"(2.19) Displacement, Time, Accel",fm:"Δx = v₀t + ½at²",vr:"From rest (v₀=0): Δx = ½at²\nConstant a REQUIRED",ex:"v₀=0, a=2.3, t=28 → Δx = 900 m"}
+]},
+{section:"Free Fall Rules",items:[
+{title:"Acceleration Due to Gravity",fm:"g = 9.8 m/s²  (or 32 ft/s²)\na = −g = −9.8 m/s² (downward, if up = +)",vr:"<b>Same for all objects regardless of mass</b>",ex:"Drop from 50 m: v² = 2(9.8)(50) = 980 → v = 31.3 m/s"},
+{title:"At Maximum Height (thrown up)",fm:"v = 0  (momentarily stopped)\na = −9.8 m/s² (still acting!)",vr:"Key: v = 0 ≠ a = 0. Object stops for one instant but gravity never pauses.",ex:"v₀=20 → h = 20²/19.6 = 20.4 m peak"},
+{title:"Symmetry: Return to Same Height",fm:"|v_return| = |v₀|\nDirection reversed: v = −v₀",vr:"When Δx = 0: v² = v₀². Speed matches, direction flips.",ex:"Thrown at +5 m/s, caught at same h → v = −5 m/s"}
+]},
+{section:"Terminal Velocity",items:[
+{title:"Terminal Velocity Definition",fm:"Terminal velocity = max speed in free fall with air resistance\nReached when: air resistance force = gravity",vr:"At terminal velocity: a = 0, velocity is constant",ex:"Skydiver with arms spread: ~120 mph; with arms in: ~200 mph"},
+{title:"Factors That Affect Terminal Velocity",fm:"Higher terminal v → less air resistance\nLower terminal v → more air resistance",vr:"Three factors: <b>weight</b> (↑ weight → ↑ terminal v), <b>shape</b> (compact → ↑ terminal v), <b>orientation</b> (streamlined → ↑ terminal v)",ex:"Wadded paper > folded paper > flat paper (terminal velocities)"}
+]},
+{section:"Equation Selection Guide",items:[
+{title:"Which Equation to Use",fm:"v₀, a, t → find v:     v = v₀ + at\nv₀, v, a → find Δx:   v² = v₀² + 2aΔx\nv₀, a, t → find Δx:   Δx = v₀t + ½at²\nv₀, v, t → find a:    rearrange 2.6",vr:"List your knowns. Find the equation that has only ONE unknown.",ex:"Know v₀, v, Δx (no t): use Eq 2.15!"}
+]}
+];
+let mode="problems";
+let active="eq1",subType=null,prob=null,userVal="",answered=false,solShown=false;
+let hide={given:false,formula:false,find:false};
+let vMode="mc",vQ=null,vAns="",vAnswered=false;
+let stats={c:0,a:0,streak:0,best:0};
+let lessonKey=null,lessonIdx=0,cpState={},quizState={};
+// Exam state
+let examSection=null,examQuestions=[],examIdx=0,examAnswers=[],examInput="";
+let examStartTime=0,examTimerOn=false,examDurationMin=30,examFinished=false;
+let examTimerId=null,examElapsed=0,examReviewIdx=-1;
+let examBest=JSON.parse(localStorage.getItem("m2_exam_best")||"{}");
+
+// ============================================================
+// STATS
+// ============================================================
+function loadStats(){const s=localStorage.getItem("m2_stats");if(s)stats=JSON.parse(s)}
+function saveStats(){localStorage.setItem("m2_stats",JSON.stringify(stats))}
+function renderStats(){
+  document.getElementById("sC").textContent=stats.c;
+  document.getElementById("sA").textContent=stats.a;
+  document.getElementById("sP").textContent=stats.a>0?Math.round(100*stats.c/stats.a)+"%":"—";
+  document.getElementById("sS").innerHTML=`<span id="fire">${stats.streak>0?"🔥":"💤"}</span> ${stats.streak}`;
+}
+function resetStats(){if(confirm("Reset all stats?")){stats={c:0,a:0,streak:0,best:0};saveStats();renderStats()}}
+function recordAnswer(ok){
+  stats.a++;
+  if(ok){stats.c++;stats.streak++;if(stats.streak>stats.best)stats.best=stats.streak}
+  else stats.streak=0;
+  saveStats();renderStats();
+}
+
+// ============================================================
+// MODE BAR
+// ============================================================
+const MODES=[
+{id:"problems",label:"📝 Practice"},
+{id:"exam",label:"🎯 Exam"},
+{id:"vocab",label:"📖 Vocab"},
+{id:"learn",label:"🎓 Learn"},
+{id:"cheat",label:"📋 Cheatsheet"}
+];
+function renderModes(){
+  document.getElementById("modeBar").innerHTML=MODES.map(m=>
+    `<button class="mode-btn${mode===m.id?" on":""}" onclick="switchMode('${m.id}')">${m.label}</button>`).join("");
+}
+function switchMode(m){
+  mode=m;
+  if(examTimerId){clearInterval(examTimerId);examTimerId=null}
+  if(m!=="exam"){examSection=null;examFinished=false}
+  renderModes();renderCtrls();
+  if(m==="problems")genP();
+  else if(m==="exam")renderExam();
+  else if(m==="vocab")genV();
+  else if(m==="learn")renderLearn();
+  else if(m==="cheat")renderCheat();
+}
+
+// ============================================================
+// CONTROL BAR
+// ============================================================
+function renderCtrls(){
+  const el=document.getElementById("ctrlBar");
+  if(mode==="problems"){
+    let h=SEC.map(s=>`<button class="cb${active===s.id?" on":""}" onclick="active='${s.id}';subType=null;genP()">${s.icon} ${s.title}</button>`).join("");
+    h+=`<span style="width:6px;display:inline-block"></span><span class="cl">Hide:</span>`;
+    h+=`<button class="tg" id="tg-given" onclick="tglH('given')"><span class="tg-dot"></span>Givens</button>`;
+    h+=`<button class="tg" id="tg-formula" onclick="tglH('formula')"><span class="tg-dot"></span>Formulas</button>`;
+    h+=`<button class="tg" id="tg-find" onclick="tglH('find')"><span class="tg-dot"></span>Solve-For</button>`;
+    h+=`<button class="tg" id="tg-all" onclick="tglAll()"><span class="tg-dot"></span>Hard Mode</button>`;
+    el.innerHTML=h;el.style.display="flex";syncToggles();
+  } else if(mode==="vocab"){
+    el.style.display="flex";
+    el.innerHTML=`<span class="cl">Format:</span>`+
+    `<button class="cb${vMode==="mc"?" on":""}" onclick="vMode='mc';genV()">Multiple Choice</button>`+
+    `<button class="cb${vMode==="written"?" on":""}" onclick="vMode='written';genV()">Written</button>`+
+    `<button class="cb${vMode==="tf"?" on":""}" onclick="vMode='tf';genV()">True / False</button>`;
+  } else if(mode==="learn"){
+    el.style.display="flex";
+    el.innerHTML=Object.keys(LESSONS).map(k=>`<button class="cb${lessonKey===k?" on":""}" onclick="openLesson('${k}')">${LESSONS[k].icon} ${LESSONS[k].title}</button>`).join("");
+  } else if(mode==="cheat"){
+    el.style.display="flex";
+    el.innerHTML=`<span class="cl">All formulas, definitions, and key facts for Module 1</span>`;
+  } else {
+    el.style.display="none";el.innerHTML="";
+  }
+}
+function tglH(k){hide[k]=!hide[k];syncToggles();if(prob)renderProb()}
+function tglAll(){const all=hide.given&&hide.formula&&hide.find;hide.given=hide.formula=hide.find=!all;syncToggles();if(prob)renderProb()}
+function syncToggles(){
+  ["given","formula","find"].forEach(k=>{const b=document.getElementById("tg-"+k);if(b)b.classList.toggle("on",hide[k])});
+  const a=document.getElementById("tg-all");if(a)a.classList.toggle("on",hide.given&&hide.formula&&hide.find);
+}
+
+// ============================================================
+// PROBLEMS MODE
+// ============================================================
+function genP(){
+  renderCtrls();
+  const sec=SEC.find(s=>s.id===active);
+  let genId;
+  if(subType)genId=subType;
+  else genId=pick(sec.types).id;
+  prob=G[genId]();
+  prob._gen=genId;
+  userVal="";answered=false;solShown=false;
+  renderProb();
+}
+function chkP(){
+  const i=document.getElementById("inp");if(!i)return;
+  userVal=i.value.trim();
+  if(userVal==="")return;
+  answered=true;
+  const ok=isCorrect(prob,userVal);
+  recordAnswer(ok);
+  renderProb();
+}
+function isCorrect(p,val){
+  if(p.isText){
+    const norm=s=>String(s).toLowerCase().replace(/\s+/g,"").replace(/[²³]/g,c=>({"²":"2","³":"3"}[c]));
+    return norm(val)===norm(p.a);
+  }
+  const v=parseFloat(String(val).replace(/[+,\s]/g,""));
+  return !isNaN(v)&&Math.abs(v-p.a)<=p.tol;
+}
+function showPS(){solShown=true;renderProb()}
+function renderProb(){
+  const el=document.getElementById("main"),p=prob;
+  if(!p){el.innerHTML="";return}
+  const ok=answered&&isCorrect(p,userVal);
+  const cc=answered?(ok?"ok":"no"):"";
+  const bc=answered?(ok?"bg-ok":"bg-no"):"bg-q";
+  const sec=SEC.find(s=>s.id===active);
+  const hc=(hide.given?1:0)+(hide.formula?1:0)+(hide.find?1:0);
+  const dl=hc===3?"HARD MODE":hc===2?"HARD+":hc===1?"HARD":"";
+  let h=`<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px">`;
+  h+=`<button class="cb${!subType?" on":""}" onclick="subType=null;genP()">🎲 Random</button>`;
+  sec.types.forEach(t=>{h+=`<button class="cb${subType===t.id?" on":""}" onclick="subType='${t.id}';genP()">${t.name}</button>`});
+  h+=`</div>`;
+  h+=`<div class="pc ${cc}"><div class="pc-top"><span class="bg ${bc}">${answered?(ok?"✓ Correct":"✗ Incorrect"):"Problem"}</span><span class="bg bg-ty">${p.ref}</span>${dl?`<span class="bg bg-hard">${dl}</span>`:""}</div>`;
+  h+=`<div class="q-txt">${p.q}</div>`;
+  const gH=hide.given&&!answered&&!solShown,fH=hide.formula&&!answered&&!solShown,wH=hide.find&&!answered&&!solShown;
+  if(p.gv&&(!gH||!fH||!wH)){
+    h+=`<div class="ir">`;
+    if(!gH)h+=`<div class="ib ib-g"><span class="ib-l">Given</span>${p.gv.replace(/\n/g,"<br>")}</div>`;
+    if(p.fm&&!fH)h+=`<div class="ib ib-f"><span class="ib-l">Formula</span>${p.fm.replace(/\n/g,"<br>")}</div>`;
+    if(p.fi&&!wH)h+=`<div class="ib ib-w"><span class="ib-l">Solve For</span>${p.fi.replace(/\n/g,"<br>")}</div>`;
+    h+=`</div>`;
+  }
+  if(!answered){
+    h+=`<div class="aa"><div class="aw"><input class="ai" id="inp" type="text" inputmode="${p.isText?"text":"decimal"}" placeholder="Type your answer…" value="${userVal}" onkeydown="if(event.key==='Enter')chkP()"><span class="au">${p.u||""}</span></div><button class="ab" onclick="chkP()">Check</button></div>`;
+    h+=`<div class="btn-row"><button class="btn-sh" onclick="showPS()">Show Solution</button><button class="btn-sh" onclick="genP()">Skip →</button></div>`;
+  } else {
+    h+=`<div class="aa"><div class="aw"><input class="ai ${ok?"v-ok":"v-no"}" value="${userVal}" disabled><span class="au">${p.u||""}</span></div></div>`;
+    h+=`<div class="fb ${ok?"fb-ok":"fb-no"}">${ok?`✓ Correct! Streak: ${stats.streak} 🔥`:"✗ Not quite"}</div>`;
+    if(!ok)h+=`<div class="fb-v">Correct answer: ${p.a} ${p.u||""}</div>`;
+  }
+  if(answered||solShown){
+    h+=`<div class="sol"><div class="sol-tag">Solution</div>`;
+    p.st.forEach(s=>{h+=`<div class="stp">${s}</div>`});
+    h+=`<div class="sol-note">${p.nt}</div></div>`;
+  }
+  if(answered)h+=`<div class="btn-row" style="margin-top:10px"><button class="btn-nx" onclick="genP()">Next Problem →</button></div>`;
+  h+=`</div>`;
+  el.innerHTML=h;
+  if(!answered){const i=document.getElementById("inp");if(i)setTimeout(()=>i.focus(),50)}
+}
+
+// ============================================================
+// VOCAB MODE
+// ============================================================
+function genV(){
+  renderCtrls();
+  const term=pick(VOCAB);
+  vAns="";vAnswered=false;
+  if(vMode==="mc"){
+    const others=shuffle(VOCAB.filter(v=>v.t!==term.t)).slice(0,3);
+    const opts=shuffle([{t:term.d,c:true},...others.map(o=>({t:o.d,c:false}))]);
+    vQ={mode:"mc",term,opts,ci:opts.findIndex(o=>o.c)};
+  } else if(vMode==="tf"){
+    const isTrue=Math.random()<0.5;
+    const shown=isTrue?term.d:pick(VOCAB.filter(v=>v.t!==term.t)).d;
+    vQ={mode:"tf",term,shown,correct:isTrue};
+  } else {
+    vQ={mode:"written",term};
+  }
+  renderVocab();
+}
+function chkVMC(i){
+  if(vAnswered)return;
+  vAnswered=true;vAns=i;
+  recordAnswer(i===vQ.ci);
+  renderVocab();
+}
+function chkVTF(ans){
+  if(vAnswered)return;
+  vAnswered=true;vAns=ans;
+  recordAnswer(ans===vQ.correct);
+  renderVocab();
+}
+function chkVW(){
+  const ta=document.getElementById("vta");if(!ta)return;
+  vAns=ta.value.trim();
+  if(vAns==="")return;
+  vAnswered=true;
+  renderVocab();
+}
+function renderVocab(){
+  const el=document.getElementById("main");
+  if(!vQ){el.innerHTML="";return}
+  let h="";
+  if(vQ.mode==="mc"){
+    const ok=vAnswered&&vAns===vQ.ci;
+    h+=`<div class="pc ${vAnswered?(ok?"ok":"no"):""}"><div class="pc-top"><span class="bg ${vAnswered?(ok?"bg-ok":"bg-no"):"bg-q"}">${vAnswered?(ok?"✓ Correct":"✗ Incorrect"):"Vocabulary"}</span><span class="bg bg-ty">Definition Match</span></div>`;
+    h+=`<div class="q-txt">Which definition matches <b>"${vQ.term.t}"</b>?</div><div class="opts">`;
+    vQ.opts.forEach((o,i)=>{
+      let cls="opt";
+      if(vAnswered){cls+=" done";if(i===vQ.ci)cls+=" c-ok";else if(i===vAns)cls+=" c-no"}
+      h+=`<button class="${cls}" onclick="chkVMC(${i})"><span class="opt-ltr">${vAnswered&&i===vQ.ci?"✓":vAnswered&&i===vAns?"✗":String.fromCharCode(65+i)}</span><span>${o.t}</span></button>`;
+    });
+    h+=`</div>`;
+    if(vAnswered)h+=`<div class="btn-row" style="margin-top:12px"><button class="btn-nx" onclick="genV()">Next →</button></div>`;
+    h+=`</div>`;
+  } else if(vQ.mode==="tf"){
+    const ok=vAnswered&&vAns===vQ.correct;
+    h+=`<div class="pc ${vAnswered?(ok?"ok":"no"):""}"><div class="pc-top"><span class="bg ${vAnswered?(ok?"bg-ok":"bg-no"):"bg-q"}">${vAnswered?(ok?"✓ Correct":"✗ Incorrect"):"Vocabulary"}</span><span class="bg bg-ty">True / False</span></div>`;
+    h+=`<div class="q-txt">Is this definition of <b>"${vQ.term.t}"</b> correct?<br><br><em style="color:var(--mut)">"${vQ.shown}"</em></div>`;
+    h+=`<div class="opts" style="flex-direction:row;gap:8px">`;
+    ["True","False"].forEach((lab,i)=>{
+      const val=i===0;
+      let cls="opt";
+      if(vAnswered){cls+=" done";if(val===vQ.correct)cls+=" c-ok";else if(val===vAns)cls+=" c-no"}
+      h+=`<button class="${cls}" style="flex:1;justify-content:center" onclick="chkVTF(${val})">${lab}</button>`;
+    });
+    h+=`</div>`;
+    if(vAnswered){
+      h+=`<div class="sol" style="margin-top:14px"><div class="sol-tag">Correct definition</div><div class="stp">${vQ.term.d}</div></div>`;
+      h+=`<div class="btn-row" style="margin-top:10px"><button class="btn-nx" onclick="genV()">Next →</button></div>`;
+    }
+    h+=`</div>`;
+  } else {
+    h+=`<div class="pc"><div class="pc-top"><span class="bg bg-q">Vocabulary</span><span class="bg bg-ty">Written Recall</span></div>`;
+    h+=`<div class="q-txt">In your own words, define <b>"${vQ.term.t}"</b>.</div>`;
+    if(!vAnswered){
+      h+=`<textarea class="v-ta" id="vta" placeholder="Type your definition…">${vAns}</textarea>`;
+      h+=`<div class="btn-row"><button class="ab" onclick="chkVW()">Reveal Answer</button></div>`;
+    } else {
+      h+=`<textarea class="v-ta" disabled>${vAns}</textarea>`;
+      h+=`<div class="sol" style="margin-top:14px"><div class="sol-tag">Textbook definition</div><div class="stp">${vQ.term.d}</div><div class="sol-note">Compare your answer — did you capture the key idea?</div></div>`;
+      h+=`<div class="btn-row" style="margin-top:10px"><button class="btn-nx" onclick="genV()">Next →</button></div>`;
+    }
+    h+=`</div>`;
+  }
+  el.innerHTML=h;
+}
+
+// ============================================================
+// LEARN MODE
+// ============================================================
+function renderLearn(){
+  renderCtrls();
+  if(!lessonKey){
+    const el=document.getElementById("main");
+    let h=`<div style="text-align:center;padding:20px 0 16px"><div style="font-size:36px;margin-bottom:8px">🎓</div><div style="font:400 24px/1.3 var(--s)">Choose a Lesson</div><div style="font:400 13px var(--f);color:var(--dim);margin-top:4px">Read through, hit the checkpoints, then take the quick quiz</div></div>`;
+    h+=`<div class="topic-picker">`;
+    Object.keys(LESSONS).forEach(k=>{
+      h+=`<button class="topic-btn" onclick="openLesson('${k}')"><div style="font-size:20px">${LESSONS[k].icon}</div>${LESSONS[k].title}<div class="topic-sub">${LESSONS[k].cards.length} cards</div></button>`;
+    });
+    h+=`</div>`;
+    el.innerHTML=h;
+    return;
+  }
+  renderLessonCard();
+}
+function openLesson(k){lessonKey=k;lessonIdx=0;cpState={};quizState={};renderCtrls();renderLessonCard()}
+function renderLessonCard(){
+  const el=document.getElementById("main");
+  const L=LESSONS[lessonKey],card=L.cards[lessonIdx];
+  const total=L.cards.length;
+  let h=`<div class="lesson-wrap">`;
+  h+=`<div class="lesson-nav"><button class="nav-btn" onclick="lessonKey=null;renderLearn()">← All Lessons</button><div style="text-align:center"><div class="lesson-prog">${L.icon} ${L.title} · ${lessonIdx+1}/${total}</div><div class="prog-bar"><div class="prog-fill" style="width:${100*(lessonIdx+1)/total}%"></div></div></div><div style="width:90px"></div></div>`;
+  h+=`<div class="lesson-card">`;
+  if(card.type==="intro"){
+    h+=`<div class="lesson-type">Introduction</div><div class="lesson-body">${card.body}</div>`;
+  } else if(card.type==="def"){
+    h+=`<div class="lesson-type">Key Concept</div><div class="lesson-def"><div class="lesson-def-t">${card.title}</div><div class="lesson-def-b">${card.body}</div></div>`;
+  } else if(card.type==="eq"){
+    h+=`<div class="lesson-type">Equation</div><div class="lesson-eq">${card.body}</div>`;
+  } else if(card.type==="checkpoint"){
+    const st=cpState[lessonIdx]||{};
+    h+=`<div class="lesson-type">Checkpoint</div><div class="lesson-checkpoint"><div class="lesson-cp-t">✓ Try It Yourself</div><div class="lesson-cp-q">${card.q}</div>`;
+    if(!st.done){
+      h+=`<div class="aa"><div class="aw"><input class="ai" id="cpinp" type="text" inputmode="decimal" placeholder="${card.fields.placeholder}" value="${st.val||""}" onkeydown="if(event.key==='Enter')chkCP()"><span class="au">${card.fields.label}</span></div><button class="ab" onclick="chkCP()">Check</button></div>`;
+      h+=`<div class="btn-row"><button class="btn-sh" onclick="showHint()">Show Hint</button></div>`;
+      if(st.hint)h+=`<div class="hint-box">💡 ${card.hint}</div>`;
+    } else {
+      const ok=st.ok;
+      h+=`<div class="aa"><div class="aw"><input class="ai ${ok?"v-ok":"v-no"}" value="${st.val}" disabled><span class="au">${card.fields.label}</span></div></div>`;
+      h+=`<div class="fb ${ok?"fb-ok":"fb-no"}">${ok?"✓ Correct!":`✗ Answer: ${card.answer}`}</div>`;
+      h+=`<div class="hint-box">💡 ${card.hint}</div>`;
+    }
+    h+=`</div>`;
+  } else if(card.type==="quiz"){
+    h+=renderQuizCard(card);
+  }
+  h+=`</div>`;
+  // nav
+  h+=`<div class="lesson-nav" style="margin-top:16px"><button class="nav-btn" onclick="prevCard()" ${lessonIdx===0?"disabled":""}>← Back</button>`;
+  if(lessonIdx<total-1)h+=`<button class="nav-btn primary" onclick="nextCard()">Next →</button>`;
+  else h+=`<button class="nav-btn primary" onclick="lessonKey=null;renderLearn()">Finish ✓</button>`;
+  h+=`</div></div>`;
+  el.innerHTML=h;
+}
+function chkCP(){
+  const i=document.getElementById("cpinp");if(!i)return;
+  const card=LESSONS[lessonKey].cards[lessonIdx];
+  const val=i.value.trim();if(val==="")return;
+  const v=parseFloat(val.replace(/[+,\s]/g,""));
+  const ok=!isNaN(v)&&Math.abs(v-card.answer)<=card.tol;
+  cpState[lessonIdx]={done:true,ok,val};
+  renderLessonCard();
+}
+function showHint(){
+  const st=cpState[lessonIdx]||{};
+  const i=document.getElementById("cpinp");
+  st.val=i?i.value:"";st.hint=true;
+  cpState[lessonIdx]=st;
+  renderLessonCard();
+}
+function renderQuizCard(card){
+  const st=quizState[lessonIdx]||{idx:0,answers:[]};
+  if(st.done){
+    const score=st.answers.filter(Boolean).length;
+    const pct=Math.round(100*score/card.questions.length);
+    let h=`<div class="lesson-type">Quiz Complete</div><div style="text-align:center;padding:14px 0">`;
+    h+=`<div class="quiz-score ${pct>=80?"qok":""}">${score}/${card.questions.length}</div>`;
+    h+=`<div style="font:400 14px var(--f);color:var(--mut)">${pct}% — ${pct>=80?"Great work! 🎉":pct>=60?"Good effort — review the misses.":"Worth another read-through."}</div>`;
+    h+=`<button class="nav-btn primary" style="margin-top:14px" onclick="quizState[lessonIdx]={idx:0,answers:[]};renderLessonCard()">Retake Quiz</button>`;
+    h+=`</div>`;
+    return h;
+  }
+  const q=card.questions[st.idx];
+  let h=`<div class="lesson-type">Quiz · Question ${st.idx+1}/${card.questions.length}</div>`;
+  h+=`<div class="lesson-cp-q" style="margin-bottom:14px">${q.q}</div><div class="opts">`;
+  q.opts.forEach((o,i)=>{
+    let cls="opt";
+    if(st.picked!=null){cls+=" done";if(i===q.ci)cls+=" c-ok";else if(i===st.picked)cls+=" c-no"}
+    h+=`<button class="${cls}" onclick="pickQuiz(${i})"><span class="opt-ltr">${st.picked!=null&&i===q.ci?"✓":st.picked!=null&&i===st.picked?"✗":String.fromCharCode(65+i)}</span><span>${o}</span></button>`;
+  });
+  h+=`</div>`;
+  if(st.picked!=null){
+    h+=`<div class="sol" style="margin-top:12px"><div class="sol-tag">Explanation</div><div class="stp">${q.exp}</div></div>`;
+    h+=`<div class="btn-row" style="margin-top:10px"><button class="btn-nx" onclick="nextQuiz()">${st.idx<card.questions.length-1?"Next Question →":"See Results →"}</button></div>`;
+  }
+  return h;
+}
+function pickQuiz(i){
+  const card=LESSONS[lessonKey].cards[lessonIdx];
+  const st=quizState[lessonIdx]||{idx:0,answers:[]};
+  if(st.picked!=null)return;
+  st.picked=i;
+  st.answers[st.idx]=(i===card.questions[st.idx].ci);
+  quizState[lessonIdx]=st;
+  renderLessonCard();
+}
+function nextQuiz(){
+  const card=LESSONS[lessonKey].cards[lessonIdx];
+  const st=quizState[lessonIdx];
+  if(st.idx<card.questions.length-1){st.idx++;st.picked=null}
+  else st.done=true;
+  quizState[lessonIdx]=st;
+  renderLessonCard();
+}
+function nextCard(){if(lessonIdx<LESSONS[lessonKey].cards.length-1){lessonIdx++;renderLessonCard()}}
+function prevCard(){if(lessonIdx>0){lessonIdx--;renderLessonCard()}}
+
+// ============================================================
+// CHEATSHEET MODE
+// ============================================================
+function renderCheat(){
+  renderCtrls();
+  const el=document.getElementById("main");
+  let h="";
+  CS.forEach(sec=>{
+    h+=`<div class="cs-sec">${sec.section}</div>`;
+    sec.items.forEach(it=>{
+      h+=`<div class="cs-card"><div class="cs-title">${it.title}</div>`;
+      h+=`<div class="cs-fm">${it.fm.replace(/\n/g,"<br>")}</div>`;
+      if(it.vr)h+=`<div class="cs-vr">${it.vr}</div>`;
+      if(it.ex)h+=`<div class="cs-ex"><span class="lb">Example</span><br>${it.ex.replace(/\n/g,"<br>")}</div>`;
+      h+=`</div>`;
+    });
+  });
+  el.innerHTML=h;
+}
+// ============================================================
+// EXAM MODE
+// ============================================================
+const EXAM_LENGTH=50;
+
+// Build 50 questions for a section, spreading across all generators evenly
+function buildExamQuestions(sectionId){
+  const pool=EXAM_POOLS[sectionId];
+  const questions=[];
+  // Round-robin through the generator pool (shuffled order each cycle) so all
+  // template types appear, with no two identical types back to back.
+  let lastGen=null;
+  let cycle=shuffle(pool);
+  let ci=0;
+  for(let i=0;i<EXAM_LENGTH;i++){
+    if(ci>=cycle.length){cycle=shuffle(pool);ci=0}
+    let genId=cycle[ci++];
+    // avoid immediate repeat
+    if(genId===lastGen&&ci<cycle.length){const tmp=cycle[ci];cycle[ci]=genId;cycle[ci-1]=tmp;genId=cycle[ci-1]}
+    lastGen=genId;
+    const q=G[genId]();
+    q._gen=genId;
+    questions.push(q);
+  }
+  return questions;
+}
+
+function renderExam(){
+  renderCtrls();
+  const el=document.getElementById("main");
+  // ---- RESULTS SCREEN ----
+  if(examFinished){el.innerHTML=renderExamResults();return}
+  // ---- LANDING SCREEN ----
+  if(!examSection){
+    let h=`<div class="exam-landing">`;
+    h+=`<div class="exam-title">🎯 <i>Exam Mode</i></div>`;
+    h+=`<div class="exam-sub">Pick a section for a full <b>${EXAM_LENGTH}-question</b> exam. Every question is freshly randomized — variables, scenarios, and units change every run, so it's practically infinite.</div>`;
+    h+=`<div class="exam-section-grid">`;
+    Object.keys(EXAM_META).forEach(sid=>{
+      const m=EXAM_META[sid];
+      const best=examBest[sid];
+      h+=`<button class="exam-section-btn" onclick="examPick('${sid}')">`;
+      h+=`<span class="exam-section-icon">${m.icon}</span>`;
+      h+=`<div class="exam-section-name">${m.name}</div>`;
+      h+=`<div class="exam-section-meta">${EXAM_POOLS[sid].length} question types · ${EXAM_LENGTH} Q exam</div>`;
+      h+=`<div style="font:400 11px var(--f);color:var(--dim);margin-top:6px">${m.desc}</div>`;
+      if(best!=null)h+=`<div class="exam-best">★ Best: ${best}/${EXAM_LENGTH}</div>`;
+      h+=`</button>`;
+    });
+    h+=`</div>`;
+    h+=`<div style="font:400 13px var(--f);color:var(--dim);margin-top:10px">Choose a section above to set up your exam.</div>`;
+    h+=`</div>`;
+    el.innerHTML=h;
+    return;
+  }
+  // ---- SETUP SCREEN (section picked, not yet started) ----
+  if(examQuestions.length===0){
+    const m=EXAM_META[examSection];
+    let h=`<div class="exam-landing">`;
+    h+=`<div class="exam-title">${m.icon} <i>${m.name}</i></div>`;
+    h+=`<div class="exam-sub">${EXAM_LENGTH} randomized questions drawn from ${EXAM_POOLS[examSection].length} different problem types. Set your options and begin.</div>`;
+    h+=`<div class="exam-config">`;
+    h+=`<div class="exam-config-card"><div class="exam-config-l">Questions</div><div class="exam-config-v">${EXAM_LENGTH}</div></div>`;
+    h+=`<div class="exam-config-card"><div class="exam-config-l">Timer</div>`;
+    h+=`<div class="exam-toggle"><button class="exam-tog-btn${!examTimerOn?" on":""}" onclick="examTimerOn=false;renderExam()">Off</button><button class="exam-tog-btn${examTimerOn?" on":""}" onclick="examTimerOn=true;renderExam()">On</button></div></div>`;
+    if(examTimerOn){
+      h+=`<div class="exam-config-card"><div class="exam-config-l">Time Limit</div>`;
+      h+=`<div class="exam-toggle">`;
+      [20,30,45,60].forEach(min=>{
+        h+=`<button class="exam-tog-btn${examDurationMin===min?" on":""}" onclick="examDurationMin=${min};renderExam()">${min}m</button>`;
+      });
+      h+=`</div></div>`;
+    }
+    h+=`</div>`;
+    h+=`<button class="exam-start-btn" onclick="startExam()">Start Exam →</button>`;
+    h+=`<div style="margin-top:14px"><button class="btn-sh" onclick="examSection=null;renderExam()">← Pick a different section</button></div>`;
+    h+=`</div>`;
+    el.innerHTML=h;
+    return;
+  }
+  // ---- QUESTION SCREEN ----
+  el.innerHTML=renderExamQuestion();
+  const inp=document.getElementById("exinp");
+  if(inp&&examAnswers[examIdx]==null)setTimeout(()=>inp.focus(),50);
+}
+
+function examPick(sid){
+  examSection=sid;
+  examQuestions=[];examIdx=0;examAnswers=[];examInput="";examFinished=false;
+  renderExam();
+}
+
+function startExam(){
+  examQuestions=buildExamQuestions(examSection);
+  examIdx=0;examAnswers=new Array(EXAM_LENGTH).fill(null);examInput="";
+  examFinished=false;examElapsed=0;examStartTime=Date.now();
+  if(examTimerId){clearInterval(examTimerId);examTimerId=null}
+  if(examTimerOn){
+    examTimerId=setInterval(()=>{
+      examElapsed=Math.floor((Date.now()-examStartTime)/1000);
+      const remain=examDurationMin*60-examElapsed;
+      if(remain<=0){clearInterval(examTimerId);examTimerId=null;finishExam(true);return}
+      const tEl=document.getElementById("examTimer");
+      if(tEl){
+        tEl.textContent="⏱ "+fmtTime(remain);
+        tEl.className="exam-timer"+(remain<=60?" danger":remain<=300?" warn":"");
+      }
+    },1000);
+  }
+  renderExam();
+}
+
+function renderExamQuestion(){
+  const p=examQuestions[examIdx];
+  const ans=examAnswers[examIdx];
+  const answered=ans!=null;
+  const correctCount=examAnswers.filter(a=>a&&a.ok).length;
+  const attempted=examAnswers.filter(a=>a!=null).length;
+  let h="";
+  // exam bar
+  h+=`<div class="exam-bar">`;
+  h+=`<div class="exam-q-counter">Q <span>${examIdx+1}</span> / ${EXAM_LENGTH}</div>`;
+  h+=`<div class="exam-progress-bar"><div class="exam-progress-fill" style="width:${100*attempted/EXAM_LENGTH}%"></div></div>`;
+  if(examTimerOn){
+    const remain=examDurationMin*60-examElapsed;
+    h+=`<div class="exam-timer${remain<=60?" danger":remain<=300?" warn":""}" id="examTimer">⏱ ${fmtTime(Math.max(0,remain))}</div>`;
+  } else {
+    h+=`<div class="exam-mini-stats"><span class="ok">${correctCount} ✓</span><span>${attempted} done</span></div>`;
+  }
+  h+=`<button class="exam-quit" onclick="quitExam()">Quit</button>`;
+  h+=`</div>`;
+  // question card
+  const ok=answered&&ans.ok;
+  const cc=answered?(ok?"ok":"no"):"";
+  h+=`<div class="pc ${cc}"><div class="pc-top">`;
+  h+=`<span class="bg ${answered?(ok?"bg-ok":"bg-no"):"bg-q"}">${answered?(ok?"✓ Correct":"✗ Incorrect"):"Question "+(examIdx+1)}</span>`;
+  h+=`<span class="bg bg-ty">${p.ref}</span>`;
+  h+=`<span class="bg bg-ty">${EXAM_META[examSection].icon} ${EXAM_META[examSection].name}</span>`;
+  h+=`</div>`;
+  h+=`<div class="q-txt">${p.q}</div>`;
+  // givens/formula always shown in exam (it's a real exam, but givens help focus)
+  if(p.gv){
+    h+=`<div class="ir">`;
+    h+=`<div class="ib ib-g"><span class="ib-l">Given</span>${p.gv.replace(/\n/g,"<br>")}</div>`;
+    if(p.fm)h+=`<div class="ib ib-f"><span class="ib-l">Formula</span>${p.fm.replace(/\n/g,"<br>")}</div>`;
+    if(p.fi)h+=`<div class="ib ib-w"><span class="ib-l">Solve For</span>${p.fi.replace(/\n/g,"<br>")}</div>`;
+    h+=`</div>`;
+  }
+  if(!answered){
+    h+=`<div class="aa"><div class="aw"><input class="ai" id="exinp" type="text" inputmode="${p.isText?"text":"decimal"}" placeholder="Your answer…" value="${examInput}" onkeydown="if(event.key==='Enter')submitExamAnswer()"><span class="au">${p.u||""}</span></div><button class="ab" onclick="submitExamAnswer()">Submit</button></div>`;
+  } else {
+    h+=`<div class="aa"><div class="aw"><input class="ai ${ok?"v-ok":"v-no"}" value="${ans.val}" disabled><span class="au">${p.u||""}</span></div></div>`;
+    h+=`<div class="fb ${ok?"fb-ok":"fb-no"}">${ok?"✓ Correct":`✗ Correct answer: ${p.a} ${p.u||""}`}</div>`;
+    h+=`<div class="sol"><div class="sol-tag">Solution</div>`;
+    p.st.forEach(s=>{h+=`<div class="stp">${s}</div>`});
+    h+=`<div class="sol-note">${p.nt}</div></div>`;
+  }
+  h+=`</div>`;
+  // nav
+  h+=`<div class="lesson-nav">`;
+  h+=`<button class="nav-btn" onclick="examPrev()" ${examIdx===0?"disabled":""}>← Previous</button>`;
+  if(answered){
+    if(examIdx<EXAM_LENGTH-1)h+=`<button class="nav-btn primary" onclick="examNext()">Next Question →</button>`;
+    else h+=`<button class="nav-btn primary" onclick="finishExam(false)">Finish Exam ✓</button>`;
+  } else {
+    h+=`<div style="font:400 11px var(--f);color:var(--dim);align-self:center">Submit an answer to continue</div>`;
+  }
+  h+=`</div>`;
+  return h;
+}
+
+function submitExamAnswer(){
+  const inp=document.getElementById("exinp");if(!inp)return;
+  const val=inp.value.trim();if(val==="")return;
+  const p=examQuestions[examIdx];
+  const ok=isCorrect(p,val);
+  examAnswers[examIdx]={val,ok};
+  examInput="";
+  recordAnswer(ok);
+  renderExam();
+}
+function examNext(){
+  if(examIdx<EXAM_LENGTH-1){examIdx++;examInput="";renderExam()}
+}
+function examPrev(){
+  if(examIdx>0){examIdx--;examInput="";renderExam()}
+}
+function quitExam(){
+  if(confirm("Quit this exam? Your progress will be lost.")){
+    if(examTimerId){clearInterval(examTimerId);examTimerId=null}
+    examSection=null;examQuestions=[];examFinished=false;
+    renderExam();
+  }
+}
+function finishExam(timeUp){
+  if(examTimerId){clearInterval(examTimerId);examTimerId=null}
+  // auto-mark any unanswered as incorrect
+  for(let i=0;i<EXAM_LENGTH;i++){
+    if(examAnswers[i]==null)examAnswers[i]={val:"—",ok:false,skipped:true};
+  }
+  const score=examAnswers.filter(a=>a.ok).length;
+  if(examBest[examSection]==null||score>examBest[examSection]){
+    examBest[examSection]=score;
+    localStorage.setItem("m2_exam_best",JSON.stringify(examBest));
+  }
+  examFinished=true;examTimeUp=timeUp;examReviewIdx=-1;
+  renderExam();
+}
+let examTimeUp=false;
+
+function renderExamResults(){
+  const score=examAnswers.filter(a=>a.ok).length;
+  const pct=Math.round(100*score/EXAM_LENGTH);
+  const grade=pct>=90?"A":pct>=80?"B":pct>=70?"C":pct>=60?"D":"F";
+  const colorClass=pct>=90?"gold":pct>=75?"green":pct>=60?"orange":"red";
+  const m=EXAM_META[examSection];
+  let h=`<div class="exam-results">`;
+  h+=`<div style="font:400 22px var(--s);color:var(--mut)">${m.icon} ${m.name} Exam</div>`;
+  if(examTimeUp)h+=`<div style="font:600 12px var(--m);color:var(--red);margin-top:6px">⏱ Time expired — unanswered questions marked incorrect</div>`;
+  h+=`<div class="exam-results-score ${colorClass}">${score}<span style="font-size:28px;color:var(--dim)">/${EXAM_LENGTH}</span></div>`;
+  h+=`<div class="exam-results-pct">${pct}%</div>`;
+  h+=`<div class="exam-results-grade ${colorClass==="gold"||colorClass==="green"?"":""}" style="color:${pct>=90?"var(--ylw)":pct>=75?"var(--grn)":pct>=60?"var(--org)":"var(--red)"}">Grade: ${grade}</div>`;
+  // encouragement
+  const msg=pct>=90?"Outstanding! You've mastered this section. 🎉":pct>=80?"Great work — you really know this material!":pct>=70?"Solid pass. Review the misses below to level up.":pct>=60?"You passed, but there's room to grow. Study the solutions.":"Keep going — review the solutions and try again. You've got this! 💪";
+  h+=`<div style="font:400 14px var(--f);color:var(--mut);max-width:440px;margin:0 auto 10px">${msg}</div>`;
+  // meta cards
+  h+=`<div class="exam-results-meta">`;
+  h+=`<div class="exam-meta-card"><div class="exam-meta-l">Correct</div><div class="exam-meta-v" style="color:var(--grn)">${score}</div></div>`;
+  h+=`<div class="exam-meta-card"><div class="exam-meta-l">Incorrect</div><div class="exam-meta-v" style="color:var(--red)">${EXAM_LENGTH-score}</div></div>`;
+  if(examTimerOn)h+=`<div class="exam-meta-card"><div class="exam-meta-l">Time Used</div><div class="exam-meta-v">${fmtTime(examElapsed)}</div></div>`;
+  h+=`<div class="exam-meta-card"><div class="exam-meta-l">Best Ever</div><div class="exam-meta-v" style="color:var(--ylw)">${examBest[examSection]}</div></div>`;
+  h+=`</div>`;
+  // action buttons
+  h+=`<div class="btn-row" style="justify-content:center;margin:16px 0">`;
+  h+=`<button class="exam-start-btn" onclick="examPick('${examSection}')">Retake This Exam</button>`;
+  h+=`<button class="nav-btn" onclick="examSection=null;examQuestions=[];examFinished=false;renderExam()">Different Section</button>`;
+  h+=`</div>`;
+  // review list
+  h+=`<div class="exam-review-list"><div style="font:700 11px var(--m);letter-spacing:.1em;color:var(--acc);text-transform:uppercase;margin-bottom:10px">Question Review — tap any to expand</div>`;
+  examQuestions.forEach((p,i)=>{
+    const a=examAnswers[i];
+    const expanded=examReviewIdx===i;
+    // strip HTML graphs from the review snippet
+    const snippet=p.q.replace(/<svg[\s\S]*?<\/svg>/g,"[graph]").replace(/<[^>]+>/g,"").slice(0,90);
+    h+=`<div class="exam-review-item ${a.ok?"ok-row":"no-row"}" onclick="toggleReview(${i})">`;
+    h+=`<div class="exam-review-num">${i+1}</div>`;
+    h+=`<div class="exam-review-q">${snippet}${snippet.length>=90?"…":""}`;
+    if(expanded){
+      h+=`<div style="margin-top:8px;padding:10px;background:rgba(0,0,0,0.2);border-radius:8px">`;
+      h+=`<div style="font:400 13px/1.7 var(--s);color:var(--txt);margin-bottom:8px">${p.q}</div>`;
+      h+=`<div style="font:500 11px var(--m);color:${a.ok?"var(--grn)":"var(--red)"}">Your answer: ${a.val} ${a.skipped?"(skipped)":""} ${p.u||""}</div>`;
+      if(!a.ok)h+=`<div style="font:500 11px var(--m);color:var(--grn)">Correct: ${p.a} ${p.u||""}</div>`;
+      h+=`<div class="sol" style="margin-top:8px">`;
+      p.st.forEach(s=>{h+=`<div class="stp">${s}</div>`});
+      h+=`<div class="sol-note">${p.nt}</div></div>`;
+      h+=`</div>`;
+    }
+    h+=`</div>`;
+    h+=`<div class="exam-review-status ${a.ok?"ok":"no"}">${a.ok?"✓":"✗"}</div>`;
+    h+=`</div>`;
+  });
+  h+=`</div></div>`;
+  return h;
+}
+function toggleReview(i){
+  examReviewIdx=examReviewIdx===i?-1:i;
+  renderExam();
+}
+
+// ============================================================
+// INIT
+// ============================================================
+loadStats();
+renderStats();
+renderModes();
+renderCtrls();
+genP();
+</script>
+</body>
+</html>
