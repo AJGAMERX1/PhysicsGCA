@@ -21,7 +21,7 @@ Study data stays in browser storage under the existing `retentionApp_v3` key. Th
 
 ## Development
 
-`index.html` is the self-contained application. No build step is required. The two original Physics module pages are preserved.
+`index.html` contains the application. `manifest.webmanifest` and `assets/icons/` supply the Orbit home-screen and browser icons. Keep these files together when hosting; no build step is required. The two original Physics module pages are preserved.
 
 ```sh
 python3 -m http.server 8765 --bind 127.0.0.1
